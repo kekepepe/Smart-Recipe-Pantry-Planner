@@ -1,5 +1,4 @@
-# HaoZhe: copy to .github/workflows/test.yml in your own PR.
-name: Task 4 tests
+name: Prototype checks
 on:
   push:
     branches: [main]
@@ -7,11 +6,15 @@ on:
 permissions:
   contents: read
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
       - run: npm run test:final
+      - run: npm run demo
+      - run: npm run build
