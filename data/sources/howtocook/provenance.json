@@ -1,0 +1,116 @@
+{
+  "repository": "https://github.com/Anduin2017/HowToCook",
+  "revision": "308cc8b7dab1da84b20e7fafdf836a715437f582",
+  "retrieved": "2026-11-06",
+  "license": "Unlicense",
+  "sources": [
+    {
+      "id": "tomato-eggs",
+      "path": "dishes/vegetable_dish/西红柿炒鸡蛋.md",
+      "blobSha": "c94b0ca05505ac47e509235ed2b4c5bd4e079370",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/vegetable_dish/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E7%82%92%E9%B8%A1%E8%9B%8B.md"
+    },
+    {
+      "id": "egg-fried-rice",
+      "path": "dishes/staple/蛋炒饭.md",
+      "blobSha": "fe50d9c74b669551c0edb9f6f54f6d0fa14e421f",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/staple/%E8%9B%8B%E7%82%92%E9%A5%AD.md"
+    },
+    {
+      "id": "milk-oats",
+      "path": "dishes/breakfast/牛奶燕麦.md",
+      "blobSha": "b977b832412acddb757bc7d62b6a46aaf5a6e178",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/breakfast/%E7%89%9B%E5%A5%B6%E7%87%95%E9%BA%A6.md"
+    },
+    {
+      "id": "steamed-eggs",
+      "path": "dishes/breakfast/蒸水蛋.md",
+      "blobSha": "1e5a44e03b3f2cd94f5cb610c8da5671c425a8ce",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/breakfast/%E8%92%B8%E6%B0%B4%E8%9B%8B.md"
+    },
+    {
+      "id": "egg-sandwich",
+      "path": "dishes/breakfast/鸡蛋三明治.md",
+      "blobSha": "0f425955a2593ab87584bb98751434d3bec1fd44",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/breakfast/%E9%B8%A1%E8%9B%8B%E4%B8%89%E6%98%8E%E6%B2%BB.md"
+    },
+    {
+      "id": "garlic-broccoli",
+      "path": "dishes/vegetable_dish/蒜蓉西兰花.md",
+      "blobSha": "1ee282e1c472bff777b82885e0e0779bdcef6375",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/vegetable_dish/%E8%92%9C%E8%93%89%E8%A5%BF%E5%85%B0%E8%8A%B1.md"
+    },
+    {
+      "id": "sour-spicy-potatoes",
+      "path": "dishes/vegetable_dish/酸辣土豆丝.md",
+      "blobSha": "f93bb62fdb625738e7414c6374df97e94864fde6",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/vegetable_dish/%E9%85%B8%E8%BE%A3%E5%9C%9F%E8%B1%86%E4%B8%9D.md"
+    },
+    {
+      "id": "smashed-cucumber",
+      "path": "dishes/vegetable_dish/凉拌黄瓜.md",
+      "blobSha": "2c16a64c5bd977ff3dafcd6079b816586f207f7f",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/vegetable_dish/%E5%87%89%E6%8B%8C%E9%BB%84%E7%93%9C.md"
+    },
+    {
+      "id": "cabbage-pork",
+      "path": "dishes/vegetable_dish/手撕包菜/手撕包菜.md",
+      "blobSha": "32b3dd4915b946994ba5275c3deece4fce339d0d",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/vegetable_dish/%E6%89%8B%E6%92%95%E5%8C%85%E8%8F%9C/%E6%89%8B%E6%92%95%E5%8C%85%E8%8F%9C.md"
+    },
+    {
+      "id": "mapo-tofu",
+      "path": "dishes/meat_dish/麻婆豆腐/麻婆豆腐.md",
+      "blobSha": "202fdaa3ebccf73b0d420d32c5440aed26e19e02",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/meat_dish/%E9%BA%BB%E5%A9%86%E8%B1%86%E8%85%90/%E9%BA%BB%E5%A9%86%E8%B1%86%E8%85%90.md"
+    },
+    {
+      "id": "scallion-tofu",
+      "path": "dishes/vegetable_dish/葱煎豆腐.md",
+      "blobSha": "17bf935f916ec6fe045de83d4e5b1124a86f4116",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/vegetable_dish/%E8%91%B1%E7%85%8E%E8%B1%86%E8%85%90.md"
+    },
+    {
+      "id": "cola-wings",
+      "path": "dishes/meat_dish/可乐鸡翅.md",
+      "blobSha": "e1b65f28a8e1a5530755db257237b37d648fb2a9",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/meat_dish/%E5%8F%AF%E4%B9%90%E9%B8%A1%E7%BF%85.md"
+    },
+    {
+      "id": "braised-pork",
+      "path": "dishes/meat_dish/红烧肉/简易红烧肉.md",
+      "blobSha": "e0507ea528d22c0b5fa7dc112d72d48ff0bb5d5f",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/meat_dish/%E7%BA%A2%E7%83%A7%E8%82%89/%E7%AE%80%E6%98%93%E7%BA%A2%E7%83%A7%E8%82%89.md"
+    },
+    {
+      "id": "tomato-beef",
+      "path": "dishes/meat_dish/西红柿牛腩/西红柿牛腩.md",
+      "blobSha": "f1403bd14e18415baa7833c801e202feb05a8c0c",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/meat_dish/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E7%89%9B%E8%85%A9/%E8%A5%BF%E7%BA%A2%E6%9F%BF%E7%89%9B%E8%85%A9.md"
+    },
+    {
+      "id": "garlic-shrimp",
+      "path": "dishes/aquatic/蒜蓉虾/蒜蓉虾.md",
+      "blobSha": "318d762f322537d1a79820027a10309f69667378",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/aquatic/%E8%92%9C%E8%93%89%E8%99%BE/%E8%92%9C%E8%93%89%E8%99%BE.md"
+    },
+    {
+      "id": "steamed-sea-bass",
+      "path": "dishes/aquatic/清蒸鲈鱼/清蒸鲈鱼.md",
+      "blobSha": "838927818ef70f2f294fe9cdfa5163182993c38b",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/aquatic/%E6%B8%85%E8%92%B8%E9%B2%88%E9%B1%BC/%E6%B8%85%E8%92%B8%E9%B2%88%E9%B1%BC.md"
+    },
+    {
+      "id": "seaweed-egg-soup",
+      "path": "dishes/soup/紫菜蛋花汤.md",
+      "blobSha": "5afa5e0bc863a3fd23c4508a0e21da7141397fd5",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/soup/%E7%B4%AB%E8%8F%9C%E8%9B%8B%E8%8A%B1%E6%B1%A4.md"
+    },
+    {
+      "id": "stir-fried-noodles",
+      "path": "dishes/staple/炒方便面/炒方便面.md",
+      "blobSha": "73cf334540d90dfa389a7933233da5228084adfa",
+      "url": "https://github.com/Anduin2017/HowToCook/blob/308cc8b7dab1da84b20e7fafdf836a715437f582/dishes/staple/%E7%82%92%E6%96%B9%E4%BE%BF%E9%9D%A2/%E7%82%92%E6%96%B9%E4%BE%BF%E9%9D%A2.md"
+    }
+  ]
+}

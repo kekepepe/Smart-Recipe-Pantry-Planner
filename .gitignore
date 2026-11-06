@@ -7,3 +7,11 @@ dist/
 *.db-shm
 *.db-wal
 .DS_Store
+
+var/
+backups/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+playwright-report/
+test-results/

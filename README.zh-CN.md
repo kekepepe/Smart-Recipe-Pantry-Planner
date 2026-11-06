@@ -1,12 +1,12 @@
 # Smart Recipe & Pantry Planner
 
-**V0 入口：** 原型已通过 PR #3 合入 main，CI、demo 验收与回归测试 PR #2/#4/#5 也已合并。[运行手册](docs/V0-RUNBOOK.md) · [技术验收](docs/V0-ACCEPTANCE.md) · [最新完成度复核](docs/V0-COMPLETENESS-REVIEW.zh-CN.md) · [V1 完整开发计划](docs/V1-DEVELOPMENT-PLAN.zh-CN.md)。独立复现、最终证据一致性与真实用户试用仍需核验。
+**V1 开发版：** `feat/v1-core` 已实现本地持久化核心与 20 道带图菜谱。[运行手册](docs/V1-RUNBOOK.md) · [技术验收](docs/V1-ACCEPTANCE.md) · [开发计划](docs/V1-DEVELOPMENT-PLAN.zh-CN.md) · [菜谱来源](docs/RECIPE-CATALOG.md) · [发布状态](docs/V1-RELEASE.md)。尚待团队评审、独立成员复现和真实用户试用。
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 一个帮助家庭烹饪者管理现有食材、发现菜谱、识别缺失食材并生成购物清单的软件项目。
 
-**当前状态：V0 本地原型已实现，待团队评审与用户试用。** 以下 V1、V2 仍为计划交付。V0 使用可重置的内存示例数据，尚无持久化或多用户服务。
+**当前状态：V1 本机受控开发基线。** React/Vite 界面经 Express 读写 SQLite，刷新及重启保留库存和单菜清单。V2 仍为计划，多人共享运行另行验收。
 
 **项目仓库：** [kekepepe/Smart-Recipe-Pantry-Planner](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)
 
@@ -38,7 +38,7 @@
 | 开发团队 | 需求明确、功能可测试、代码便于维护。 |
 | 系统管理员 | 维护菜谱记录与基本系统数据，并监控错误。 |
 
-## V0 已可演示
+## V0 历史原型
 
 - 两蛋一番茄示例入口，以及从空库存自己添加。
 - 食材与数量的新增、编辑、删除。
@@ -48,9 +48,9 @@
 
 [技术与搭建计划](docs/V0-IMPLEMENTATION-PLAN.zh-CN.md) · [设计与素材记录](docs/design/V0-DESIGN.md)
 
-## 计划功能
+## 版本功能
 
-### V1 — 核心 MVP
+### V1 — 本地核心 MVP 已实现于开发分支
 
 - **食材库存管理：** 添加、编辑和删除食材，并记录数量。
 - **菜谱浏览：** 查看菜谱、所需食材和基本烹饪步骤。
@@ -86,11 +86,11 @@
 | 用户测试与评价 | 邀请样本用户完成典型任务，记录缺陷和反馈。 | 评价总结与调整后的 V2 需求清单。 |
 | 迭代 2 — V2 | 改进 V1，增加每日推荐、热量估算和购物清单优化。 | 增强应用、回归测试与演示。 |
 
-项目最初没有可运行的 V0，本分支补齐原型准备基线，供 Task 3 正式第 1 天评估。两个各五工作日的迭代仍用于 V1、V2；V0 准备不替代任何正式版本。
+V0 已合入 main。本分支在其基础上完成 V1 本地核心开发；原两轮五工作日计划保留为团队安排，技术实现不能代替独立复现和真实评价。
 
 ## 版本验收目标
 
-以下为计划验收目标，并非已经通过的测试结果。
+以下为产品验收目标；本轮已执行的技术结果见 V1-ACCEPTANCE，未执行的用户评价与发布门槛单独列出。
 
 **V1**
 
@@ -108,25 +108,24 @@
 
 ## 开始使用
 
-使用 `.nvmrc` 中的 Node.js 22.23.1（Node 22 系列且至少 22.12）。以下命令直接获取 V0 开发分支：
+使用 `.nvmrc` 中的 Node.js 22.23.1：
 
 ```bash
-git clone --branch feat/v0-prototype https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
+git clone --branch feat/v1-core https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
 cd Smart-Recipe-Pantry-Planner
 npm ci
+npm run db:init
 npm run dev
 ```
 
-打开[本地应用](http://127.0.0.1:5173/)。V0 位于 `feat/v0-prototype`，`main` 作为团队集成分支；正式试用应记录评审后的提交 SHA。本机正式开发和提交位置仍为课程目录下的 `workspace/Smart-Recipe-Pantry-Planner/`。
+开发页为 [127.0.0.1:5173](http://127.0.0.1:5173/)。构建后 `npm start` 提供 [同源 V1 服务](http://127.0.0.1:3001/)；`npm run preview` 仅为静态预览，不能代替 V1 服务。
 
 ```bash
-npm run test:final
-npm run demo
-npm run build
-npm run preview
+npx playwright install chromium
+npm run check:v1
 ```
 
-静态预览在[本机 4173 端口](http://127.0.0.1:4173/)，两个服务仅监听本机。[运行手册](docs/V0-RUNBOOK.md) 包含重置、错误模拟和交接边界。V1 候选技术为 Express + SQLite，由 Task 3 第 1 天检查 V0 后确认。
+[运行手册](docs/V1-RUNBOOK.md) 包含配置、迁移、失败恢复与备份。数据库留在本机，不上传 GitHub。以上命令选择开发分支，main 合并/发布状态以 [发布记录](docs/V1-RELEASE.md) 为准。
 
 ## 规划依据
 

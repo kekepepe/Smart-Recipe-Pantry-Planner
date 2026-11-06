@@ -1,12 +1,12 @@
 # Smart Recipe & Pantry Planner
 
-**V0 prototype:** merged into main through PR #3, followed by CI, demo acceptance and regression PRs #2/#4/#5. [Run guide](docs/V0-RUNBOOK.md) · [Technical checks](docs/V0-ACCEPTANCE.md) · [Current completeness review (Chinese)](docs/V0-COMPLETENESS-REVIEW.zh-CN.md) · [V1 development plan (Chinese)](docs/V1-DEVELOPMENT-PLAN.zh-CN.md). Independent reproduction, final evidence consistency and real-user evaluation still need verification.
+**V1 development build:** `feat/v1-core` implements local persistence and 20 illustrated recipes. [Run guide](docs/V1-RUNBOOK.md) · [Technical acceptance](docs/V1-ACCEPTANCE.md) · [Plan](docs/V1-DEVELOPMENT-PLAN.zh-CN.md) · [Recipe sources](docs/RECIPE-CATALOG.md) · [Release status](docs/V1-RELEASE.md). Peer review, independent member reproduction and real-user evaluation remain outstanding.
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 A software project to help home cooks manage ingredients, discover recipes, identify missing ingredients, and prepare grocery lists.
 
-**Status: V0 local prototype implemented; team review and user trials pending.** The V1 and V2 features below remain planned releases. V0 uses resettable in-memory demo data and is not a persistent or multi-user application.
+**Status: supervised local V1 development baseline.** React/Vite now reads and writes SQLite through Express. Pantry and single-recipe lists survive refresh and service restart. V2 and a multi-user hosted pilot remain separate work.
 
 **Repository:** [kekepepe/Smart-Recipe-Pantry-Planner](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)
 
@@ -38,7 +38,7 @@ People often have ingredients at home but are unsure what to cook. Browsing reci
 | Development team | Work with clear requirements, testable features, and maintainable code. |
 | System administrator | Maintain recipe records and basic system data, and monitor errors. |
 
-## V0 available now
+## Historical V0 prototype
 
 - Start with two eggs and one tomato, or enter your own pantry.
 - Add, edit and delete canonical ingredients and quantities.
@@ -48,9 +48,9 @@ People often have ingredients at home but are unsure what to cook. Browsing reci
 
 [Implementation plan in Chinese](docs/V0-IMPLEMENTATION-PLAN.zh-CN.md) · [Design reference and assets](docs/design/V0-DESIGN.md)
 
-## Planned features
+## Version features
 
-### V1 — Core MVP
+### V1 — Local core MVP implemented on the development branch
 
 - **Pantry management:** add, edit, and remove ingredients, including their quantities.
 - **Recipe browsing:** view recipes, required ingredients, and basic cooking instructions.
@@ -86,11 +86,11 @@ The project follows **Iterative-Incremental Development**. V1 will provide a com
 | User evaluation | Ask sample users to complete common tasks and record defects and feedback. | Evaluation summary and revised V2 backlog. |
 | Iteration 2 — V2 | Improve V1 and add daily recommendations, calorie estimates, and shopping-list enhancements. | Enhanced application, regression tests, and demonstration. |
 
-The project began without a runnable V0. This branch supplies that preparation baseline for the Day 1 review in Task 3. The two five-working-day iterations still cover V1 and V2; V0 preparation does not replace either release.
+V0 has been integrated into main. This branch extends it with the local V1 core. The two five-working-day iterations remain the team plan; implementation does not replace independent reproduction or user evaluation.
 
 ## Release acceptance goals
 
-These are planned acceptance goals, not completed test results.
+These are product acceptance goals. Completed technical checks are recorded in V1-ACCEPTANCE; user evaluation and release gates are listed separately.
 
 **V1**
 
@@ -108,25 +108,24 @@ These are planned acceptance goals, not completed test results.
 
 ## Getting started
 
-Use the Node.js version in `.nvmrc` (22.23.1; Node 22.12+ within the Node 22 line).
+Use Node.js 22.23.1 from `.nvmrc`:
 
 ```bash
-git clone --branch feat/v0-prototype https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
+git clone --branch feat/v1-core https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
 cd Smart-Recipe-Pantry-Planner
 npm ci
+npm run db:init
 npm run dev
 ```
 
-Open [the local app](http://127.0.0.1:5173/). The commands above select the V0 development branch; `main` remains the team integration branch. Use a reviewed commit for team evaluation. On the original development machine, the clone lives in `workspace/Smart-Recipe-Pantry-Planner/` inside the course directory.
+Open [the development app](http://127.0.0.1:5173/). After `npm run build`, `npm start` serves the complete app at [127.0.0.1:3001](http://127.0.0.1:3001/). Vite `preview` is static-only and does not replace the V1 server.
 
 ```bash
-npm run test:final
-npm run demo
-npm run build
-npm run preview
+npx playwright install chromium
+npm run check:v1
 ```
 
-Static preview runs at [localhost:4173](http://127.0.0.1:4173/). Both servers bind to localhost. See the [run guide](docs/V0-RUNBOOK.md) for reset, failure simulation, actual paths and handoff limits. V1 is proposed to add Express and SQLite, subject to the Task 3 Day 1 review.
+See the [run guide](docs/V1-RUNBOOK.md) for configuration, migrations, failure recovery and backups. Database files stay local. These commands select the development branch; see [release status](docs/V1-RELEASE.md) for review and main integration.
 
 ## Planning references
 

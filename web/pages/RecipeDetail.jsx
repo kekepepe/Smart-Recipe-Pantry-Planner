@@ -6,7 +6,7 @@ export default function RecipeDetail({ recipeId }) {
   const { snapshot, busy, mutate } = useApp();
   const [error, setError] = useState('');
   const recipe = snapshot.recipes.find(item => item.id === recipeId);
-  if (!recipe) return <><PageHeading title="Recipe not found" subtitle="This recipe is not in our demo collection." /><a href="#/recipes">Back to recipes</a></>;
+  if (!recipe) return <><PageHeading title="Recipe not found" subtitle="This recipe is not in our collection." /><a href="#/recipes">Back to recipes</a></>;
   const evaluation = snapshot.evaluations.find(item => item.recipeId === recipeId);
   async function addToList() {
     const result = await mutate('selectShoppingRecipe', recipeId, 'Shopping list updated from your current pantry.');
@@ -15,7 +15,7 @@ export default function RecipeDetail({ recipeId }) {
   }
   return <>
     <a className="back-link" href="#/recipes"><Icon name="back" />Back to recipes</a>
-    <PageHeading title={recipe.title} subtitle={`${recipe.time} min · ${recipe.description}`} />
+    <PageHeading title={recipe.title} subtitle={`${recipe.titleZh || ''} · ${recipe.servings} ${recipe.servings === 1 ? 'serving' : 'servings'} · ${recipe.time} min · ${recipe.description}`} />
     <div className="detail-layout">
       <div className="detail-content">
         <RecipeStatus evaluation={evaluation} />
@@ -37,7 +37,7 @@ export default function RecipeDetail({ recipeId }) {
           </>}
           {error ? <p className="error" role="alert">{error}</p> : null}
         </div>
-        <section className="instructions"><h2>How to make it</h2><ol>{recipe.steps.map(step => <li key={step}>{step}</li>)}</ol><p className="source">{recipe.source}</p></section>
+        <section className="instructions"><h2>How to make it</h2><ol>{recipe.steps.map(step => <li key={step}>{step}</li>)}</ol><p className="source">{recipe.source} {recipe.sourceUrl ? <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">View original recipe</a> : null}</p><p className="source">{recipe.imageCredit}</p>{recipe.adaptationNotes ? <details className="source"><summary>Recipe source &amp; adjustments</summary><p>{recipe.adaptationNotes}</p></details> : null}</section>
       </div>
       <img className="detail-photo" src={recipe.image} alt={recipe.imageAlt} />
     </div>

@@ -1,6 +1,6 @@
 # V1 完整开发计划
 
-日期：2026-11-06（Asia/Shanghai）。状态：开发方案，已获准开始实施。依据：当前 PRD P1–P4、Task 3 Final 的第一个五工作日迭代，以及 [V0 完成度复核](V0-COMPLETENESS-REVIEW.zh-CN.md)。
+日期：2026-11-06（Asia/Shanghai）。状态：开发方案已开始实施；本机核心与 20 菜目录见 [技术验收](V1-ACCEPTANCE.md)，团队/发布待办见 [发布状态](V1-RELEASE.md)。依据：当前 PRD P1–P4、Task 3 Final 的第一个五工作日迭代，以及 [V0 完成度复核](V0-COMPLETENESS-REVIEW.zh-CN.md)。
 
 ## 1. 交付目标与范围
 
