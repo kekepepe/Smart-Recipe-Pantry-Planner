@@ -1,14 +1,28 @@
 # Smart Recipe & Pantry Planner
 
-**Task 4 starter:** [Minimal collaboration trial, member tasks and debugging guide](docs/task4/README.md). The starter contains TODOs; the full app remains planned.
+**V0 prototype:** a runnable local interface is now implemented on `feat/v0-prototype`. [Run guide](docs/V0-RUNBOOK.md) · [Technical checks](docs/V0-ACCEPTANCE.md) · [Task 4 collaboration requirements](docs/task4/README.md). Team contribution evidence and user evaluation remain pending.
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 A software project to help home cooks manage ingredients, discover recipes, identify missing ingredients, and prepare grocery lists.
 
-**Status: planning and initial setup.** Development is starting from scratch. The features below describe the planned releases and are not implemented yet.
+**Status: V0 local prototype implemented; team review and user trials pending.** The V1 and V2 features below remain planned releases. V0 uses resettable in-memory demo data and is not a persistent or multi-user application.
 
 **Repository:** [kekepepe/Smart-Recipe-Pantry-Planner](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)
+
+## Interface preview
+
+Actual screenshots of the running V0 prototype, using the two-eggs/one-tomato demo. These are rendered application screens, not the design concept. The interface currently uses English.
+
+### Desktop recipe matching
+
+![V0 desktop recipe matching: scrambled eggs can be made now; the tomato skillet needs one more tomato](docs/screenshots/v0-desktop-recipes.png)
+
+### Mobile pantry and shopping list
+
+| My pantry | Shopping list |
+| --- | --- |
+| <img src="docs/screenshots/v0-mobile-pantry.png" alt="V0 mobile pantry with two eggs, one tomato and the ingredient form" width="280"> | <img src="docs/screenshots/v0-mobile-shopping.png" alt="V0 mobile shopping list showing one tomato to buy" width="280"> |
 
 ## Why this project
 
@@ -23,6 +37,16 @@ People often have ingredients at home but are unsure what to cook. Browsing reci
 | Health-conscious users | View estimated calories to support everyday food choices. |
 | Development team | Work with clear requirements, testable features, and maintainable code. |
 | System administrator | Maintain recipe records and basic system data, and monitor errors. |
+
+## V0 available now
+
+- Start with two eggs and one tomato, or enter your own pantry.
+- Add, edit and delete canonical ingredients and quantities.
+- Browse two sample recipes, compare required and available amounts, and distinguish ready recipes from shortages or incompatible units.
+- Generate an idempotent single-recipe shopping list that updates with pantry changes and never consumes stock.
+- Use responsive pages, keyboard-accessible controls and confirmation dialogs. Refresh resets the session.
+
+[Implementation plan in Chinese](docs/V0-IMPLEMENTATION-PLAN.zh-CN.md) · [Design reference and assets](docs/design/V0-DESIGN.md)
 
 ## Planned features
 
@@ -57,12 +81,12 @@ The project follows **Iterative-Incremental Development**. V1 will provide a com
 
 | Stage | Planned work | Expected output |
 | --- | --- | --- |
-| Project initialization | Confirm requirements and priorities, choose the technology stack, and set up the development environment. | Project baseline and prioritized backlog. |
+| V0 preparation and Day 1 review | Prepare the local prototype, then review reusable code, requirements and the candidate stack on formal Day 1. | Runnable prototype, technical checks and prioritized backlog. |
 | Iteration 1 — V1 | Build pantry management, recipe browsing and matching, and missing-ingredient lists. | Working MVP and core test cases. |
 | User evaluation | Ask sample users to complete common tasks and record defects and feedback. | Evaluation summary and revised V2 backlog. |
 | Iteration 2 — V2 | Improve V1 and add daily recommendations, calorie estimates, and shopping-list enhancements. | Enhanced application, regression tests, and demonstration. |
 
-The planning documents refer to reviewing an existing V0 codebase. The current project starts from scratch, so that stage is replaced here with project initialization. The V1 and V2 feature scope is retained.
+The project began without a runnable V0. This branch supplies that preparation baseline for the Day 1 review in Task 3. The two five-working-day iterations still cover V1 and V2; V0 preparation does not replace either release.
 
 ## Release acceptance goals
 
@@ -84,22 +108,31 @@ These are planned acceptance goals, not completed test results.
 
 ## Getting started
 
-The repository is at the documentation stage. There is no runnable application or installation procedure yet.
-
-To obtain a local copy once these files are added to GitHub:
+Use the Node.js version in `.nvmrc` (22.23.1; Node 22.12+ within the Node 22 line).
 
 ```bash
-git clone https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
+git clone --branch feat/v0-prototype https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
 cd Smart-Recipe-Pantry-Planner
+npm ci
+npm run dev
 ```
 
-The frontend, backend, database, recipe and nutrition data sources, deployment approach, and testing tools remain to be selected. Installation commands, configuration, and run instructions will be documented when the implementation is established.
+Open [the local app](http://127.0.0.1:5173/). The commands above select the V0 development branch; `main` remains the team integration branch. Use a reviewed commit for team evaluation. On the original development machine, the clone lives in `workspace/Smart-Recipe-Pantry-Planner/` inside the course directory.
+
+```bash
+npm run test:final
+npm run demo
+npm run build
+npm run preview
+```
+
+Static preview runs at [localhost:4173](http://127.0.0.1:4173/). Both servers bind to localhost. See the [run guide](docs/V0-RUNBOOK.md) for reset, failure simulation, actual paths and handoff limits. V1 is proposed to add Express and SQLite, subject to the Task 3 Day 1 review.
 
 ## Planning references
 
 This README is based on the supplied planning documents:
 
-- `Smart_Recipe_and_Pantry_Planner_Project_Planning_Revised.docx` — English planning document.
-- `Smart_Recipe_and_Pantry_Planner_Project_Planning_CN_Revised.docx` — Chinese planning document.
+- `Smart_Recipe_and_Pantry_Planner_Project_Planning_Revised_task2.docx` — English planning document.
+- `Smart_Recipe_and_Pantry_Planner_Project_Planning_CN_Revised_task2.docx` — Chinese planning document.
 
 The documents define stakeholders, release scope, the problem statement, the selected development approach, and success criteria. Their original files are preserved separately from this README.

@@ -1,14 +1,28 @@
 # Smart Recipe & Pantry Planner
 
-**Task 4 入口：** [最小协作方案、每人任务与调试步骤](docs/task4/README.md)。当前是含 TODO 的试验骨架，完整应用仍待开发。
+**V0 入口：** `feat/v0-prototype` 分支已实现可运行原型。[运行手册](docs/V0-RUNBOOK.md) · [技术验收](docs/V0-ACCEPTANCE.md) · [Task 4 协作要求](docs/task4/README.md)。团队贡献证据与真实用户试用尚待完成。
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 一个帮助家庭烹饪者管理现有食材、发现菜谱、识别缺失食材并生成购物清单的软件项目。
 
-**当前状态：项目规划与初始化。** 项目将从零开始搭建。以下内容为计划交付的功能，目前尚未实现。
+**当前状态：V0 本地原型已实现，待团队评审与用户试用。** 以下 V1、V2 仍为计划交付。V0 使用可重置的内存示例数据，尚无持久化或多用户服务。
 
 **项目仓库：** [kekepepe/Smart-Recipe-Pantry-Planner](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)
+
+## 界面预览
+
+以下为实际运行的 V0 截图，使用“两蛋一番茄”示例，并非设计概念图。当前界面语言为英文。
+
+### 桌面菜谱匹配
+
+![V0 桌面菜谱页：鸡蛋菜谱现在可做，番茄菜谱还缺一个番茄](docs/screenshots/v0-desktop-recipes.png)
+
+### 手机库存与购物清单
+
+| 我的食材 | 购物清单 |
+| --- | --- |
+| <img src="docs/screenshots/v0-mobile-pantry.png" alt="V0 手机库存页，展示两个鸡蛋、一个番茄和食材录入表单" width="280"> | <img src="docs/screenshots/v0-mobile-shopping.png" alt="V0 手机购物清单，展示需要购买一个番茄" width="280"> |
 
 ## 项目背景
 
@@ -23,6 +37,16 @@
 | 关注健康饮食的用户 | 查看热量估算，辅助日常饮食选择。 |
 | 开发团队 | 需求明确、功能可测试、代码便于维护。 |
 | 系统管理员 | 维护菜谱记录与基本系统数据，并监控错误。 |
+
+## V0 已可演示
+
+- 两蛋一番茄示例入口，以及从空库存自己添加。
+- 食材与数量的新增、编辑、删除。
+- 两道样例菜谱、需要／已有／缺少对照、动态匹配及单位不兼容提示。
+- 不重复累加、随库存更新、不扣库存的单道菜购物清单。
+- 手机浏览器布局、键盘操作和确认对话框；刷新会重置会话。
+
+[技术与搭建计划](docs/V0-IMPLEMENTATION-PLAN.zh-CN.md) · [设计与素材记录](docs/design/V0-DESIGN.md)
 
 ## 计划功能
 
@@ -57,12 +81,12 @@
 
 | 阶段 | 计划工作 | 预期交付物 |
 | --- | --- | --- |
-| 项目初始化 | 确认需求与优先级，选择技术栈，配置开发环境。 | 项目基线与按优先级排列的需求清单。 |
+| V0 准备与第 1 天评估 | 先准备本地原型，再于正式第 1 天检查可复用代码、需求及候选技术栈。 | 可运行原型、技术检查和按优先级排列的需求清单。 |
 | 迭代 1 — V1 | 实现食材管理、菜谱浏览与匹配、缺失食材清单。 | 可运行的 MVP 与核心测试用例。 |
 | 用户测试与评价 | 邀请样本用户完成典型任务，记录缺陷和反馈。 | 评价总结与调整后的 V2 需求清单。 |
 | 迭代 2 — V2 | 改进 V1，增加每日推荐、热量估算和购物清单优化。 | 增强应用、回归测试与演示。 |
 
-原规划文档包含“评估现有 V0 代码”的阶段。由于本项目当前从零开始搭建，这里将该阶段调整为项目初始化，并保留 V1、V2 的原定功能范围。
+项目最初没有可运行的 V0，本分支补齐原型准备基线，供 Task 3 正式第 1 天评估。两个各五工作日的迭代仍用于 V1、V2；V0 准备不替代任何正式版本。
 
 ## 版本验收目标
 
@@ -84,22 +108,31 @@
 
 ## 开始使用
 
-仓库目前处于文档准备阶段，尚无可运行的应用或安装流程。
-
-这些文件添加到 GitHub 后，可通过以下命令获取本地副本：
+使用 `.nvmrc` 中的 Node.js 22.23.1（Node 22 系列且至少 22.12）。以下命令直接获取 V0 开发分支：
 
 ```bash
-git clone https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
+git clone --branch feat/v0-prototype https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
 cd Smart-Recipe-Pantry-Planner
+npm ci
+npm run dev
 ```
 
-前端、后端、数据库、菜谱与营养数据来源、部署方式和测试工具尚待确定。实现方案确定后，将补充安装命令、配置说明和启动步骤。
+打开[本地应用](http://127.0.0.1:5173/)。V0 位于 `feat/v0-prototype`，`main` 作为团队集成分支；正式试用应记录评审后的提交 SHA。本机正式开发和提交位置仍为课程目录下的 `workspace/Smart-Recipe-Pantry-Planner/`。
+
+```bash
+npm run test:final
+npm run demo
+npm run build
+npm run preview
+```
+
+静态预览在[本机 4173 端口](http://127.0.0.1:4173/)，两个服务仅监听本机。[运行手册](docs/V0-RUNBOOK.md) 包含重置、错误模拟和交接边界。V1 候选技术为 Express + SQLite，由 Task 3 第 1 天检查 V0 后确认。
 
 ## 规划依据
 
 本 README 根据以下已提供的规划文档编写：
 
-- `Smart_Recipe_and_Pantry_Planner_Project_Planning_Revised.docx`：英文规划文档。
-- `Smart_Recipe_and_Pantry_Planner_Project_Planning_CN_Revised.docx`：中文规划文档。
+- `Smart_Recipe_and_Pantry_Planner_Project_Planning_Revised_task2.docx`：英文规划文档。
+- `Smart_Recipe_and_Pantry_Planner_Project_Planning_CN_Revised_task2.docx`：中文规划文档。
 
 文档涵盖利益相关者、版本范围、问题陈述、开发方法与成功标准。原始文件单独保留，未因编写 README 而修改。
