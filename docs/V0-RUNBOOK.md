@@ -4,8 +4,8 @@ V0 是可交互的本地原型，使用 React、Vite、JavaScript 和内存数�
 
 ## 开发位置
 
-正式 clone：`/Users/kepeng/Desktop/AUTclass/software/workspace/Smart-Recipe-Pantry-Planner`。
-分支：`feat/v0-prototype`。本次实现基于 main 提交 `6b44fc4`；V0 通过该开发分支提交和推送，尚未完成团队 PR 评审或合并。具体提交以 `git log` 和远端分支为准。
+Peng 的开发 clone：`/Users/kepeng/Desktop/AUTclass/software/workspace/Smart-Recipe-Pantry-Planner`；其他成员使用各自的项目目录。
+V0 已通过 [PR #3](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/pull/3) 合入 main，集成提交为 `f75ba58`。原开发分支为 `feat/v0-prototype`，实现基于 `6b44fc4`。
 
 上层 `software/` 是课程资料目录，不执行 git 提交。仓库中的 [实施计划](V0-IMPLEMENTATION-PLAN.zh-CN.md) 保留实施前的规划；当前实现与限制以本手册和 [技术验收](V0-ACCEPTANCE.md) 为准。
 
@@ -18,6 +18,21 @@ cd /Users/kepeng/Desktop/AUTclass/software/workspace/Smart-Recipe-Pantry-Planner
 npm ci
 npm run dev
 ```
+
+Windows PowerShell：先进入自己的 clone，确认 `node --version` 为 `.nvmrc` 指定的版本，再运行 `npm ci` 和 `npm run dev`。当前 `package.json` 要求 Node `>=22.12.0 <23`，Node 24 不符合本项目的版本范围。
+
+冯灏哲本机已单独安装 Node 22.23.1，保留系统 Node 24。每次新开 PowerShell 可执行：
+
+```powershell
+cd "$HOME\Desktop\Smart-Recipe-Pantry-Planner"
+$runtimePath = Join-Path $env:LOCALAPPDATA 'CodexRuntimes/node-v22.23.1-win-x64'
+$env:PATH = "$runtimePath;$env:PATH"
+node --version
+npm.cmd ci
+npm.cmd run dev
+```
+
+该便携运行时路径仅适用于已安装它的本机；其他成员应自行安装 `.nvmrc` 指定的 Node 版本。Windows 复验结果见 [CI 集成复核](task4/ci-v0-review.md)。
 
 打开 [本地开发页](http://127.0.0.1:5173/)。服务仅监听本机；5173 已被占用会报错，不会悄悄换端口。终端按 Ctrl+C 关闭。
 
@@ -61,11 +76,11 @@ npm run preview
 - `web/AppProvider.jsx`：统一快照、写操作互斥、反馈与确认对话框。
 - `web/pages/`：首页、库存、菜谱列表、详情、购物页。
 - `tests/`：16 项真实规则和状态测试。
-- `.github/workflows/test.yml`：PR 或 main push 后执行安装、最终检查、构建；远端尚未触发验证。
+- `.github/workflows/test.yml`：PR 或 main push 后执行安装、最终检查、演示和构建。V0 原始集成提交 `f75ba58` 的 [main Actions 已成功](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/runs/42174104141)；新增演示检查的结果以 PR #2 为准。
 
 ## 交接边界
 
-本次由 Codex 协助实现代码和检查，不能代替四位成员各自完成课程贡献。Task 4 的 Issue、四人自己的 PR/评审、main 上 Actions、第二成员干净克隆、真实验收与复盘仍待团队完成。不要用本地测试结果替代这些证据。
+本次由 Codex 协助实现代码和检查，不能代替四位成员各自完成课程贡献。Task 4 已有 Issue #1 和上述 main Actions；四人自己的 PR/评审、第二成员干净克隆、真实验收与复盘仍需逐项核实并记录。不要用本地测试结果替代这些证据。
 
 本次未招募真实用户，也未冒充第二成员复现。技术验收通过只表示可以开始团队评审与试用，不代表 V0 已通过所有项目交接门槛。
 
