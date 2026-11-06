@@ -92,7 +92,15 @@ test('A09: saved data survives actual service process termination and restart', 
   const f = fixture(); t.after(f.close);
   const port = await new Promise(resolve => { const server = createServer(); server.listen(0, '127.0.0.1', () => { const p = server.address().port; server.close(() => resolve(p)); }); });
   let child;
-  const stop = async () => { if (!child || child.exitCode !== null) return; const current = child; await new Promise(resolve => { current.once('exit', resolve); current.kill('SIGTERM'); }); };
+  const stop = async () => {
+    const current = child; child = null;
+    if (!current || current.exitCode !== null || current.signalCode !== null) return;
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('Service shutdown timeout')), 5000);
+      current.once('exit', () => { clearTimeout(timer); resolve(); });
+      if (!current.kill('SIGTERM')) { clearTimeout(timer); reject(new Error('Service could not be terminated')); }
+    });
+  };
   t.after(stop);
   const start = () => new Promise((resolve, reject) => {
     child = spawn(process.execPath, ['server/index.js'], { cwd: root, env: { ...process.env, DB_PATH: f.path, PORT: String(port), HOST: '127.0.0.1' }, stdio: ['ignore', 'pipe', 'pipe'] });

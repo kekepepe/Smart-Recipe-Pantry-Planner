@@ -62,3 +62,5 @@ Browser plugin 的 browser 技能未提供（Browser plugin not available），�
 首轮远端 Windows CI 在 npm ci 失败：13.0.3 需本机编译，runner 的 node-gyp 11.5.0 未识别 Visual Studio 2026。固定为 npm 实际可安装的 12.11.1；上游 release 已核对提供 Node ABI 127 的 Windows x64、Linux x64 与 Mac arm64 预编译包。12.12.0 虽有 GitHub release，但当前 registry 无该版本，未写入依赖。
 
 变更前已备份本机库；新驱动成功打开已有数据库并读到 20 道菜。随后完整 check:v1 再次退出 0，45 项测试与 demo 5/5 不变。源码文本固定 LF，避免跨平台检出令迁移校验和漂移。远端最终复验结果另按 Actions 记录，不将此修复提交视为 Windows 已通过。
+
+修复后首轮：Linux 与 macOS 的远端 job 成功，Windows 安装/API 通过，但重启测试清理阶段重复等待一个已因 SIGTERM 终止的子进程，导致用例 cancelled。已让清理同时识别 exitCode/signalCode，清空引用并加有限关闭超时；保留原 HTTP 保存、真实进程重启和快照一致断言，未跳过 Windows 用例。
