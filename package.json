@@ -1,0 +1,13 @@
+{
+  "name": "smart-recipe-pantry-trial",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "demo": "node examples/shortages-demo.js",
+    "test": "node --test tests/*.test.js",
+    "test:final": "node scripts/check-complete.js && npm test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

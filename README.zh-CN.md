@@ -1,5 +1,7 @@
 # Smart Recipe & Pantry Planner
 
+**Task 4 入口：** [最小协作方案、每人任务与调试步骤](docs/task4/README.md)。当前是含 TODO 的试验骨架，完整应用仍待开发。
+
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 一个帮助家庭烹饪者管理现有食材、发现菜谱、识别缺失食材并生成购物清单的软件项目。

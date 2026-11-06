@@ -1,5 +1,7 @@
 # Smart Recipe & Pantry Planner
 
+**Task 4 starter:** [Minimal collaboration trial, member tasks and debugging guide](docs/task4/README.md). The starter contains TODOs; the full app remains planned.
+
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 A software project to help home cooks manage ingredients, discover recipes, identify missing ingredients, and prepare grocery lists.
