@@ -1,0 +1,44 @@
+OS: Darwin arm64
+Node: v22.23.1
+npm: 10.9.8
+Base main: 4946181975e3b91e51a5038f725f29a98f53cc2c
+
+normal: npm run demo; exit=0
+PASS AC1
+PASS AC2
+PASS AC3
+PASS AC4
+PASS AC5
+Demo verification: 5/5 passed, 0 failed.
+
+wrong-array: npm run demo; exit=1
+PASS AC2
+PASS AC3
+Demo verification: 2/5 passed, 3 failed.
+FAIL AC1: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+FAIL AC4: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+FAIL AC5: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+
+exception: npm run demo; exit=1
+Demo verification: 0/5 passed, 5 failed.
+FAIL AC1: Error: INJECTED_FAILURE
+FAIL AC2: Error: INJECTED_FAILURE
+FAIL AC3: Error: INJECTED_FAILURE
+FAIL AC4: Error: INJECTED_FAILURE
+FAIL AC5: Error: INJECTED_FAILURE
+
+input-mutation: npm run demo; exit=1
+PASS AC1
+PASS AC2
+PASS AC3
+PASS AC4
+Demo verification: 4/5 passed, 1 failed.
+FAIL AC5: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+
+output-alias: npm run demo; exit=1
+PASS AC1
+PASS AC2
+PASS AC3
+PASS AC4
+Demo verification: 4/5 passed, 1 failed.
+FAIL AC5: AssertionError [ERR_ASSERTION]: Expected "actual" not to be reference-equal to "expected":
