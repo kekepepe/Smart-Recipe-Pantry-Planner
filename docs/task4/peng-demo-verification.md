@@ -58,6 +58,6 @@ PYCODE
 
 ## 协作状态
 
-实现、正常验证及负向验证已完成，提交本分支 PR 关联 `Related to #1`，供 ChangPeng 交叉评审。尚未获知 ChangPeng 的 GitHub 用户名，不能猜测正式 reviewer；确认账号后发起请求。
+实现、正常验证及负向验证已完成，提交本分支 PR 关联 `Related to #1`，供 ChangPeng 交叉评审。用户已确认 ChangPeng 的账号为 `Lsiav`，PR 创建时请求其评审。
 
 核查时没有开放的 ChangPeng 新增回归测试 PR，Peng 对该 PR 的评审仍待其提交后进行。ChangPeng 对本 PR 的评审、Peng 对实际意见的回应、合并及集成 main 的成功 Checks 必须按后续活动补充；本记录不把这些步骤记为完成，也不代表 Mao 的独立复现或人工验收。
