@@ -1,10 +1,10 @@
 # V1 技术验收记录
 
-日期：2026-11-06（Asia/Shanghai）。对象：`feat/v1-core` 的 V1 实现工作树；验收记录与实现同次提交，确切 SHA 以包含此文件的实现提交为准。执行者：Codex 在 Peng 的 macOS 工作区协助执行，不是独立成员复现或真实用户试用。
+日期：2026-11-06 至 2026-11-07（Asia/Shanghai）。对象：`feat/v1-core` 的 V1 实现工作树；验收记录与实现同次提交，确切 SHA 以包含此文件的实现提交为准。执行者：Codex 在 Peng 的 macOS 工作区协助执行，不是独立成员复现或真实用户试用。
 
 ## 环境与实际结果
 
-Node 22.23.1 / npm 10.9.8，macOS arm64；Express 5.3.0、better-sqlite3 13.0.3（SQLite 3.53.4）、React 19.3.1、Vite 8.3.6、Playwright 1.65.0（Chromium 158）。版本以锁文件为准。
+Node 22.23.1 / npm 10.9.8，macOS arm64；Express 5.3.0、better-sqlite3 12.11.1（SQLite 3.53.2）、React 19.3.1、Vite 8.3.6、Playwright 1.65.0（Chromium 158）。版本以锁文件为准。
 
 最终修改后执行 `npm run check:v1`，退出 0：
 
@@ -56,3 +56,9 @@ Browser plugin 的 browser 技能未提供（Browser plugin not available），�
 未验证 Safari、Firefox、真实手机或完整屏幕阅读器。没有执行多人认证/越权共享试用、HTTPS 托管、自启动和离机备份，应用主动限制 loopback。没有 V2 多菜合并、已购状态、营养估算或每日推荐。
 
 此结果证明本机受控 V1 的技术基线，不证明用户评价、团队贡献或正式发布门槛全部满足。
+
+## 跨平台安装修复（2026-11-07）
+
+首轮远端 Windows CI 在 npm ci 失败：13.0.3 需本机编译，runner 的 node-gyp 11.5.0 未识别 Visual Studio 2026。固定为 npm 实际可安装的 12.11.1；上游 release 已核对提供 Node ABI 127 的 Windows x64、Linux x64 与 Mac arm64 预编译包。12.12.0 虽有 GitHub release，但当前 registry 无该版本，未写入依赖。
+
+变更前已备份本机库；新驱动成功打开已有数据库并读到 20 道菜。随后完整 check:v1 再次退出 0，45 项测试与 demo 5/5 不变。源码文本固定 LF，避免跨平台检出令迁移校验和漂移。远端最终复验结果另按 Actions 记录，不将此修复提交视为 Windows 已通过。

@@ -4,7 +4,7 @@ V1 开发版位于 `feat/v1-core`，使用 React/Vite + Express + SQLite。库�
 
 ## 安装与运行
 
-使用 `.nvmrc` 指定的 Node 22.23.1 和 npm。首次使用：
+使用 `.nvmrc` 指定的 Node 22.23.1 和 npm。SQLite 驱动固定为提供该运行时预编译包的 12.11.1；不要自行升级到需要源码编译的 13.x。首次使用：
 
 ```bash
 git clone --branch feat/v1-core https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
