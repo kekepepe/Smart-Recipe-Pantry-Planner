@@ -6,7 +6,7 @@
 
 A software project to help home cooks manage ingredients, discover recipes, identify missing ingredients, and prepare grocery lists.
 
-**Status: supervised local V1 development baseline.** React/Vite now reads and writes SQLite through Express. Pantry and single-recipe lists survive refresh and service restart. V2 and a multi-user hosted pilot remain separate work.
+**Status: supervised local V1 development baseline.** React/Vite now reads and writes SQLite through Express. Pantry and multi-recipe lists survive refresh and service restart. V2 and a multi-user hosted pilot remain separate work.
 
 **Repository:** [kekepepe/Smart-Recipe-Pantry-Planner](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)
 
@@ -55,7 +55,7 @@ People often have ingredients at home but are unsure what to cook. Browsing reci
 - **Pantry management:** add, edit, and remove ingredients, including their quantities.
 - **Recipe browsing:** view recipes, required ingredients, and basic cooking instructions.
 - **Pantry-based matching:** separate recipes into “can make now” and “can make after buying missing ingredients”.
-- **Shopping list:** identify missing ingredients for a recipe and generate a simple grocery list.
+- **Shopping list:** persist several recipes, show individual gaps and combined buying totals, sum requirements before subtracting shared stock once, and remove individual recipes or clear the list. [Behavior and migration](docs/V1-MULTI-RECIPE.md).
 
 The core user journey is: **record pantry ingredients → browse matching recipes → inspect missing ingredients → generate a shopping list**.
 
@@ -63,7 +63,7 @@ The core user journey is: **record pantry ingredients → browse matching recipe
 
 - **Daily recommendations:** suggest recipes independently of the current pantry inventory.
 - **Calorie estimates:** show estimated total and per-serving calories based on recipe ingredients.
-- **Improved shopping lists:** combine duplicate missing ingredients across selected recipes and allow users to mark items as purchased.
+- **Improved shopping lists:** combined multi-recipe totals have moved into V1; purchased status and further convenience improvements remain future work.
 - **Feedback-driven improvements:** refine matching, filters, and usability based on V1 evaluation.
 - **Optional, time permitting:** ingredient expiry reminders.
 

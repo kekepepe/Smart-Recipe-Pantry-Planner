@@ -1,4 +1,5 @@
 import { DomainError, validateItem, evaluateRecipe } from '../../src/evaluate-recipe.js';
+import { evaluateShopping } from '../../src/evaluate-shopping.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
@@ -21,29 +22,44 @@ export class Store {
     if (!state) throw new ServiceError(404, 'NOT_FOUND', 'Workspace not found.');
     return state;
   }
+  selectedIds() {
+    return this.db.prepare('SELECT recipe_id FROM shopping_selections WHERE workspace_id=? ORDER BY position').all(this.workspace).map(row => row.recipe_id);
+  }
+  shoppingState(recipes, pantry, ingredients) {
+    const ids = this.selectedIds();
+    const selected = ids.map(id => recipes.find(recipe => recipe.id === id));
+    if (selected.some(recipe => !recipe)) throw new ServiceError(503, 'LIST_OUT_OF_DATE', 'The saved list needs repair.');
+    return selected.length ? evaluateShopping(selected, pantry, ingredients) : null;
+  }
   snapshotUnsafe() {
-    const state = this.state(); const { ingredients, recipes, catalogVersion } = this.catalog(); const pantry = this.pantry();
+    const state = this.state();
+    const { ingredients, recipes, catalogVersion } = this.catalog();
+    const pantry = this.pantry();
     const evaluations = recipes.map(recipe => evaluateRecipe(recipe, pantry, ingredients));
+    const result = this.shoppingState(recipes, pantry, ingredients);
     const list = this.db.prepare('SELECT * FROM shopping_lists WHERE workspace_id=?').get(this.workspace);
-    if (list && (list.pantry_version !== state.pantry_version || list.catalog_version !== catalogVersion)) throw new ServiceError(503, 'LIST_OUT_OF_DATE', 'The saved list needs repair. Ask the operator to run db:repair.');
-    const shopping = list ? evaluations.find(r => r.recipeId === list.recipe_id) : null;
+    const stale = () => { throw new ServiceError(503, 'LIST_OUT_OF_DATE', 'The saved list needs repair. Ask the operator to run db:repair.'); };
+    if (Boolean(list) !== Boolean(result)) stale();
     if (list) {
+      if (list.pantry_version !== state.pantry_version || list.catalog_version !== catalogVersion || list.status !== result.combined.status) stale();
       const saved = this.db.prepare('SELECT ingredient_id AS ingredientId,quantity_minor/100.0 AS quantity,unit FROM shopping_list_items WHERE workspace_id=? ORDER BY position').all(this.workspace);
-      if (!shopping || list.status !== shopping.status || JSON.stringify(saved) !== JSON.stringify(shopping.status === 'checkUnits' ? [] : shopping.shortages)) throw new ServiceError(503, 'LIST_OUT_OF_DATE', 'The saved list needs repair. Ask the operator to run db:repair.');
+      if (JSON.stringify(saved) !== JSON.stringify(result.combined.shortages)) stale();
     }
-    return { schemaVersion: 1, catalogVersion, revision: state.revision, pantryVersion: state.pantry_version, initialized: Boolean(state.initialized), started: Boolean(state.initialized), pantry, ingredients, recipes, evaluations, shoppingRecipeId: list?.recipe_id ?? null, shopping: shopping?.status === 'checkUnits' ? { ...shopping, shortages: [] } : shopping };
+    return {
+      schemaVersion: 2, catalogVersion, revision: state.revision, pantryVersion: state.pantry_version,
+      initialized: Boolean(state.initialized), started: Boolean(state.initialized), pantry, ingredients, recipes, evaluations,
+      shoppingRecipeIds: result?.combined.recipeIds ?? [], shoppingRecipes: result?.perRecipe ?? [], shopping: result?.combined ?? null,
+    };
   }
   getSnapshot() { return this.db.transaction(() => this.snapshotUnsafe())(); }
-  rebuildShopping(recipeId = null) {
-    const current = this.db.prepare('SELECT recipe_id FROM shopping_lists WHERE workspace_id=?').get(this.workspace);
-    const selected = recipeId ?? current?.recipe_id;
-    if (!selected) return;
-    const { ingredients, recipes, catalogVersion } = this.catalog(); const recipe = recipes.find(r => r.id === selected);
-    if (!recipe) throw new ServiceError(404, 'NOT_FOUND', 'Recipe not found.');
-    const evaluation = evaluateRecipe(recipe, this.pantry(), ingredients);
-    this.db.prepare('INSERT INTO shopping_lists VALUES (?,?,?,?,?) ON CONFLICT(workspace_id) DO UPDATE SET recipe_id=excluded.recipe_id,status=excluded.status,pantry_version=excluded.pantry_version,catalog_version=excluded.catalog_version').run(this.workspace, selected, evaluation.status, this.state().pantry_version, catalogVersion);
+  rebuildShopping() {
+    const { ingredients, recipes, catalogVersion } = this.catalog();
+    const result = this.shoppingState(recipes, this.pantry(), ingredients);
+    if (!result) { this.db.prepare('DELETE FROM shopping_lists WHERE workspace_id=?').run(this.workspace); return; }
+    const { combined } = result;
+    this.db.prepare('INSERT INTO shopping_lists VALUES (?,?,?,?) ON CONFLICT(workspace_id) DO UPDATE SET status=excluded.status,pantry_version=excluded.pantry_version,catalog_version=excluded.catalog_version').run(this.workspace, combined.status, this.state().pantry_version, catalogVersion);
     this.db.prepare('DELETE FROM shopping_list_items WHERE workspace_id=?').run(this.workspace);
-    if (evaluation.status !== 'checkUnits') evaluation.shortages.forEach((r, i) => this.db.prepare('INSERT INTO shopping_list_items VALUES (?,?,?,?,?)').run(this.workspace, r.ingredientId, Math.round(r.quantity * 100), r.unit, i));
+    combined.shortages.forEach((item, position) => this.db.prepare('INSERT INTO shopping_list_items VALUES (?,?,?,?,?)').run(this.workspace, item.ingredientId, Math.round(item.quantity * 100), item.unit, position));
   }
   write(revision, action, { pantry = false } = {}) {
     if (!Number.isSafeInteger(revision) || revision < 0) throw new ServiceError(400, 'INVALID_REQUEST', 'A valid expectedRevision is required.', 'expectedRevision');
@@ -71,10 +87,16 @@ export class Store {
       const { recipes, ingredients } = this.catalog(); const recipe = recipes.find(r => r.id === body.recipeId);
       if (!recipe) throw new ServiceError(404, 'NOT_FOUND', 'Recipe not found.');
       if (evaluateRecipe(recipe, this.pantry(), ingredients).status === 'checkUnits') throw new ServiceError(422, 'UNIT_MISMATCH', 'Check pantry units before creating this list.');
-      this.rebuildShopping(body.recipeId);
+      this.db.prepare('INSERT OR IGNORE INTO shopping_selections(workspace_id,recipe_id,position) SELECT ?,?,COALESCE(MAX(position),-1)+1 FROM shopping_selections WHERE workspace_id=?').run(this.workspace, body.recipeId, this.workspace);
     });
   }
-  clearSelection(body) { return this.write(body.expectedRevision, () => this.db.prepare('DELETE FROM shopping_lists WHERE workspace_id=?').run(this.workspace)); }
+  removeRecipe(id, body) {
+    if (!this.catalog().recipes.some(recipe => recipe.id === id)) throw new ServiceError(404, 'NOT_FOUND', 'Recipe not found.');
+    return this.write(body.expectedRevision, () => this.db.prepare('DELETE FROM shopping_selections WHERE workspace_id=? AND recipe_id=?').run(this.workspace, id));
+  }
+  clearSelection(body) {
+    return this.write(body.expectedRevision, () => this.db.prepare('DELETE FROM shopping_selections WHERE workspace_id=?').run(this.workspace));
+  }
   onboard(body) {
     if (!['sample', 'empty'].includes(body.mode)) throw new ServiceError(400, 'INVALID_REQUEST', 'Choose sample or empty mode.', 'mode');
     return this.write(body.expectedRevision, () => {

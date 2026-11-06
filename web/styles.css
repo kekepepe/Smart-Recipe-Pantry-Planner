@@ -211,3 +211,22 @@ input[aria-invalid=true], select[aria-invalid=true] { border-color: #a94331; }
 @media(max-width: 760px) { .recipe-search { grid-template-columns: 1fr; gap: 12px; } .recipe-actions > .recipe-status { flex: 1; } .recipe-actions > .button { flex-shrink: 0; } }
 
 .source summary { cursor: pointer; padding-block: 8px; color: var(--green); }
+
+.shopping-overview { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; padding: 18px 22px; margin-bottom: 28px; border-radius: 8px; background: var(--surface); }
+.shopping-overview p { margin: 0; }
+.shopping-overview .text-button { flex-shrink: 0; }
+.combined-shopping { padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+.selected-recipes { padding-top: 30px; }
+.recipe-gap-explanation { color: var(--muted); font-size: 14px; max-width: 720px; }
+.selected-recipe { border: 1px solid var(--border); border-radius: 10px; padding: 22px; margin-block: 18px; }
+.selected-recipe-heading { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
+.selected-recipe-heading img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+.selected-recipe-heading > div { flex: 1; min-width: 0; }
+.selected-recipe-heading h3 { font: bold 23px Georgia, serif; color: var(--green-dark); margin-bottom: 4px; }
+.selected-recipe-heading a { font-size: 14px; }
+.selected-recipe-heading .text-button { flex-shrink: 0; }
+.recipe-gap-list { list-style: none; margin: 0; padding: 0; }
+.recipe-gap-list li { display: flex; justify-content: space-between; gap: 20px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 14px; }
+.recipe-gap-list strong { color: var(--amber); white-space: nowrap; }
+.shopping-quantity { flex-shrink: 0; margin-left: 12px; }
+@media(max-width: 420px) { .shopping-overview { padding: 16px; align-items: flex-start; } .shopping-overview p { font-size: 14px; } .selected-recipe { padding: 16px; } .selected-recipe-heading { flex-wrap: wrap; gap: 12px; } .selected-recipe-heading img { width: 64px; height: 64px; } .selected-recipe-heading h3 { font-size: 21px; overflow-wrap: anywhere; } .selected-recipe-heading .text-button { margin-left: auto; } }

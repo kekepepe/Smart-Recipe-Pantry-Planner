@@ -9,7 +9,7 @@ const test = base.extend({
 test.beforeEach(async ({ page, service }) => { await page.goto(service.url); });
 const sample = page => page.getByRole('button', { name: 'Use sample pantry' }).click();
 const tomato = page => page.getByRole('link', { name: 'View recipe: Warm tomato skillet', exact: true }).click();
-const add = page => page.getByRole('button', { name: 'Add missing ingredients to list', exact: true }).click();
+const add = page => page.getByRole('button', { name: /^(Add missing ingredients to list|View saved shopping list)$/ }).click();
 
 test('P1–P4: sample, single list, no double addition, pantry edit and browser refresh', async ({ page }, info) => {
   const errors = []; page.on('pageerror', e => errors.push(e.message)); page.on('console', m => { if (['error', 'warning'].includes(m.type())) errors.push(m.text()); });
@@ -92,3 +92,41 @@ test('A17: initial service failure offers retry; keyboard completes onboarding',
   await page.getByRole('button', { name: 'Use sample pantry' }).focus(); await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { name: 'What can you make?' })).toBeVisible();
 });
+
+for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mobile', { width: 375, height: 812 }]]) {
+  test(`multiple recipes ${name}: preserve both dishes, combine totals, refresh, remove and clear`, async ({ page, service }, info) => {
+    await page.setViewportSize(viewport);
+    const errors = []; page.on('pageerror', error => errors.push(error.message));
+    await sample(page); await tomato(page); await add(page);
+    await page.getByRole('link', { name: 'Add more recipes', exact: true }).click();
+    await page.getByRole('link', { name: 'View recipe: Tomato & egg stir-fry', exact: true }).click();
+    if (name === 'mobile') {
+      await page.route('**/api/shopping-selection', route => route.fulfill({ status: 503, json: { error: { message: 'Save failed. Please retry.', code: 'STORAGE_UNAVAILABLE' } } }), { times: 1 });
+      await add(page); await expect(page.getByRole('alert').filter({ hasText: 'Save failed' })).toBeVisible();
+      expect((await service.request('/snapshot')).data.shoppingRecipeIds).toEqual(['tomato-skillet']);
+    }
+    await add(page);
+    const cards = page.getByRole('region', { name: 'Selected recipes', exact: true }).getByRole('article');
+    await expect(cards).toHaveCount(2);
+    await expect(page.getByRole('list', { name: 'Missing ingredients', exact: true }).getByRole('listitem').filter({ hasText: 'Tomatoes' })).toContainText('3 piece');
+    await expect(page.getByRole('list', { name: 'Missing for Warm tomato skillet', exact: true })).toContainText('1 piece');
+    await expect(page.getByRole('list', { name: 'Missing for Tomato & egg stir-fry', exact: true })).toContainText('1 piece');
+    await cards.first().getByRole('link', { name: 'View recipe', exact: true }).click(); await add(page);
+    await expect(cards).toHaveCount(2);
+    await page.reload(); await expect(cards).toHaveCount(2);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({ path: info.outputPath(`multi-recipe-${name}.png`), fullPage: true });
+    await page.getByRole('button', { name: 'Remove Tomato & egg stir-fry from list', exact: true }).click();
+    await expect(cards).toHaveCount(1);
+    await expect(page.getByRole('list', { name: 'Missing ingredients', exact: true })).toContainText('1 piece');
+    await page.getByRole('button', { name: 'Clear list', exact: true }).click();
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click(); await expect(cards).toHaveCount(1);
+    await page.getByRole('button', { name: 'Clear list', exact: true }).click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Clear list', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Your next meal starts here' })).toBeVisible();
+    const s = (await service.request('/snapshot')).data;
+    expect(s.shoppingRecipeIds).toEqual([]); expect(s.pantry.find(item => item.ingredientId === 'tomato').quantity).toBe(1);
+    expect(errors).toEqual([]);
+  });
+}

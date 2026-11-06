@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { config } from '../server/config.js';
 import { openDatabase } from '../server/db/connection.js';
-import { migrate, assertSchema } from '../server/db/migrate.js';
+import { migrate, assertSchema, migration } from '../server/db/migrate.js';
 import { seed } from '../server/db/seed.js';
 import { Store } from '../server/services/store.js';
 const [command, ...args] = process.argv.slice(2); let db;
@@ -29,7 +29,7 @@ try {
     mkdirSync(dirname(destination), { recursive: true }); await db.backup(destination);
     let version = 'unversioned-source-package';
     try { version = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); } catch { /* source packages can omit .git */ }
-    writeFileSync(destination + '.json', JSON.stringify({ createdAt: new Date().toISOString(), applicationCommit: version, sha256: checksum(destination), schemaVersion: 1 }, null, 2));
+    writeFileSync(destination + '.json', JSON.stringify({ createdAt: new Date().toISOString(), applicationCommit: version, sha256: checksum(destination), schemaVersion: migration.version }, null, 2));
     console.log('Consistent backup created:', destination);
   } else if (command === 'restore') {
     const [sourceArg, destinationArg] = args;

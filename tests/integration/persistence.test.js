@@ -31,7 +31,7 @@ test('A15/A14: repeat migrations and seed preserve pantry, revision and selectio
   const f = fixture(); t.after(f.close); const store = new Store(f.db);
   let s = store.onboard({ mode: 'sample', expectedRevision: 0 }); s = store.selectRecipe({ recipeId: 'tomato-skillet', expectedRevision: s.revision });
   migrate(f.db); assert.equal(seed(f.db), false); assert.deepEqual(store.getSnapshot(), s);
-  assert.equal(f.db.prepare('SELECT count(*) n FROM schema_migrations').get().n, 1);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM schema_migrations').get().n, 2);
 });
 
 test('A15: unknown migration versions and changed checksums stop startup/migration', t => {
@@ -112,6 +112,8 @@ test('A09: saved data survives actual service process termination and restart', 
   let response = await fetch(url + '/onboarding', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'sample', expectedRevision: 0 }) });
   let s = await response.json();
   response = await fetch(url + '/shopping-selection', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ recipeId: 'tomato-skillet', expectedRevision: s.revision }) });
-  assert.equal(response.status, 200); s = await response.json(); await stop(); await start();
+  assert.equal(response.status, 200); s = await response.json();
+  response = await fetch(url + '/shopping-selection', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ recipeId: 'tomato-eggs', expectedRevision: s.revision }) });
+  assert.equal(response.status, 200); s = await response.json(); assert.equal(s.shoppingRecipeIds.length, 2); await stop(); await start();
   assert.deepEqual(await (await fetch(url + '/snapshot')).json(), s); await stop();
 });
