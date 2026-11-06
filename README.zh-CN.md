@@ -1,6 +1,6 @@
 # Smart Recipe & Pantry Planner
 
-**V0 入口：** `feat/v0-prototype` 分支已实现可运行原型。[运行手册](docs/V0-RUNBOOK.md) · [技术验收](docs/V0-ACCEPTANCE.md) · [Task 4 协作要求](docs/task4/README.md)。团队贡献证据与真实用户试用尚待完成。
+**V0 入口：** 原型已通过 PR #3 合入 main，CI、demo 验收与回归测试 PR #2/#4/#5 也已合并。[运行手册](docs/V0-RUNBOOK.md) · [技术验收](docs/V0-ACCEPTANCE.md) · [最新完成度复核](docs/V0-COMPLETENESS-REVIEW.zh-CN.md) · [V1 完整开发计划](docs/V1-DEVELOPMENT-PLAN.zh-CN.md)。独立复现、最终证据一致性与真实用户试用仍需核验。
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 

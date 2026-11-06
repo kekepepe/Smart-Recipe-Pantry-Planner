@@ -1,6 +1,6 @@
 # Smart Recipe & Pantry Planner
 
-**V0 prototype:** a runnable local interface is now implemented on `feat/v0-prototype`. [Run guide](docs/V0-RUNBOOK.md) · [Technical checks](docs/V0-ACCEPTANCE.md) · [Task 4 collaboration requirements](docs/task4/README.md). Team contribution evidence and user evaluation remain pending.
+**V0 prototype:** merged into main through PR #3, followed by CI, demo acceptance and regression PRs #2/#4/#5. [Run guide](docs/V0-RUNBOOK.md) · [Technical checks](docs/V0-ACCEPTANCE.md) · [Current completeness review (Chinese)](docs/V0-COMPLETENESS-REVIEW.zh-CN.md) · [V1 development plan (Chinese)](docs/V1-DEVELOPMENT-PLAN.zh-CN.md). Independent reproduction, final evidence consistency and real-user evaluation still need verification.
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
