@@ -127,7 +127,7 @@ V2 全部完成必须同时具备：V1 核心回归；首批分类/100 菜/组�
 | HaoZhe Feng | `@fhhhz-todd` |
 | ZheKai Mao | `@Justmao1` |
 
-- **先确认共同基线。** GitHub 的 `feat/v1-core` 指向 `ed31b62`，`main` 指向 `c36b655`。分类、100 菜、组合筛选、迁移 003 及相关测试和资源还在 Peng 的本地工作区。先走下表的两个基线 PR。Peng 保留现有实现的实际作者和来源，Hao 在评审后登记可检出的合并 SHA。其他成员从这个 SHA 开新分支。历史实现及本轮新做的复核、缺陷修复和集成分别记账。
+- **先确认共同基线。** [交接 Issue #6](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/issues/6) 关联 [V1 PR #7](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/pull/7) 和 [V2 首批 PR #8](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/pull/8)。V1 基线为 `ed31b62`，分类、100 菜、组合筛选、迁移 003 和相关测试已提交到 `feat/v2-discovery-handoff`，等候评审。Peng 保留现有实现的实际作者和来源，Hao 在评审后登记可检出的合并 SHA。其他成员从这个 SHA 开新分支。历史实现及本轮新做的复核、缺陷修复和集成分别记账。
 - **Iteration 1 跟踪 Issue。** Mao 开单，分配给自己，提及全员。登记两轮范围、A1 的四项 Must、实际选中的任务、负责人、验收条件和基线 SHA。本轮验收库存 → 菜谱匹配 → 购物清单，做独立复现与试用，完成成果 review 和 retrospective。Mao 在 Issue 里链接证据，记录第一轮实际发现的问题及改进前的度量，各负责人确认自己部分。
 - **Iteration 2 跟踪 Issue。** Mao 在第一轮复盘后开单，分配给自己，提及全员。写明选定的增量、流程改进做法、比较口径和验收条件。建议先完成已购持久化和一项基于真实试用的修复。主食材推荐、每日灵感、热量按团队确认的产能纳入。未选中的工作包在 backlog 标记延期并记理由。第二轮结束时登记实际结果、复盘和两轮对比。
 - **AI 协助边界。** 先查看 Canvas 或向教学团队确认允许的用途及披露要求。在课程允许范围内，AI 可以辅助读代码、起草实现、测试和文档。成员本人确认需求及关键决定，检查差异、执行或核对实际测试，确认本人名下的 Issue 和 PR，亲自给出同行 review/Approve、作个人声明和参加演示。试用、复盘、独立复现、审批和度量记录都必须对应实际参与人和真实结果。按课程要求记录 AI 用途，及时记录来源及许可。
