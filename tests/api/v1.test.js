@@ -9,9 +9,9 @@ async function setup(t, options) {
   t.after(async () => { await server.close(); f.close(); }); return { ...f, ...server };
 }
 
-test('A01/A03: database snapshot has 20 sourced recipes; empty pantry is browsable', async t => {
+test('A01/A03: database snapshot has 100 sourced recipes; empty pantry is browsable', async t => {
   const api = await setup(t); const { status, data, headers } = await api.request('/snapshot');
-  assert.equal(status, 200); assert.equal(data.recipes.length, 20); assert.equal(data.ingredients.length, 50);
+  assert.equal(status, 200); assert.equal(data.recipes.length, 100); assert(data.ingredients.length > 50); assert(data.ingredients.every(i => ['food','seasoning'].includes(i.kind)));
   assert.deepEqual(data.pantry, []); assert.equal(data.initialized, false);
   assert(data.evaluations.every(r => r.status === 'needsShopping')); assert.equal(headers.get('cache-control'), 'no-store');
   assert.equal(data.recipes.filter(r => r.sourceLicense === 'Unlicense' && r.sourceRevision && r.sourceUrl).length, 18);

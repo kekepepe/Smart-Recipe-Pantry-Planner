@@ -1,12 +1,14 @@
 # Smart Recipe & Pantry Planner
 
+**First V2 increment implemented:** food/seasoning classification, 100 illustrated recipes and combined country/region, taste and meal filters. Locally verified; not yet merged/released. See [catalog and discovery guide](docs/V2-DISCOVERY.md).
+
 **V1 development build:** `feat/v1-core` implements local persistence and 20 illustrated recipes. [Run guide](docs/V1-RUNBOOK.md) · [Technical acceptance](docs/V1-ACCEPTANCE.md) · [Plan](docs/V1-DEVELOPMENT-PLAN.zh-CN.md) · [Recipe sources](docs/RECIPE-CATALOG.md) · [Release status](docs/V1-RELEASE.md). Peer review, independent member reproduction and real-user evaluation remain outstanding.
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 A software project to help home cooks manage ingredients, discover recipes, identify missing ingredients, and prepare grocery lists.
 
-**Status: supervised local V1 development baseline.** React/Vite now reads and writes SQLite through Express. Pantry and multi-recipe lists survive refresh and service restart. V2 and a multi-user hosted pilot remain separate work.
+**Status: supervised local development, first V2 increment.** React/Vite now reads and writes SQLite through Express. Pantry and multi-recipe lists survive refresh and service restart. Recommendations, purchased status, nutrition and a multi-user hosted pilot remain future work.
 
 **Repository:** [kekepepe/Smart-Recipe-Pantry-Planner](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)
 
@@ -61,7 +63,10 @@ The core user journey is: **record pantry ingredients → browse matching recipe
 
 ### V2 — Enhanced application
 
-- **Daily recommendations:** suggest recipes independently of the current pantry inventory.
+[V2 development plan (Chinese)](docs/V2-DEVELOPMENT-PLAN.zh-CN.md): 100 illustrated recipes, food/seasoning classification, pantry-based recommendations, inventory-independent daily inspiration, combinable cuisine/taste/meal filters, purchased status, sourced calorie estimates and a verified feedback improvement. Recipe multipliers are optional; public hosting and app packaging remain later work.
+
+- **Two recommendation modes:** match owned food ingredients, including partial matches, or show inventory-independent daily inspiration; classify food and seasonings separately.
+- **100 recipes and combined search:** classify by country/region cuisine, taste and meal; each filter works alone or in combination.
 - **Calorie estimates:** show estimated total and per-serving calories based on recipe ingredients.
 - **Improved shopping lists:** combined multi-recipe totals have moved into V1; purchased status and further convenience improvements remain future work.
 - **Feedback-driven improvements:** refine matching, filters, and usability based on V1 evaluation.
@@ -86,7 +91,7 @@ The project follows **Iterative-Incremental Development**. V1 will provide a com
 | User evaluation | Ask sample users to complete common tasks and record defects and feedback. | Evaluation summary and revised V2 backlog. |
 | Iteration 2 — V2 | Improve V1 and add daily recommendations, calorie estimates, and shopping-list enhancements. | Enhanced application, regression tests, and demonstration. |
 
-V0 has been integrated into main. This branch extends it with the local V1 core. The two five-working-day iterations remain the team plan; implementation does not replace independent reproduction or user evaluation.
+V0 has been integrated into main. This branch extends it with the local V1 core. The original two five-working-day iterations are historical planning context. The expanded 100-recipe V2 proposes three five-working-day phases; see the revised plan. Implementation does not replace independent reproduction or user evaluation.
 
 ## Release acceptance goals
 

@@ -230,3 +230,20 @@ input[aria-invalid=true], select[aria-invalid=true] { border-color: #a94331; }
 .recipe-gap-list strong { color: var(--amber); white-space: nowrap; }
 .shopping-quantity { flex-shrink: 0; margin-left: 12px; }
 @media(max-width: 420px) { .shopping-overview { padding: 16px; align-items: flex-start; } .shopping-overview p { font-size: 14px; } .selected-recipe { padding: 16px; } .selected-recipe-heading { flex-wrap: wrap; gap: 12px; } .selected-recipe-heading img { width: 64px; height: 64px; } .selected-recipe-heading h3 { font-size: 21px; overflow-wrap: anywhere; } .selected-recipe-heading .text-button { margin-left: auto; } }
+
+.discovery-panel { border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin: 20px 0; background: #fafbf8; }
+.discovery-panel > summary { cursor: pointer; font-weight: 600; color: var(--green-dark); }
+.discovery-panel > summary span { font-size: 12px; color: var(--muted); margin-left: 12px; }
+.discovery-panel > .helper { margin-top: 14px; }
+.discovery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; }
+.discovery-grid fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.discovery-grid legend { font-size: 14px; font-weight: 600; padding: 0; margin-bottom: 10px; }
+.discovery-options { display: flex; flex-wrap: wrap; gap: 7px; }
+.tag-option { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #c5d1c4; border-radius: 6px; padding: 7px 9px; font-size: 12px; font-weight: 400; margin: 0; cursor: pointer; background: #fff; }
+.tag-option:has(input:checked) { background: #e5eee1; border-color: var(--green); color: var(--green-dark); }
+.tag-option input { width: 15px; height: 15px; min-height: 0; margin: 0; accent-color: var(--green); }
+.discovery-panel > .text-button { margin-top: 14px; }
+.recipe-tags { color: var(--green); font-size: 11px; margin-bottom: 8px; line-height: 1.65; }
+.ingredient-kind { display: block; font-weight: 400; color: var(--muted); font-size: 11px; margin-top: 3px; }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 18px; padding-top: 28px; }
+@media(max-width:760px) { .discovery-grid { grid-template-columns: 1fr; } .discovery-panel { padding: 15px; } .tag-option { min-height: 36px; } .recipe-tags { font-size: 10px; } }

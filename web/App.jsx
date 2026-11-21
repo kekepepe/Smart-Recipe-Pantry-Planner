@@ -45,7 +45,7 @@ export default function App() {
       </nav>
       <button className="text-button reset-button" onClick={refresh} disabled={busy || refreshing}>{refreshing ? 'Loading…' : 'Reload saved data'}</button>
     </header>
-    <div className="demo-notice">Saved on this computer · 20 recipes to explore</div>
+    <div className="demo-notice">Saved on this computer · {snapshot?.recipes.length ?? 100} recipes to explore</div>
     <main className="shell main" id="main" tabIndex="-1" aria-busy={busy}>{page}</main>
     <div className="sr-only" role="status" aria-live="polite">{notice}</div>
     {syncError ? <p className="shell error" role="alert">{syncError}</p> : null}

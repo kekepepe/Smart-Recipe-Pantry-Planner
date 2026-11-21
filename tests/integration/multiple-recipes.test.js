@@ -8,7 +8,7 @@ import { Store } from '../../server/services/store.js';
 import { openDatabase } from '../../server/db/connection.js';
 import { migrate, migrations, assertSchema } from '../../server/db/migrate.js';
 
-test('migration 001→002 retains old pantry, recipe selection and cache; rerun is a no-op', t => {
+test('migration 001→003 retains old pantry, recipe selection and cache; rerun is a no-op', t => {
   const dir = mkdtempSync(join(tmpdir(), 'pantry-v1-upgrade-')); const db = openDatabase(join(dir, 'old.sqlite'), { create: true });
   t.after(() => { db.close(); rmSync(dir, { recursive: true, force: true }); });
   db.exec(migrations[0].sql);
@@ -19,7 +19,7 @@ test('migration 001→002 retains old pantry, recipe selection and cache; rerun 
   db.exec("INSERT INTO recipe_steps VALUES ('old-recipe',0,'Cook the tomatoes.'); INSERT INTO recipe_requirements VALUES ('old-recipe','tomato',200,'piece',0); INSERT INTO pantry_items VALUES ('local','tomato',100,'piece'); UPDATE workspaces SET initialized=1,revision=7,pantry_version=4; INSERT INTO shopping_lists VALUES ('local','old-recipe','needsShopping',4,'legacy-catalog'); INSERT INTO shopping_list_items VALUES ('local','tomato',100,'piece',0);");
   assert.throws(() => assertSchema(db), /migration required/);
   migrate(db); assertSchema(db); const next = new Store(db).getSnapshot();
-  assert.equal(next.schemaVersion, 2); assert.equal(next.revision, 8);
+  assert.equal(next.schemaVersion, 3); assert.equal(next.revision, 8);
   assert.deepEqual(next.pantry, [{ ingredientId: 'tomato', quantity: 1, unit: 'piece' }]);
   assert.deepEqual(next.shoppingRecipeIds, ['old-recipe']); assert.equal(next.shopping.shortages[0].quantity, 1);
   assert.equal(db.pragma('foreign_key_check').length, 0);

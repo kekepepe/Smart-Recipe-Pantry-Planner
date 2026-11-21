@@ -1,10 +1,11 @@
+import world from './world-recipes.json' with { type: 'json' };
 import { ingredients as originalIngredients, recipes as originalRecipes } from '../web/data/fixtures.js';
 
 // Curated adaptations, not an automatic conversion of ambiguous upstream quantities.
 // Original source snapshots, blob hashes and license are in data/sources/howtocook/.
 const revision = '308cc8b7dab1da84b20e7fafdf836a715437f582';
 const entry = (id, name, unit, singular = name.toLowerCase()) => ({ id, name, singular, allowedUnits: unit === 'piece' ? ['piece', 'g'] : [unit] });
-export const ingredients = [...originalIngredients,
+const baseIngredients = [...originalIngredients,
   entry('cooked-rice', 'Cooked rice', 'g'), entry('oats', 'Oats', 'g'), entry('bread', 'Bread slices', 'piece', 'bread slice'),
   entry('bacon', 'Bacon', 'g'), entry('ham', 'Ham sausage', 'g'), entry('butter', 'Butter', 'g'), entry('mayonnaise', 'Mayonnaise', 'g'),
   entry('broccoli', 'Broccoli', 'g'), entry('garlic', 'Garlic', 'g'), entry('potato', 'Potatoes', 'g'),
@@ -35,7 +36,7 @@ const make = (id, title, titleZh, category, time, servings, path, description, r
   imageCredit: 'AI-generated recipe illustration; not a photograph of a tested preparation.',
 });
 
-export const recipes = [
+const baseRecipes = [
   ...originalRecipes.map(r => ({ ...r, titleZh: r.id === 'scrambled-eggs' ? '简易炒蛋' : '暖煎番茄', category: 'Demo', servings: 1, sourceLicense: 'Project original', adaptationNotes: 'Original V0 regression fixture; unchanged.', imageCredit: 'AI-generated illustration.' })),
   make('tomato-eggs', 'Tomato & egg stir-fry', '西红柿炒鸡蛋', 'Vegetables & eggs', 15, 2, 'dishes/vegetable_dish/西红柿炒鸡蛋.md',
     'Soft eggs folded through juicy tomatoes.', [req('tomato', 2, 'piece'), req('egg', 3, 'piece'), req('oil', 12, 'ml'), req('salt', 3)],
@@ -110,3 +111,23 @@ export const recipes = [
     ['Parboil the noodles briefly, reserving 80 ml cooking water. Drain and rinse, then drain well.', 'Mix part of the included seasoning sachet with the reserved water.', 'Use 8 ml oil to scramble the egg until set and lift out. Add the remaining oil and cook the sliced ham.', 'Add noodles, sauce and egg and stir-fry until fully cooked and hot throughout.'],
     'One noodle packet represented by an editorial 100 g product including its seasoning; ham fixed at 50 g; oil totals both cooking stages.'),
 ];
+
+// Stable canonical IDs retain all V1 quantities and add only supported units.
+const seasoningIds = new Set(['butter','mayonnaise','garlic','dried-chili','ginger','fresh-chili','chili-garlic-sauce','sichuan-pepper','scallion','garlic-sauce','oil','salt','sugar','soy-sauce','dark-soy-sauce','oyster-sauce','vinegar','sesame-oil','cooking-wine','black-pepper','stock-powder','star-anise','bay-leaf']);
+const canonical = new Map(baseIngredients.map(i => [i.id, { ...i, kind: seasoningIds.has(i.id) ? 'seasoning' : 'food' }]));
+for (const item of world.ingredients) {
+  const previous = canonical.get(item.id);
+  canonical.set(item.id, previous ? { ...item, ...previous, nameZh: item.nameZh || '', allowedUnits: [...new Set([...previous.allowedUnits, ...item.allowedUnits])] } : item);
+}
+export const ingredients = [...canonical.values()];
+const sour = new Set(['sour-spicy-potatoes','smashed-cucumber']);
+const spicy = new Set(['sour-spicy-potatoes','cabbage-pork','mapo-tofu']);
+const sweet = new Set(['cola-wings','braised-pork']);
+export const recipes = [...baseRecipes.map(r => ({ ...r,
+  countries: r.category === 'Demo' ? [] : ['cn'],
+  regions: r.id === 'mapo-tofu' ? ['sichuan'] : ['steamed-sea-bass','steamed-eggs','garlic-shrimp'].includes(r.id) ? ['guangdong'] : [],
+  tastes: ['savory','salty', ...(sour.has(r.id) ? ['sour'] : []), ...(spicy.has(r.id) ? ['spicy'] : []), ...(sweet.has(r.id) ? ['sweet'] : [])],
+  meals: r.category === 'Breakfast' || r.id === 'scrambled-eggs' ? ['breakfast','lunch','dinner'] : ['lunch','dinner'],
+})), ...world.recipes].map(r => ({ ...r, requirements: r.requirements.map(q => ({ ...q,
+  role: r.id === 'garlic-broccoli' && q.ingredientId === 'garlic' ? 'food' : q.role || canonical.get(q.ingredientId).kind,
+})) }));

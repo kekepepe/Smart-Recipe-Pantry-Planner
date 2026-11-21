@@ -21,7 +21,8 @@
     "test:api": "node --test tests/api/*.test.js",
     "test:integration": "node --test tests/integration/*.test.js",
     "test:e2e": "playwright test",
-    "check:v1": "npm run test:final && npm run demo && npm run test:api && npm run test:integration && npm run build && npm run test:e2e"
+    "check:v1": "npm run test:final && npm run demo && npm run test:api && npm run test:integration && npm run build && npm run test:e2e",
+    "check:v2-discovery": "npm run check:v1"
   },
   "engines": {
     "node": ">=22.12.0 <23"

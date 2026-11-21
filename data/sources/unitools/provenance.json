@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/farcrak/unitools-recipes",
+  "revision": "2f554073f7e730b18d707fe1164d18308f6ec16c",
+  "file": "unitools-recipes-v1.json",
+  "datasetVersion": "2.0.0",
+  "retrievedAt": "2026-11-07",
+  "attribution": "UniTools — theunitools.com",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "adaptations": "data/world-recipes.json contains adapted data under CC BY-SA 4.0. Per-recipe adjustment notes and per-photo attribution/license apply. No upstream nutrition values imported; these have not been independently verified.",
+  "selection": "80 different dishes with explicitly licensed photographs; geographic quotas revised to actual source availability, not invented sources.",
+  "imageReview": "All 80 newly added world recipes now use built-in image_gen illustrations: 3 earlier replacements plus 77 source photographs replaced at user request for a unified style. Prior-photo attribution and hashes are retained only as historical replacedImage records in data/world-image-manifest.json. Recipe data remains CC BY-SA 4.0."
+}

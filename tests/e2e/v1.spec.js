@@ -49,8 +49,8 @@ test('A02/A05/A18: mobile pantry, validation draft, confirm deletion and incompa
   await expect(page.getByRole('button', { name: 'Edit tomato', exact: true })).toHaveCount(0);
 });
 
-test('20 recipes: Chinese search/category persist through detail, images load and source link is pinned', async ({ page, service }, info) => {
-  await page.getByRole('link', { name: 'Browse all 20 recipes' }).click(); await expect(page.getByRole('article')).toHaveCount(20);
+test('100 recipes: Chinese search/category persist through detail, images load and source link is pinned', async ({ page, service }, info) => {
+  await page.getByRole('link', { name: 'Browse all 100 recipes' }).click(); await expect(page.getByRole('article')).toHaveCount(20);
   const snapshot = (await service.request('/snapshot')).data;
   for (const recipe of snapshot.recipes) {
     const response = await page.request.get(service.url + recipe.image); expect(response.ok(), recipe.id).toBe(true); expect(response.headers()['content-type']).toMatch(/^image\//);
