@@ -1,0 +1,98 @@
+{
+  "generator": "Built-in imagegen",
+  "date": "2026-11-06",
+  "output": "JPEG copies optimized to a maximum edge of 900px; generated PNG originals retained outside the repository.",
+  "note": "The two V0 images are retained; these 18 are new generated illustrations, not photos of tested preparations.",
+  "images": [
+    {
+      "id": "tomato-eggs",
+      "path": "public/images/recipes/tomato-eggs.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photo for Pantry & Plate web app. Subject: Chinese tomato and egg stir-fry (西红柿炒鸡蛋), softly scrambled fully cooked golden eggs and juicy red tomato wedges, no garnish. One modest serving on a simple off-white ceramic plate, warm pale beige tabletop, soft daylight, gentle shadows, overhead three-quarter view, appetizing realistic home-cooked texture. Square composition, entire plate visible, no people, no lettering, no collage, no watermark. Save the final generated image as a local project asset if supported; it will be used for recipe tomato-eggs."
+    },
+    {
+      "id": "egg-fried-rice",
+      "path": "public/images/recipes/egg-fried-rice.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese egg fried rice with diced ham, carrot and cucumber, golden fully cooked egg and spring onion, separate grains of cooked rice. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe egg-fried-rice."
+    },
+    {
+      "id": "milk-oats",
+      "path": "public/images/recipes/milk-oats.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: a bowl of creamy milk oatmeal with a single fully cooked fried egg on a small matching plate beside it; no fruit or nuts. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe milk-oats."
+    },
+    {
+      "id": "steamed-eggs",
+      "path": "public/images/recipes/steamed-eggs.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese steamed egg custard in a shallow ceramic bowl, smooth pale golden set custard, no toppings. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe steamed-eggs."
+    },
+    {
+      "id": "egg-sandwich",
+      "path": "public/images/recipes/egg-sandwich.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: two triangular egg mayonnaise and crisp bacon sandwiches on white bread, visible chopped cooked egg filling, no lettuce. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe egg-sandwich."
+    },
+    {
+      "id": "garlic-broccoli",
+      "path": "public/images/recipes/garlic-broccoli.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: blanched bright green broccoli florets topped with minced garlic and a light glossy soy sauce. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe garlic-broccoli."
+    },
+    {
+      "id": "sour-spicy-potatoes",
+      "path": "public/images/recipes/sour-spicy-potatoes.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese finely shredded stir-fried potatoes with thin green and red pepper strips and small dried red chili pieces. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe sour-spicy-potatoes."
+    },
+    {
+      "id": "smashed-cucumber",
+      "path": "public/images/recipes/smashed-cucumber.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese smashed cucumber chunks in a light garlic soy vinegar dressing, no sesame seeds. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe smashed-cucumber."
+    },
+    {
+      "id": "cabbage-pork",
+      "path": "public/images/recipes/cabbage-pork.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese hand-torn cabbage stir-fry with thin pork belly slices and small red chili pieces. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe cabbage-pork."
+    },
+    {
+      "id": "mapo-tofu",
+      "path": "public/images/recipes/mapo-tofu.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese home-style soft tofu with finely minced pork and salted duck egg white pieces, a little garlic chili sauce in a light orange-brown broth, not the traditional heavily red chili-oil version. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe mapo-tofu."
+    },
+    {
+      "id": "scallion-tofu",
+      "path": "public/images/recipes/scallion-tofu.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: golden pan-fried tofu slices with chopped scallions and green pepper pieces. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe scallion-tofu."
+    },
+    {
+      "id": "cola-wings",
+      "path": "public/images/recipes/cola-wings.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese cola-braised chicken mid-wings with shiny dark caramel-brown glaze, no sesame or garnish. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe cola-wings."
+    },
+    {
+      "id": "braised-pork",
+      "path": "public/images/recipes/braised-pork.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese hong shao rou, glossy red-brown braised pork belly cubes, a small star anise beside the meat, no eggs or extra ingredients. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe braised-pork."
+    },
+    {
+      "id": "tomato-beef",
+      "path": "public/images/recipes/tomato-beef.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese tender beef brisket and tomato stew, red tomato sauce, visible beef chunks and softened tomato, no potatoes. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe tomato-beef."
+    },
+    {
+      "id": "garlic-shrimp",
+      "path": "public/images/recipes/garlic-shrimp.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: eight steamed shell-on shrimp split along the back topped with finely minced golden garlic sauce and light soy glaze. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe garlic-shrimp."
+    },
+    {
+      "id": "steamed-sea-bass",
+      "path": "public/images/recipes/steamed-sea-bass.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: a whole steamed sea bass on an oval white plate with finely shredded ginger and scallion in light soy sauce. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe steamed-sea-bass."
+    },
+    {
+      "id": "seaweed-egg-soup",
+      "path": "public/images/recipes/seaweed-egg-soup.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese seaweed and egg drop soup with fine golden cooked egg ribbons and dark nori seaweed in clear broth, no shrimp. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe seaweed-egg-soup."
+    },
+    {
+      "id": "stir-fried-noodles",
+      "path": "public/images/recipes/stir-fried-noodles.jpg",
+      "prompt": "Use case: photorealistic-natural. Asset type: individual recipe card photograph for Pantry & Plate. Subject: Chinese stir-fried instant wheat noodles with cooked egg pieces and sliced ham sausage, glossy light soy seasoning, no vegetables. One modest home-cooked serving on simple off-white ceramic ware on a warm pale beige tabletop. Soft natural daylight, gentle shadows, realistic food texture, overhead three-quarter view. Square framing with the entire dish visible. Food must match the named ingredients. No text, no people, no watermarks, no collage, no unrelated garnishes. This is a single photo for recipe stir-fried-noodles."
+    }
+  ]
+}

@@ -6,16 +6,18 @@ export default function RecipeDetail({ recipeId }) {
   const { snapshot, busy, mutate } = useApp();
   const [error, setError] = useState('');
   const recipe = snapshot.recipes.find(item => item.id === recipeId);
-  if (!recipe) return <><PageHeading title="Recipe not found" subtitle="This recipe is not in our demo collection." /><a href="#/recipes">Back to recipes</a></>;
+  if (!recipe) return <><PageHeading title="Recipe not found" subtitle="This recipe is not in our collection." /><a href="#/recipes">Back to recipes</a></>;
   const evaluation = snapshot.evaluations.find(item => item.recipeId === recipeId);
+  const inList = snapshot.shoppingRecipeIds?.includes(recipeId);
   async function addToList() {
-    const result = await mutate('selectShoppingRecipe', recipeId, 'Shopping list updated from your current pantry.');
+    if (inList) { window.location.hash = '/shopping'; return; }
+    const result = await mutate('selectShoppingRecipe', recipeId, 'Recipe saved. Combined shopping list updated from your current pantry.');
     if (result.ok) window.location.hash = '/shopping';
     else setError(result.error.message);
   }
   return <>
     <a className="back-link" href="#/recipes"><Icon name="back" />Back to recipes</a>
-    <PageHeading title={recipe.title} subtitle={`${recipe.time} min · ${recipe.description}`} />
+    <PageHeading title={recipe.title} subtitle={`${recipe.titleZh || ''} · ${recipe.servings} ${recipe.servings === 1 ? 'serving' : 'servings'} · ${recipe.time} min · ${recipe.description}`} />
     <div className="detail-layout">
       <div className="detail-content">
         <RecipeStatus evaluation={evaluation} />
@@ -31,13 +33,13 @@ export default function RecipeDetail({ recipeId }) {
         <p className="helper">{recipe.note}</p>
         <div className="detail-cta">
           {evaluation.status === 'checkUnits' ? <><p className="error">Your units cannot be compared. Update them before making a shopping list.</p><a className="button" href="#/pantry">Check pantry units</a></> : <>
-            {evaluation.status === 'ready' ? <p className="success">You have everything for this recipe. No purchase needed.</p> : null}
-            <button onClick={addToList} disabled={busy}><Icon name="bag" />{busy ? 'Updating…' : evaluation.status === 'ready' ? 'View shopping list — nothing to buy' : 'Add missing ingredients to list'}</button>
-            <p className="helper">One recipe at a time. This replaces your current list and never uses up pantry stock.</p>
+            {evaluation.status === 'ready' ? <p className="success">You have enough for this recipe on its own. The combined list also accounts for your other selected recipes.</p> : null}
+            <button onClick={addToList} disabled={busy}><Icon name="bag" />{busy ? 'Updating…' : inList ? 'View saved shopping list' : evaluation.status === 'ready' ? 'Add recipe to shopping list' : 'Add missing ingredients to list'}</button>
+            <p className="helper">{inList ? 'Already saved in your list. Your other recipes are kept too.' : 'Add this recipe alongside your saved recipes. Shared ingredients are combined, without using up pantry stock.'}</p>
           </>}
           {error ? <p className="error" role="alert">{error}</p> : null}
         </div>
-        <section className="instructions"><h2>How to make it</h2><ol>{recipe.steps.map(step => <li key={step}>{step}</li>)}</ol><p className="source">{recipe.source}</p></section>
+        <section className="instructions"><h2>How to make it</h2><ol>{recipe.steps.map(step => <li key={step}>{step}</li>)}</ol><p className="source">{recipe.source} {recipe.sourceUrl ? <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">View original recipe</a> : null}</p><p className="source">{recipe.imageCredit}</p>{recipe.adaptationNotes ? <details className="source"><summary>Recipe source &amp; adjustments</summary><p>{recipe.adaptationNotes}</p></details> : null}</section>
       </div>
       <img className="detail-photo" src={recipe.image} alt={recipe.imageAlt} />
     </div>
