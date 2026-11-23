@@ -132,11 +132,7 @@ npm run check:v1
 
 See the [run guide](docs/V1-RUNBOOK.md) for configuration, migrations, failure recovery and backups. Database files stay local. These commands select the development branch; see [release status](docs/V1-RELEASE.md) for review and main integration.
 
-## Planning references
+## Project documentation
 
-This README is based on the supplied planning documents:
-
-- `Smart_Recipe_and_Pantry_Planner_Project_Planning_Revised_task2.docx` — English planning document.
-- `Smart_Recipe_and_Pantry_Planner_Project_Planning_CN_Revised_task2.docx` — Chinese planning document.
-
-The documents define stakeholders, release scope, the problem statement, the selected development approach, and success criteria. Their original files are preserved separately from this README.
+- [Product requirements](docs/PRD.md) cover stakeholders, scope, and acceptance criteria.
+- [Iteration 1 project summary](docs/iteration-1-report.zh-CN.docx) brings together the planning decisions, implemented features, and GitHub evidence for the first iteration.
