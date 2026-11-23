@@ -22,12 +22,13 @@ export default function RecipeDetail({ recipeId }) {
       <div className="detail-content">
         <RecipeStatus evaluation={evaluation} />
         <h2>What you need</h2>
+        <p className="helper">食材 / Food 与调料 / Seasonings 分别标注；所有必需用料都计入缺料与采购。</p>
         <div className="table-scroll"><table className="comparison-table"><caption className="sr-only">Required amounts, pantry stock and shortages for {recipe.title}</caption><thead><tr><th scope="col">Ingredient</th><th scope="col">Need</th><th scope="col">Have</th><th scope="col">Missing</th></tr></thead><tbody>
           {recipe.requirements.map(item => {
             const stock = snapshot.pantry.find(entry => entry.ingredientId === item.ingredientId);
             const unitIssue = evaluation.unitIssues.some(entry => entry.ingredientId === item.ingredientId);
             const shortage = evaluation.shortages.find(entry => entry.ingredientId === item.ingredientId);
-            return <tr key={item.ingredientId}><th scope="row">{snapshot.ingredients.find(entry => entry.id === item.ingredientId).name}</th><td>{item.quantity} {item.unit}</td><td>{stock ? `${stock.quantity} ${stock.unit}` : `0 ${item.unit}`}</td><td className={unitIssue || shortage ? 'missing-cell' : 'ready-cell'}>{unitIssue ? 'Check units' : `${shortage?.quantity ?? 0} ${item.unit}`}</td></tr>;
+            return <tr key={item.ingredientId}><th scope="row">{snapshot.ingredients.find(entry => entry.id === item.ingredientId).name}<small className="ingredient-kind">{item.role === 'seasoning' ? '调料 / Seasoning' : '食材 / Food'}</small></th><td>{item.quantity} {item.unit}</td><td>{stock ? `${stock.quantity} ${stock.unit}` : `0 ${item.unit}`}</td><td className={unitIssue || shortage ? 'missing-cell' : 'ready-cell'}>{unitIssue ? 'Check units' : `${shortage?.quantity ?? 0} ${item.unit}`}</td></tr>;
           })}
         </tbody></table></div>
         <p className="helper">{recipe.note}</p>
@@ -39,7 +40,7 @@ export default function RecipeDetail({ recipeId }) {
           </>}
           {error ? <p className="error" role="alert">{error}</p> : null}
         </div>
-        <section className="instructions"><h2>How to make it</h2><ol>{recipe.steps.map(step => <li key={step}>{step}</li>)}</ol><p className="source">{recipe.source} {recipe.sourceUrl ? <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">View original recipe</a> : null}</p><p className="source">{recipe.imageCredit}</p>{recipe.adaptationNotes ? <details className="source"><summary>Recipe source &amp; adjustments</summary><p>{recipe.adaptationNotes}</p></details> : null}</section>
+        <section className="instructions"><h2>How to make it</h2><ol>{recipe.steps.map(step => <li key={step}>{step}</li>)}</ol><p className="source">{recipe.source} {recipe.sourceUrl ? <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">View original recipe</a> : null}</p><p className="source">{recipe.imageCredit} {recipe.imageSourceUrl ? <a href={recipe.imageSourceUrl} target="_blank" rel="noreferrer">Image source</a> : null} {recipe.imageLicenseUrl ? <a href={recipe.imageLicenseUrl} target="_blank" rel="noreferrer">Image license</a> : null}</p>{recipe.sourceLicense === 'CC BY-SA 4.0' ? <p className="source">Adapted recipe data: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a> · <a href="/recipe-licenses/unitools.txt">License text</a>. Recipe text retains this license; the image is an independently generated illustration.</p> : null}{recipe.adaptationNotes ? <details className="source"><summary>Recipe source &amp; adjustments</summary><p>{recipe.adaptationNotes}</p></details> : null}</section>
       </div>
       <img className="detail-photo" src={recipe.image} alt={recipe.imageAlt} />
     </div>

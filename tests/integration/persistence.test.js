@@ -31,7 +31,7 @@ test('A15/A14: repeat migrations and seed preserve pantry, revision and selectio
   const f = fixture(); t.after(f.close); const store = new Store(f.db);
   let s = store.onboard({ mode: 'sample', expectedRevision: 0 }); s = store.selectRecipe({ recipeId: 'tomato-skillet', expectedRevision: s.revision });
   migrate(f.db); assert.equal(seed(f.db), false); assert.deepEqual(store.getSnapshot(), s);
-  assert.equal(f.db.prepare('SELECT count(*) n FROM schema_migrations').get().n, 2);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM schema_migrations').get().n, 3);
 });
 
 test('A15: unknown migration versions and changed checksums stop startup/migration', t => {
@@ -71,8 +71,8 @@ test('A16: online backup and restore into a new path reproduce exact saved state
   writeFileSync(backup + '.json', JSON.stringify({ sha256: 'invalid' })); assert.throws(() => cli(['restore', backup, join(f.dir, 'bad.sqlite')]), /checksum/);
 });
 
-test('catalog: all 20 images exist, all ingredients are unique and every new recipe has pinned source and adaptation notes', () => {
-  assert.equal(recipes.length, 20); assert.equal(new Set(ingredients.map(i => i.id)).size, ingredients.length);
+test('catalog: all 100 images exist, all ingredients are unique and every new recipe has pinned source and adaptation notes', () => {
+  assert.equal(recipes.length, 100); assert.equal(new Set(ingredients.map(i => i.id)).size, ingredients.length);
   for (const recipe of recipes) {
     assert(existsSync(join(root, 'public', recipe.image)), recipe.id);
     if (recipe.sourceLicense === 'Unlicense') {

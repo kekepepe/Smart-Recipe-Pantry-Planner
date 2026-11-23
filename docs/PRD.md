@@ -38,6 +38,8 @@ An empty pantry still permits browsing and explains how to start matching. If no
 
 ## 4. V2: more choice while preserving the core journey
 
+**Scope revision, 2026-11-07:** The original E1–E4 and ten-day schedule below remain the Task 3 baseline. The revised V2 adds food/seasoning classification, pantry-based recommendations, inventory-independent daily inspiration, individually usable or combined cuisine/taste/meal filters, and a target of 100 illustrated recipes. See the [revised V2 plan (Chinese)](V2-DEVELOPMENT-PLAN.zh-CN.md) for contracts, acceptance criteria and three proposed five-working-day phases. This is planned work.
+
 | Requirement | Experience and acceptance |
 | --- | --- |
 | E1 Daily suggestions | Label the entry “Daily inspiration”. Show suggestions even with an empty pantry. Explain shopping needs on the detail page so a suggestion is not mistaken for a pantry match. |

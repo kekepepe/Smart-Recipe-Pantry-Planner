@@ -6,11 +6,11 @@ export class ServiceError extends Error {
 export class Store {
   constructor(db, { workspace = 'local', fault = () => {} } = {}) { this.db = db; this.workspace = workspace; this.fault = fault; }
   catalog() {
-    const ingredients = this.db.prepare('SELECT * FROM ingredients ORDER BY rowid').all().map(row => ({ ...row, allowedUnits: this.db.prepare('SELECT unit FROM ingredient_units WHERE ingredient_id=? ORDER BY rowid').all(row.id).map(r => r.unit) }));
+    const ingredients = this.db.prepare('SELECT * FROM ingredients ORDER BY rowid').all().map(row => ({ ...row, nameZh: row.name_zh, allowedUnits: this.db.prepare('SELECT unit FROM ingredient_units WHERE ingredient_id=? ORDER BY rowid').all(row.id).map(r => r.unit) }));
     const recipes = this.db.prepare('SELECT * FROM recipes ORDER BY rowid').all().map(row => ({
       id: row.id, ...JSON.parse(row.metadata),
       steps: this.db.prepare('SELECT text FROM recipe_steps WHERE recipe_id=? ORDER BY position').all(row.id).map(r => r.text),
-      requirements: this.db.prepare('SELECT ingredient_id AS ingredientId, quantity_minor/100.0 AS quantity, unit FROM recipe_requirements WHERE recipe_id=? ORDER BY position').all(row.id),
+      requirements: this.db.prepare('SELECT ingredient_id AS ingredientId, quantity_minor/100.0 AS quantity, unit, role FROM recipe_requirements WHERE recipe_id=? ORDER BY position').all(row.id),
     }));
     const catalogVersion = this.db.prepare('SELECT version FROM catalog_metadata WHERE id=1').get()?.version;
     if (!catalogVersion || !recipes.length) throw new ServiceError(503, 'CATALOG_NOT_READY', 'Recipe catalog is not initialized. Run db:seed.');
@@ -46,7 +46,7 @@ export class Store {
       if (JSON.stringify(saved) !== JSON.stringify(result.combined.shortages)) stale();
     }
     return {
-      schemaVersion: 2, catalogVersion, revision: state.revision, pantryVersion: state.pantry_version,
+      schemaVersion: 3, catalogVersion, revision: state.revision, pantryVersion: state.pantry_version,
       initialized: Boolean(state.initialized), started: Boolean(state.initialized), pantry, ingredients, recipes, evaluations,
       shoppingRecipeIds: result?.combined.recipeIds ?? [], shoppingRecipes: result?.perRecipe ?? [], shopping: result?.combined ?? null,
     };

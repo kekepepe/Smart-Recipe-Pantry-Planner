@@ -54,12 +54,12 @@ export default function Pantry() {
     <PageHeading title="My pantry" subtitle="Keep track of what you have."><a href="#/recipes" className="heading-link">Find recipes <Icon name="arrow" /></a></PageHeading>
     <div className="pantry-layout">
       <section aria-label="Your ingredients">
-        {snapshot.pantry.length ? <ul className="pantry-list">{snapshot.pantry.map(item => <li className="pantry-row" key={item.ingredientId}>
+        {snapshot.pantry.length ? <>{['food','seasoning'].map(kind => <div key={kind}><h2>{kind === 'food' ? '食材 / Food' : '调料 / Seasonings'}</h2><ul className="pantry-list" aria-label={kind === 'food' ? 'Food ingredients' : 'Seasonings'}>{snapshot.pantry.filter(item => snapshot.ingredients.find(i=>i.id===item.ingredientId).kind===kind).map(item => <li className="pantry-row" key={item.ingredientId}>
           <strong>{snapshot.ingredients.find(entry => entry.id === item.ingredientId).name}</strong>
           <span className="stock-amount">{item.quantity} {item.unit}</span>
           <button className="text-button" onClick={() => edit(item)} disabled={busy} aria-label={`Edit ${item.ingredientId}`}>Edit</button>
           <button className="text-button" onClick={() => remove(item)} disabled={busy} aria-label={`Remove ${item.ingredientId}`}>Remove</button>
-        </li>)}</ul> : <EmptyState title="A fresh start">Add your first ingredient, or browse recipes to see what you could make.</EmptyState>}
+        </li>)}</ul></div>)}</> : <EmptyState title="A fresh start">Add your first ingredient, or browse recipes to see what you could make.</EmptyState>}
         <p className="helper">Changing your pantry updates recipe matches and your selected shopping list.</p>
         {saved ? <p className="success" role="status">{saved}</p> : null}
       </section>
@@ -67,7 +67,7 @@ export default function Pantry() {
         <h2>{editing ? 'Edit ingredient' : 'Add an ingredient'}</h2>
         <label htmlFor="ingredient">Ingredient</label>
         <select id="ingredient" value={draft.ingredientId} onChange={event => selectIngredient(event.target.value)} disabled={busy} aria-invalid={error?.field === 'ingredientId'} aria-describedby={error?.field === 'ingredientId' ? 'form-error' : undefined}>
-          <option value="">Select ingredient</option>{snapshot.ingredients.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}
+          <option value="">Select ingredient</option>{['food','seasoning'].map(kind => <optgroup key={kind} label={kind==='food' ? '食材 / Food' : '调料 / Seasonings'}>{snapshot.ingredients.filter(i=>i.kind===kind).map(item => <option value={item.id} key={item.id}>{item.name}{item.nameZh ? ` · ${item.nameZh}` : ''}</option>)}</optgroup>)}
         </select>
         <div className="quantity-fields">
           <div><label htmlFor="quantity">Quantity</label><input ref={quantityRef} id="quantity" inputMode="decimal" placeholder="e.g. 2" autoComplete="off" value={draft.quantity} onChange={event => setDraft({ ...draft, quantity: event.target.value })} disabled={busy} aria-invalid={error?.field === 'quantity'} aria-describedby={error?.field === 'quantity' ? 'quantity-help form-error' : 'quantity-help'} /></div>

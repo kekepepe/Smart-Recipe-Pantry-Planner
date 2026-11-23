@@ -1,11 +1,13 @@
 import { createHash } from 'node:crypto';
+import { taxonomy, validateDiscoveryRecipe } from '../../src/discover-recipes.js';
 import { ingredients, recipes } from '../../data/catalog.js';
 import { evaluateRecipe, validateItem } from '../../src/evaluate-recipe.js';
 import { Store } from '../services/store.js';
-export const catalogVersion = createHash('sha256').update(JSON.stringify({ ingredients, recipes })).digest('hex');
+export const catalogVersion = createHash('sha256').update(JSON.stringify({ ingredients, recipes, taxonomy })).digest('hex');
 export function seed(db, { upgrade = false } = {}) {
-  if (recipes.length > 20 || recipes.length < 3 || new Set(recipes.map(r => r.id)).size !== recipes.length) throw new Error('Catalog must have 3–20 unique recipes.');
+  if (recipes.length !== 100 || new Set(recipes.map(r => r.id)).size !== recipes.length) throw new Error('Catalog must have exactly 100 unique recipes.');
   for (const r of recipes) {
+    validateDiscoveryRecipe(r, ingredients);
     if (!r.steps.length || !r.source || !r.image) throw new Error('Incomplete recipe: ' + r.id);
     r.requirements.forEach(item => validateItem(item, ingredients)); evaluateRecipe(r, [], ingredients);
   }
@@ -14,14 +16,19 @@ export function seed(db, { upgrade = false } = {}) {
     if (previous === catalogVersion) return false;
     if (previous && !upgrade) throw new Error('Catalog changed. Back up first, then use db:seed -- --upgrade.');
     for (const i of ingredients) {
-      db.prepare('INSERT INTO ingredients VALUES (?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,singular=excluded.singular').run(i.id, i.name, i.singular);
+      db.prepare('INSERT INTO ingredients(id,name,singular,kind,name_zh) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,singular=excluded.singular,kind=excluded.kind,name_zh=excluded.name_zh').run(i.id, i.name, i.singular, i.kind, i.nameZh || '');
       i.allowedUnits.forEach(u => db.prepare('INSERT OR IGNORE INTO ingredient_units VALUES (?,?)').run(i.id, u));
+    }
+    for (const [dimension, tags] of Object.entries(taxonomy)) {
+      for (const tag of tags) db.prepare('INSERT INTO recipe_tags VALUES (?,?,?,?) ON CONFLICT(dimension,id) DO UPDATE SET label=excluded.label,parent_id=excluded.parent_id').run(dimension, tag.id, tag.label, tag.parent || null);
     }
     for (const r of recipes) {
       const { id, requirements, steps, ...meta } = r;
       db.prepare('INSERT INTO recipes VALUES (?,?) ON CONFLICT(id) DO UPDATE SET metadata=excluded.metadata').run(id, JSON.stringify(meta));
       db.prepare('DELETE FROM recipe_requirements WHERE recipe_id=?').run(id); db.prepare('DELETE FROM recipe_steps WHERE recipe_id=?').run(id);
-      requirements.forEach((q, index) => db.prepare('INSERT INTO recipe_requirements VALUES (?,?,?,?,?)').run(id, q.ingredientId, Math.round(q.quantity * 100), q.unit, index));
+      requirements.forEach((q, index) => db.prepare('INSERT INTO recipe_requirements(recipe_id,ingredient_id,quantity_minor,unit,position,role) VALUES (?,?,?,?,?,?)').run(id, q.ingredientId, Math.round(q.quantity * 100), q.unit, index, q.role));
+      db.prepare('DELETE FROM recipe_tag_links WHERE recipe_id=?').run(id);
+      for (const dimension of Object.keys(taxonomy)) for (const tag of r[dimension]) db.prepare('INSERT INTO recipe_tag_links VALUES (?,?,?)').run(id, dimension, tag);
       steps.forEach((step, index) => db.prepare('INSERT INTO recipe_steps VALUES (?,?,?)').run(id, index, step));
     }
     if (db.prepare('SELECT COUNT(*) AS n FROM recipes').get().n !== recipes.length) throw new Error('Removing catalog recipes needs a dedicated migration.');
