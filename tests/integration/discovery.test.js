@@ -13,8 +13,13 @@ import { ingredients,recipes } from '../../data/catalog.js';
 import { validateDiscoveryRecipe } from '../../src/discover-recipes.js';
 
 test('schema 002 upgrade and 100-recipe seed preserve all V1 amounts and multi-recipe choices',t=>{
- const f=fixture();t.after(f.close);
- const old=openDatabase(join(f.dir,'v1.sqlite'),{create:true});t.after(()=>old.close());
+ const f=fixture();
+ let old;
+ t.after(()=>{
+  // Windows cannot remove the fixture directory while the legacy DB is open.
+  try { if(old?.open) old.close(); } finally { f.close(); }
+ });
+ old=openDatabase(join(f.dir,'v1.sqlite'),{create:true});
  old.exec('CREATE TABLE schema_migrations(version INTEGER PRIMARY KEY,checksum TEXT NOT NULL,applied_at TEXT NOT NULL)');
  for(const m of migrations.slice(0,2)){old.exec(m.sql);old.prepare('INSERT INTO schema_migrations VALUES (?,?,?)').run(m.version,m.checksum,'legacy');}
  for(const i of ingredients){old.prepare('INSERT INTO ingredients VALUES (?,?,?)').run(i.id,i.name,i.singular);for(const u of i.allowedUnits)old.prepare('INSERT INTO ingredient_units VALUES (?,?)').run(i.id,u);}
