@@ -1,0 +1,5644 @@
+{
+  "formatVersion": 1,
+  "startedAt": "2026-11-23T11:19:46.632Z",
+  "applicationSha": "14e64b361ac95dc1772b9b25a34cffae49d140cd",
+  "runnerSha256": "aece188305f2d9353a3501e2dd8e954405adede8d53e4b8de140e9a246c18baf",
+  "lockfileSha256": "52c7b991762e8be7423493c1ced0be10dafb169ffb7b3946ddd0f6c1386cb923",
+  "catalogVersion": "c7f4fa453136c1227fa502c633c0a422be0007284bdfa1bcf72631a9a3955dc2",
+  "environment": {
+    "os": "win32",
+    "release": "10.0.26200",
+    "arch": "x64",
+    "node": "v22.23.1",
+    "cpu": "Intel(R) Core(TM) i9-14900HX",
+    "logicalCpus": 32,
+    "memoryBytes": 68319440896
+  },
+  "protocol": {
+    "runs": 3,
+    "warmupsPerCasePerRun": 10,
+    "samplesPerCasePerRun": 50,
+    "concurrency": 1,
+    "timing": "performance.now before fetch until full body text received; JSON parsing/assertions excluded",
+    "percentile": "nearest rank ceil(0.95*n); median average of middle pair",
+    "transport": "HTTP loopback, Node fetch default connection pooling, no retries",
+    "cases": [
+      {
+        "id": "list-page-1",
+        "query": "page=1&pageSize=20",
+        "total": 100,
+        "count": 20,
+        "page": 1
+      },
+      {
+        "id": "combined-five-filters",
+        "query": "countries=cn&regions=sichuan&tastes=spicy&meals=dinner&q=宫保",
+        "total": 1,
+        "count": 1,
+        "page": 1,
+        "ids": [
+          "gong-bao-chicken"
+        ]
+      },
+      {
+        "id": "empty-bitter",
+        "query": "tastes=bitter",
+        "total": 0,
+        "count": 0,
+        "page": 1
+      },
+      {
+        "id": "list-page-5",
+        "query": "page=5&pageSize=20",
+        "total": 100,
+        "count": 20,
+        "page": 5
+      }
+    ]
+  },
+  "fixture": {
+    "pantry": [
+      {
+        "ingredientId": "egg",
+        "quantity": 2,
+        "unit": "piece"
+      },
+      {
+        "ingredientId": "tomato",
+        "quantity": 1,
+        "unit": "piece"
+      }
+    ],
+    "shoppingRecipeIds": [
+      "tomato-skillet",
+      "tomato-eggs"
+    ]
+  },
+  "raw": [
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 1,
+      "ms": 14.044999999999845,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 1,
+      "ms": 9.257399999999961,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 1,
+      "ms": 22.505499999999984,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 1,
+      "ms": 15.733999999999924,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 2,
+      "ms": 15.674099999999953,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 2,
+      "ms": 17.01520000000005,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 2,
+      "ms": 14.810899999999947,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 2,
+      "ms": 15.804200000000037,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 3,
+      "ms": 14.784700000000157,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 3,
+      "ms": 14.307700000000068,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 3,
+      "ms": 16.132100000000037,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 3,
+      "ms": 14.173299999999927,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 4,
+      "ms": 15.589200000000119,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 4,
+      "ms": 15.632100000000037,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 4,
+      "ms": 16.111900000000105,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 4,
+      "ms": 14.506700000000137,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 5,
+      "ms": 15.418900000000122,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 5,
+      "ms": 17.10290000000009,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 5,
+      "ms": 14.047399999999925,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 5,
+      "ms": 16.467800000000125,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 6,
+      "ms": 15.744500000000016,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 6,
+      "ms": 15.172399999999925,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 6,
+      "ms": 14.196500000000015,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 6,
+      "ms": 16.04639999999995,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 7,
+      "ms": 14.991200000000163,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 7,
+      "ms": 14.742399999999861,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 7,
+      "ms": 16.451500000000124,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 7,
+      "ms": 15.512300000000096,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 8,
+      "ms": 16.361799999999903,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 8,
+      "ms": 14.985799999999927,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 8,
+      "ms": 16.532000000000153,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 8,
+      "ms": 14.43730000000005,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 9,
+      "ms": 16.06009999999992,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 9,
+      "ms": 15.495200000000068,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 9,
+      "ms": 14.125,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 9,
+      "ms": 15.683099999999968,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 10,
+      "ms": 15.996599999999944,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 10,
+      "ms": 9.185899999999947,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 10,
+      "ms": 20.807900000000018,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 10,
+      "ms": 16.21289999999999,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 11,
+      "ms": 14.719000000000051,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 11,
+      "ms": 17.16540000000009,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 11,
+      "ms": 13.957100000000082,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 11,
+      "ms": 15.3746000000001,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 12,
+      "ms": 16.23070000000007,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 12,
+      "ms": 15.279400000000123,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 12,
+      "ms": 14.096000000000004,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 12,
+      "ms": 15.344900000000052,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 13,
+      "ms": 16.013099999999895,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 13,
+      "ms": 15.91969999999992,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 13,
+      "ms": 13.997299999999996,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 13,
+      "ms": 15.23339999999962,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 14,
+      "ms": 16.426899999999932,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 14,
+      "ms": 15.016900000000078,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 14,
+      "ms": 16.685100000000148,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 14,
+      "ms": 13.132800000000316,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 15,
+      "ms": 14.838600000000042,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 15,
+      "ms": 14.56710000000021,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 15,
+      "ms": 15.65099999999984,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 15,
+      "ms": 16.16240000000016,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 16,
+      "ms": 15.677500000000236,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 16,
+      "ms": 15.300600000000031,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 16,
+      "ms": 17.310099999999693,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 16,
+      "ms": 18.03769999999986,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 17,
+      "ms": 12.311699999999746,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 17,
+      "ms": 15.759600000000319,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 17,
+      "ms": 7.329999999999927,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 17,
+      "ms": 22.759700000000066,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 18,
+      "ms": 16.417500000000018,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 18,
+      "ms": 15.756600000000162,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 18,
+      "ms": 14.661299999999756,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 18,
+      "ms": 15.458500000000186,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 19,
+      "ms": 18.06179999999995,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 19,
+      "ms": 13.576399999999921,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 19,
+      "ms": 17.361699999999928,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 19,
+      "ms": 14.782200000000103,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 20,
+      "ms": 6.382099999999809,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 20,
+      "ms": 23.393200000000434,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 20,
+      "ms": 14.305699999999888,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 20,
+      "ms": 14.501700000000255,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 21,
+      "ms": 7.9202000000000226,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 21,
+      "ms": 10.491199999999935,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 21,
+      "ms": 12.858099999999922,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 21,
+      "ms": 15.904700000000048,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 22,
+      "ms": 16.507700000000114,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 22,
+      "ms": 15.515800000000127,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 22,
+      "ms": 14.578800000000228,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 22,
+      "ms": 16.983600000000024,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 23,
+      "ms": 16.034799999999905,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 23,
+      "ms": 14.460900000000038,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 23,
+      "ms": 15.411200000000008,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 23,
+      "ms": 16.126600000000053,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 24,
+      "ms": 13.298299999999927,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 24,
+      "ms": 14.916899999999714,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 24,
+      "ms": 15.851999999999862,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 24,
+      "ms": 15.489600000000337,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 25,
+      "ms": 15.148400000000038,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 25,
+      "ms": 16.07009999999991,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 25,
+      "ms": 15.151100000000042,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 25,
+      "ms": 17.784200000000055,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 26,
+      "ms": 14.100599999999758,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 26,
+      "ms": 16.115299999999934,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 26,
+      "ms": 15.619199999999637,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 26,
+      "ms": 15.565500000000156,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 27,
+      "ms": 7.503400000000056,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 27,
+      "ms": 23.079099999999926,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 27,
+      "ms": 15.309600000000046,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 27,
+      "ms": 16.27300000000014,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 28,
+      "ms": 16.178800000000138,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 28,
+      "ms": 12.658500000000004,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 28,
+      "ms": 16.283699999999953,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 28,
+      "ms": 16.088999999999942,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 29,
+      "ms": 13.884299999999712,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 29,
+      "ms": 15.216300000000047,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 29,
+      "ms": 16.50720000000001,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 29,
+      "ms": 15.776800000000094,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 30,
+      "ms": 15.155199999999695,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 30,
+      "ms": 15.18690000000015,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 30,
+      "ms": 14.202099999999973,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 30,
+      "ms": 17.484699999999975,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 31,
+      "ms": 14.836999999999989,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 31,
+      "ms": 16.86940000000004,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 31,
+      "ms": 12.63740000000007,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 31,
+      "ms": 15.567400000000362,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 32,
+      "ms": 14.910499999999956,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 32,
+      "ms": 14.827099999999973,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 32,
+      "ms": 15.723500000000058,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 32,
+      "ms": 16.73129999999992,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 33,
+      "ms": 14.871099999999842,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 33,
+      "ms": 15.826000000000022,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 33,
+      "ms": 17.207900000000336,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 33,
+      "ms": 15.575400000000172,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 34,
+      "ms": 15.496299999999792,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 34,
+      "ms": 15.783400000000256,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 34,
+      "ms": 13.140800000000127,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 34,
+      "ms": 15.602899999999863,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 35,
+      "ms": 14.775500000000193,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 35,
+      "ms": 15.084799999999632,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 35,
+      "ms": 8.140599999999722,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 35,
+      "ms": 23.779399999999896,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 36,
+      "ms": 8.12480000000005,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 36,
+      "ms": 23.077899999999772,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 36,
+      "ms": 17.10629999999992,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 36,
+      "ms": 17.44549999999981,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 37,
+      "ms": 12.73640000000023,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 37,
+      "ms": 15.534599999999955,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 37,
+      "ms": 15.087599999999838,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 37,
+      "ms": 15.942199999999957,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 38,
+      "ms": 16.147500000000036,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 38,
+      "ms": 14.176900000000387,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 38,
+      "ms": 13.335199999999986,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 38,
+      "ms": 15.271499999999833,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 39,
+      "ms": 17.363400000000183,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 39,
+      "ms": 13.153499999999894,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 39,
+      "ms": 15.990099999999984,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 39,
+      "ms": 15.68040000000019,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 40,
+      "ms": 16.461399999999685,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 40,
+      "ms": 16.009299999999712,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 40,
+      "ms": 15.455199999999877,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 40,
+      "ms": 15.053800000000138,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 41,
+      "ms": 14.87559999999985,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 41,
+      "ms": 18.78879999999981,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 41,
+      "ms": 11.181699999999637,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 41,
+      "ms": 15.564899999999852,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 42,
+      "ms": 15.92489999999998,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 42,
+      "ms": 15.93020000000024,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 42,
+      "ms": 14.30159999999978,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 42,
+      "ms": 15.194300000000112,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 43,
+      "ms": 15.827699999999822,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 43,
+      "ms": 15.574299999999766,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 43,
+      "ms": 14.144999999999982,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 43,
+      "ms": 14.781199999999899,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 44,
+      "ms": 16.49929999999995,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 44,
+      "ms": 14.034999999999854,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 44,
+      "ms": 16.384900000000016,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 44,
+      "ms": 16.646200000000135,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 45,
+      "ms": 13.616500000000087,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 45,
+      "ms": 15.894600000000082,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 45,
+      "ms": 14.633499999999913,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 45,
+      "ms": 16.263800000000174,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 46,
+      "ms": 15.189800000000105,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 46,
+      "ms": 14.70910000000049,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 46,
+      "ms": 15.92370000000028,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 46,
+      "ms": 16.80739999999969,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 47,
+      "ms": 17.94329999999991,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 47,
+      "ms": 11.266300000000228,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 47,
+      "ms": 14.977499999999964,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 47,
+      "ms": 16.55159999999978,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 48,
+      "ms": 15.024199999999837,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 48,
+      "ms": 9.103699999999662,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 48,
+      "ms": 20.756800000000112,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 48,
+      "ms": 7.218300000000454,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 49,
+      "ms": 24.233900000000176,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 49,
+      "ms": 18.6287999999995,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 49,
+      "ms": 12.10949999999957,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 49,
+      "ms": 15.500900000000001,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-5",
+      "sample": 50,
+      "ms": 15.383699999999408,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "list-page-1",
+      "sample": 50,
+      "ms": 15.492299999999886,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "combined-five-filters",
+      "sample": 50,
+      "ms": 13.441600000000108,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 1,
+      "case": "empty-bitter",
+      "sample": 50,
+      "ms": 16.191399999999703,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 1,
+      "ms": 21.702699999999822,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 1,
+      "ms": 15.996600000000399,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 1,
+      "ms": 15.431399999999485,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 1,
+      "ms": 15.46560000000045,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 2,
+      "ms": 16.006399999999303,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 2,
+      "ms": 16.111800000000585,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 2,
+      "ms": 10.301299999999173,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 2,
+      "ms": 19.33520000000044,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 3,
+      "ms": 14.959100000000035,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 3,
+      "ms": 14.838700000000244,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 3,
+      "ms": 15.186399999999594,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 3,
+      "ms": 14.556999999999789,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 4,
+      "ms": 15.878600000000006,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 4,
+      "ms": 14.373400000000402,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 4,
+      "ms": 14.918800000000374,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 4,
+      "ms": 15.57589999999982,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 5,
+      "ms": 15.356399999999667,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 5,
+      "ms": 18.340299999999843,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 5,
+      "ms": 13.221300000000156,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 5,
+      "ms": 16.77850000000035,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 6,
+      "ms": 14.018100000000231,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 6,
+      "ms": 16.29150000000027,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 6,
+      "ms": 13.31750000000011,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 6,
+      "ms": 15.993900000000394,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 7,
+      "ms": 14.890699999999924,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 7,
+      "ms": 14.946899999999914,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 7,
+      "ms": 15.958400000000438,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 7,
+      "ms": 15.0020999999997,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 8,
+      "ms": 15.865999999999985,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 8,
+      "ms": 15.56919999999991,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 8,
+      "ms": 18.03819999999996,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 8,
+      "ms": 14.03690000000006,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 9,
+      "ms": 15.208999999999833,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 9,
+      "ms": 14.14599999999973,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 9,
+      "ms": 15.546200000000681,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 9,
+      "ms": 14.054599999999482,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 10,
+      "ms": 8.021600000000035,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 10,
+      "ms": 22.885699999999815,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 10,
+      "ms": 15.12750000000051,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 10,
+      "ms": 18.217499999999745,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 11,
+      "ms": 14.501600000000508,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 11,
+      "ms": 16.338399999999638,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 11,
+      "ms": 14.724700000000666,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 11,
+      "ms": 17.12039999999979,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 12,
+      "ms": 13.386499999999614,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 12,
+      "ms": 14.340799999999945,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 12,
+      "ms": 16.24330000000009,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 12,
+      "ms": 15.073300000000017,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 13,
+      "ms": 14.464300000000549,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 13,
+      "ms": 15.600500000000466,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 13,
+      "ms": 15.673999999999978,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 13,
+      "ms": 15.873799999999392,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 14,
+      "ms": 9.749699999999393,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 14,
+      "ms": 21.014799999999923,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 14,
+      "ms": 15.100500000000466,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 14,
+      "ms": 14.434000000000196,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 15,
+      "ms": 14.983000000000175,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 15,
+      "ms": 7.8171000000002095,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 15,
+      "ms": 6.993100000000595,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 15,
+      "ms": 16.08140000000003,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 16,
+      "ms": 15.059700000000703,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 16,
+      "ms": 15.88630000000012,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 16,
+      "ms": 15.5003999999999,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 16,
+      "ms": 15.225099999999657,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 17,
+      "ms": 16.203099999999722,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 17,
+      "ms": 16.159300000000258,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 17,
+      "ms": 15.806100000000697,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 17,
+      "ms": 14.971300000000156,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 18,
+      "ms": 16.296900000000278,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 18,
+      "ms": 15.559199999999691,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 18,
+      "ms": 14.387499999999818,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 18,
+      "ms": 14.665100000000166,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 19,
+      "ms": 16.88339999999971,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 19,
+      "ms": 14.66019999999935,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 19,
+      "ms": 15.865300000000389,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 19,
+      "ms": 14.608099999999467,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 20,
+      "ms": 15.645800000000236,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 20,
+      "ms": 15.11489999999958,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 20,
+      "ms": 15.917399999999361,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 20,
+      "ms": 18.472600000000057,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 21,
+      "ms": 12.855000000000473,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 21,
+      "ms": 8.089999999999236,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 21,
+      "ms": 23.279599999999846,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 21,
+      "ms": 14.085700000000543,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 22,
+      "ms": 14.003899999999703,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 22,
+      "ms": 15.479600000000573,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 22,
+      "ms": 14.731700000000274,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 22,
+      "ms": 15.058100000000195,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 23,
+      "ms": 18.66319999999996,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 23,
+      "ms": 13.224299999999857,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 23,
+      "ms": 16.323099999999613,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 23,
+      "ms": 16.778699999999844,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 24,
+      "ms": 14.278000000000247,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 24,
+      "ms": 15.557400000000598,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 24,
+      "ms": 16.91070000000036,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 24,
+      "ms": 15.36450000000059,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 25,
+      "ms": 13.896899999999732,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 25,
+      "ms": 20.306000000000495,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 25,
+      "ms": 12.132000000000517,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 25,
+      "ms": 7.796100000000479,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 26,
+      "ms": 21.718299999999545,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 26,
+      "ms": 15.598299999999654,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 26,
+      "ms": 15.572100000000319,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 26,
+      "ms": 16.502599999999802,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 27,
+      "ms": 15.234199999999873,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 27,
+      "ms": 16.65819999999985,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 27,
+      "ms": 13.969199999999546,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 27,
+      "ms": 29.505200000000514,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 28,
+      "ms": 16.361700000000383,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 28,
+      "ms": 15.357899999999972,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 28,
+      "ms": 14.160100000000057,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 28,
+      "ms": 17.868900000000394,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 29,
+      "ms": 13.399800000000141,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 29,
+      "ms": 16.566000000000713,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 29,
+      "ms": 16.041199999999662,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 29,
+      "ms": 15.603500000000167,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 30,
+      "ms": 16.663499999999658,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 30,
+      "ms": 16.333200000000033,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 30,
+      "ms": 13.599099999999453,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 30,
+      "ms": 13.775400000000445,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 31,
+      "ms": 17.122800000000097,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 31,
+      "ms": 13.09020000000055,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 31,
+      "ms": 15.486900000000787,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 31,
+      "ms": 15.833999999999833,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 32,
+      "ms": 15.466599999999744,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 32,
+      "ms": 14.997599999999693,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 32,
+      "ms": 16.635800000000017,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 32,
+      "ms": 15.83179999999993,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 33,
+      "ms": 13.81039999999939,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 33,
+      "ms": 18.771700000000237,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 33,
+      "ms": 11.962300000000141,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 33,
+      "ms": 14.7483000000002,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 34,
+      "ms": 14.751900000000205,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 34,
+      "ms": 15.7503999999999,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 34,
+      "ms": 14.457099999999627,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 34,
+      "ms": 16.319800000000214,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 35,
+      "ms": 16.5608000000002,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 35,
+      "ms": 15.133100000000013,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 35,
+      "ms": 16.226700000000164,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 35,
+      "ms": 15.220999999999549,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 36,
+      "ms": 14.050199999999677,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 36,
+      "ms": 15.100599999999758,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 36,
+      "ms": 16.0616,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 36,
+      "ms": 17.918499999999767,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 37,
+      "ms": 11.604699999999866,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 37,
+      "ms": 15.976700000000164,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 37,
+      "ms": 14.870600000000195,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 37,
+      "ms": 14.844299999999748,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 38,
+      "ms": 16.306300000000192,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 38,
+      "ms": 15.049099999999271,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 38,
+      "ms": 14.538500000000568,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 38,
+      "ms": 15.839700000000448,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 39,
+      "ms": 17.04659999999967,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 39,
+      "ms": 11.424599999999373,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 39,
+      "ms": 15.842800000000352,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 39,
+      "ms": 8.856400000000576,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 40,
+      "ms": 26.992299999999886,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 40,
+      "ms": 10.79489999999987,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 40,
+      "ms": 16.36920000000009,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 40,
+      "ms": 8.018300000000636,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 41,
+      "ms": 7.109199999999873,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 41,
+      "ms": 18.273699999999735,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 41,
+      "ms": 14.423099999999977,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 41,
+      "ms": 15.757200000000012,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 42,
+      "ms": 17.121100000000297,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 42,
+      "ms": 14.972899999999754,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 42,
+      "ms": 15.663499999999658,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 42,
+      "ms": 13.586600000000544,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 43,
+      "ms": 17.510200000000623,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 43,
+      "ms": 6.893300000000636,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 43,
+      "ms": 21.04610000000048,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 43,
+      "ms": 15.082000000000335,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 44,
+      "ms": 14.936599999999999,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 44,
+      "ms": 15.947000000000116,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 44,
+      "ms": 16.748999999999796,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 44,
+      "ms": 9.702299999999923,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 45,
+      "ms": 20.815999999999804,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 45,
+      "ms": 15.456099999999424,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 45,
+      "ms": 13.144400000000132,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 45,
+      "ms": 14.812600000000202,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 46,
+      "ms": 15.079499999999825,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 46,
+      "ms": 15.899199999999837,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 46,
+      "ms": 15.605199999999968,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 46,
+      "ms": 15.164600000000064,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 47,
+      "ms": 18.290399999999863,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 47,
+      "ms": 7.015899999999419,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 47,
+      "ms": 21.519400000000132,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 47,
+      "ms": 17.838600000000042,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 48,
+      "ms": 13.373400000001311,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 48,
+      "ms": 14.801900000000387,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 48,
+      "ms": 14.939399999999296,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 48,
+      "ms": 15.266900000000533,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 49,
+      "ms": 15.947799999999916,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 49,
+      "ms": 18.047200000000885,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 49,
+      "ms": 13.344699999999648,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 49,
+      "ms": 7.619599999999991,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-5",
+      "sample": 50,
+      "ms": 7.808600000000297,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "list-page-1",
+      "sample": 50,
+      "ms": 14.941600000000108,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "combined-five-filters",
+      "sample": 50,
+      "ms": 15.003200000001016,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 2,
+      "case": "empty-bitter",
+      "sample": 50,
+      "ms": 15.423600000000079,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 1,
+      "ms": 15.013600000000224,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 1,
+      "ms": 16.369399999999587,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 1,
+      "ms": 14.22990000000027,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 1,
+      "ms": 16.564500000000407,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 2,
+      "ms": 16.258600000001024,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 2,
+      "ms": 15.500199999998586,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 2,
+      "ms": 14.332500000000437,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 2,
+      "ms": 15.074200000000928,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 3,
+      "ms": 13.198500000000422,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 3,
+      "ms": 14.65560000000005,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 3,
+      "ms": 16.017799999999625,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 3,
+      "ms": 16.07840000000033,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 4,
+      "ms": 14.86199999999917,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 4,
+      "ms": 15.865200000000186,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 4,
+      "ms": 7.946399999998903,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 4,
+      "ms": 22.67530000000079,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 5,
+      "ms": 6.6163999999989755,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 5,
+      "ms": 11.136500000000524,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 5,
+      "ms": 13.659999999999854,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 5,
+      "ms": 15.69590000000062,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 6,
+      "ms": 13.442900000000009,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 6,
+      "ms": 17.648000000001048,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 6,
+      "ms": 11.85360000000037,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 6,
+      "ms": 15.3174999999992,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 7,
+      "ms": 15.097200000000157,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 7,
+      "ms": 15.78189999999995,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 7,
+      "ms": 15.918299999999363,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 7,
+      "ms": 16.064000000000306,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 8,
+      "ms": 16.146199999999226,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 8,
+      "ms": 13.967199999999139,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 8,
+      "ms": 8.881999999999607,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 8,
+      "ms": 23.14060000000063,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 9,
+      "ms": 15.606700000000274,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 9,
+      "ms": 15.089600000001155,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 9,
+      "ms": 14.476999999998952,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 9,
+      "ms": 16.507799999999406,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 10,
+      "ms": 13.115599999999176,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 10,
+      "ms": 16.610099999999875,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 10,
+      "ms": 8.15190000000075,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 10,
+      "ms": 22.53900000000067,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 11,
+      "ms": 13.985000000000582,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 11,
+      "ms": 16.72270000000026,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 11,
+      "ms": 14.355199999999968,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 11,
+      "ms": 15.745100000000093,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 12,
+      "ms": 14.689099999999598,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 12,
+      "ms": 14.988800000000992,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 12,
+      "ms": 15.914099999999962,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 12,
+      "ms": 8.109499999998661,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 13,
+      "ms": 24.284999999999854,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 13,
+      "ms": 13.277399999999034,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 13,
+      "ms": 15.474299999999857,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 13,
+      "ms": 15.565699999999197,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 14,
+      "ms": 16.275299999999334,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 14,
+      "ms": 13.425400000000081,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 14,
+      "ms": 6.710799999998926,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 14,
+      "ms": 24.57549999999901,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 15,
+      "ms": 15.258599999999205,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 15,
+      "ms": 17.549199999999473,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 15,
+      "ms": 12.291699999999764,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 15,
+      "ms": 16.471299999999246,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 16,
+      "ms": 16.520699999999124,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 16,
+      "ms": 13.56369999999879,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 16,
+      "ms": 16.251800000000003,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 16,
+      "ms": 15.178699999998571,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 17,
+      "ms": 15.94590000000062,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 17,
+      "ms": 16.45260000000053,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 17,
+      "ms": 14.612699999999677,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 17,
+      "ms": 16.37459999999919,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 18,
+      "ms": 7.739599999998973,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 18,
+      "ms": 24.49279999999999,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 18,
+      "ms": 13.879399999999805,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 18,
+      "ms": 14.378199999999197,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 19,
+      "ms": 15.745699999999488,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 19,
+      "ms": 14.106799999999566,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 19,
+      "ms": 7.8180000000011205,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 19,
+      "ms": 22.910900000000765,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 20,
+      "ms": 14.664300000000367,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 20,
+      "ms": 15.633200000000215,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 20,
+      "ms": 16.413500000000568,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 20,
+      "ms": 17.789300000000367,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 21,
+      "ms": 13.34690000000046,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 21,
+      "ms": 15.993800000000192,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 21,
+      "ms": 13.59729999999945,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 21,
+      "ms": 14.913399999999456,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 22,
+      "ms": 15.515199999999822,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 22,
+      "ms": 7.107399999998961,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 22,
+      "ms": 8.33259999999973,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 22,
+      "ms": 15.187599999999293,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 23,
+      "ms": 17.93369999999959,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 23,
+      "ms": 13.495699999999488,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 23,
+      "ms": 14.692299999998795,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 23,
+      "ms": 16.172599999999875,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 24,
+      "ms": 15.255000000001019,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 24,
+      "ms": 15.549400000001697,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 24,
+      "ms": 15.393599999999424,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 24,
+      "ms": 16.109300000000076,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 25,
+      "ms": 13.548200000001088,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 25,
+      "ms": 19.009500000000116,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 25,
+      "ms": 12.702000000001135,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 25,
+      "ms": 14.830100000001039,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 26,
+      "ms": 15.21140000000014,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 26,
+      "ms": 16.392099999999118,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 26,
+      "ms": 13.734199999998964,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 26,
+      "ms": 15.938799999999901,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 27,
+      "ms": 16.216599999999744,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 27,
+      "ms": 15.895199999999022,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 27,
+      "ms": 16.044400000000678,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 27,
+      "ms": 15.276300000001356,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 28,
+      "ms": 7.636800000000221,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 28,
+      "ms": 21.82810000000063,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 28,
+      "ms": 14.063500000000204,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 28,
+      "ms": 17.379499999999098,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 29,
+      "ms": 12.765699999999924,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 29,
+      "ms": 7.898299999998926,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 29,
+      "ms": 22.736300000000483,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 29,
+      "ms": 7.18369999999959,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 30,
+      "ms": 23.607199999998556,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 30,
+      "ms": 7.083800000000338,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 30,
+      "ms": 24.01640000000043,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 30,
+      "ms": 14.253500000000713,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 31,
+      "ms": 17.858899999999267,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 31,
+      "ms": 12.060600000000704,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 31,
+      "ms": 7.494699999999284,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 31,
+      "ms": 7.804500000000189,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 32,
+      "ms": 15.390300000000934,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 32,
+      "ms": 16.480399999998554,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 32,
+      "ms": 15.410100000000966,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 32,
+      "ms": 14.889800000000832,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 33,
+      "ms": 15.052799999999479,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 33,
+      "ms": 10.14810000000034,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 33,
+      "ms": 21.585299999998824,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 33,
+      "ms": 6.832700000000841,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 34,
+      "ms": 24.09530000000086,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 34,
+      "ms": 13.968399999999747,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 34,
+      "ms": 14.879100000000108,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 34,
+      "ms": 16.67989999999918,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 35,
+      "ms": 14.871399999999994,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 35,
+      "ms": 16.146200000001045,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 35,
+      "ms": 14.709600000000137,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 35,
+      "ms": 15.129000000000815,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 36,
+      "ms": 14.805700000000797,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 36,
+      "ms": 7.38169999999991,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 36,
+      "ms": 23.34479999999894,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 36,
+      "ms": 17.562400000000707,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 37,
+      "ms": 12.75,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 37,
+      "ms": 16.48619999999937,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 37,
+      "ms": 15.618500000000495,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 37,
+      "ms": 13.956500000000233,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 38,
+      "ms": 9.223400000000765,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 38,
+      "ms": 21.899499999999534,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 38,
+      "ms": 13.885399999999208,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 38,
+      "ms": 16.41280000000006,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 39,
+      "ms": 17.92330000000038,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 39,
+      "ms": 11.67909999999938,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 39,
+      "ms": 16.039499999998952,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 39,
+      "ms": 16.455599999999322,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 40,
+      "ms": 14.161000000000058,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 40,
+      "ms": 16.53769999999895,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 40,
+      "ms": 16.134100000001126,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 40,
+      "ms": 15.117999999998574,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 41,
+      "ms": 14.550400000000081,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 41,
+      "ms": 19.90519999999924,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 41,
+      "ms": 11.580500000000029,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 41,
+      "ms": 14.155300000000352,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 42,
+      "ms": 8.233799999999974,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 42,
+      "ms": 22.776199999998425,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 42,
+      "ms": 14.958000000000538,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 42,
+      "ms": 16.204599999999118,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 43,
+      "ms": 15.647399999999834,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 43,
+      "ms": 16.14300000000003,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 43,
+      "ms": 14.824599999999919,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 43,
+      "ms": 15.653700000000754,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 44,
+      "ms": 13.706500000000233,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 44,
+      "ms": 9.561299999999392,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 44,
+      "ms": 20.903200000000652,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 44,
+      "ms": 17.693600000000515,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 45,
+      "ms": 12.133200000000215,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 45,
+      "ms": 15.8224999999984,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 45,
+      "ms": 15.897899999999936,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 45,
+      "ms": 14.891600000000835,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 46,
+      "ms": 15.82470000000103,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 46,
+      "ms": 15.207399999999325,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 46,
+      "ms": 16.163699999999153,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 46,
+      "ms": 13.636099999999715,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 47,
+      "ms": 10.028700000000754,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 47,
+      "ms": 19.653200000000652,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 47,
+      "ms": 17.365999999999985,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 47,
+      "ms": 15.222499999999854,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 48,
+      "ms": 13.861699999999473,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 48,
+      "ms": 14.859699999999066,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 48,
+      "ms": 15.40060000000085,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 48,
+      "ms": 16.842899999999645,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 49,
+      "ms": 14.593800000000556,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 49,
+      "ms": 19.364700000000084,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 49,
+      "ms": 11.625599999999395,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 49,
+      "ms": 15.391999999999825,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-5",
+      "sample": 50,
+      "ms": 15.169099999999162,
+      "status": 200,
+      "bytes": 63089,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "list-page-1",
+      "sample": 50,
+      "ms": 14.890500000001339,
+      "status": 200,
+      "bytes": 41937,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "combined-five-filters",
+      "sample": 50,
+      "ms": 14.444600000000719,
+      "status": 200,
+      "bytes": 6011,
+      "valid": true
+    },
+    {
+      "run": 3,
+      "case": "empty-bitter",
+      "sample": 50,
+      "ms": 14.740600000000995,
+      "status": 200,
+      "bytes": 2252,
+      "valid": true
+    }
+  ],
+  "runSummaries": [
+    {
+      "run": 1,
+      "cases": {
+        "list-page-1": {
+          "count": 50,
+          "errors": 0,
+          "min": 7.218300000000454,
+          "median": 15.11934999999994,
+          "p95": 18.03769999999986,
+          "max": 22.505499999999984,
+          "mean": 14.899622000000045
+        },
+        "combined-five-filters": {
+          "count": 50,
+          "errors": 0,
+          "min": 6.382099999999809,
+          "median": 15.56959999999981,
+          "p95": 20.807900000000018,
+          "max": 23.079099999999926,
+          "mean": 15.289629999999988
+        },
+        "empty-bitter": {
+          "count": 50,
+          "errors": 0,
+          "min": 7.9202000000000226,
+          "median": 15.305100000000039,
+          "p95": 23.077899999999772,
+          "max": 24.233900000000176,
+          "mean": 15.245511999999968
+        },
+        "list-page-5": {
+          "count": 50,
+          "errors": 0,
+          "min": 9.257399999999961,
+          "median": 15.838999999999942,
+          "p95": 18.78879999999981,
+          "max": 23.779399999999896,
+          "mean": 15.896659999999974
+        }
+      }
+    },
+    {
+      "run": 2,
+      "cases": {
+        "list-page-1": {
+          "count": 50,
+          "errors": 0,
+          "min": 8.018300000000636,
+          "median": 15.552700000000186,
+          "p95": 21.014799999999923,
+          "max": 23.279599999999846,
+          "mean": 15.715304000000051
+        },
+        "combined-five-filters": {
+          "count": 50,
+          "errors": 0,
+          "min": 6.893300000000636,
+          "median": 14.841499999999996,
+          "p95": 16.65819999999985,
+          "max": 26.992299999999886,
+          "mean": 14.263042000000059
+        },
+        "empty-bitter": {
+          "count": 50,
+          "errors": 0,
+          "min": 6.993100000000595,
+          "median": 15.28269999999975,
+          "p95": 21.04610000000048,
+          "max": 21.702699999999822,
+          "mean": 15.273508000000092
+        },
+        "list-page-5": {
+          "count": 50,
+          "errors": 0,
+          "min": 7.808600000000297,
+          "median": 16.00149999999985,
+          "p95": 20.306000000000495,
+          "max": 29.505200000000514,
+          "mean": 15.764093999999986
+        }
+      }
+    },
+    {
+      "run": 3,
+      "cases": {
+        "list-page-1": {
+          "count": 50,
+          "errors": 0,
+          "min": 7.083800000000338,
+          "median": 15.487249999999221,
+          "p95": 22.776199999998425,
+          "max": 24.49279999999999,
+          "mean": 15.821059999999852
+        },
+        "combined-five-filters": {
+          "count": 50,
+          "errors": 0,
+          "min": 6.710799999998926,
+          "median": 14.817900000000918,
+          "p95": 17.549199999999473,
+          "max": 24.01640000000043,
+          "mean": 14.275889999999999
+        },
+        "empty-bitter": {
+          "count": 50,
+          "errors": 0,
+          "min": 6.6163999999989755,
+          "median": 15.001200000000608,
+          "p95": 22.53900000000067,
+          "max": 24.57549999999901,
+          "mean": 14.898707999999896
+        },
+        "list-page-5": {
+          "count": 50,
+          "errors": 0,
+          "min": 7.739599999998973,
+          "median": 15.783799999999246,
+          "p95": 23.34479999999894,
+          "max": 24.09530000000086,
+          "mean": 15.314150000000009
+        }
+      }
+    }
+  ],
+  "summaries": {
+    "list-page-1": {
+      "count": 150,
+      "errors": 0,
+      "min": 7.083800000000338,
+      "median": 15.397950000000037,
+      "p95": 22.505499999999984,
+      "max": 24.49279999999999,
+      "mean": 15.478661999999986
+    },
+    "combined-five-filters": {
+      "count": 150,
+      "errors": 0,
+      "min": 6.382099999999809,
+      "median": 14.911949999999706,
+      "p95": 17.549199999999473,
+      "max": 26.992299999999886,
+      "mean": 14.609520666666683
+    },
+    "empty-bitter": {
+      "count": 150,
+      "errors": 0,
+      "min": 6.6163999999989755,
+      "median": 15.201649999999972,
+      "p95": 21.702699999999822,
+      "max": 24.57549999999901,
+      "mean": 15.139242666666654
+    },
+    "list-page-5": {
+      "count": 150,
+      "errors": 0,
+      "min": 7.739599999998973,
+      "median": 15.873299999999972,
+      "p95": 20.903200000000652,
+      "max": 29.505200000000514,
+      "mean": 15.658301333333323
+    }
+  },
+  "completed": true,
+  "finishedAt": "2026-11-23T11:19:58.614Z"
+}
