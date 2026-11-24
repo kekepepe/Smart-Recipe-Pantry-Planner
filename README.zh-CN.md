@@ -132,11 +132,7 @@ npm run check:v1
 
 [运行手册](docs/V1-RUNBOOK.md) 包含配置、迁移、失败恢复与备份。数据库留在本机，不上传 GitHub。以上命令选择开发分支，main 合并/发布状态以 [发布记录](docs/V1-RELEASE.md) 为准。
 
-## 规划依据
+## 项目文档
 
-本 README 根据以下已提供的规划文档编写：
-
-- `Smart_Recipe_and_Pantry_Planner_Project_Planning_Revised_task2.docx`：英文规划文档。
-- `Smart_Recipe_and_Pantry_Planner_Project_Planning_CN_Revised_task2.docx`：中文规划文档。
-
-文档涵盖利益相关者、版本范围、问题陈述、开发方法与成功标准。原始文件单独保留，未因编写 README 而修改。
+- [产品需求](docs/PRD.zh-CN.md)记录目标用户、版本范围和验收标准。
+- [第一轮项目总结完整版](docs/iteration-1-report.zh-CN.docx)汇总规划决策、实现成果和第一轮 GitHub 证据。

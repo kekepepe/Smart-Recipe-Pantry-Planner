@@ -22,13 +22,15 @@ V1 沿用前端、数据约定和纯计算函数，增加 **Express 单一应用
 
 | 依据 | 对本计划的约束 | 本计划如何落实 |
 | --- | --- | --- |
-| [Task 2 英文规划](../Smart_Recipe_and_Pantry_Planner_Project_Planning_Revised_task2.docx)，第 2、5 节 | 迭代增量开发；V1 核心流程、V2 增强功能；两个版本分别可演示 | V0 为准备基线，保留 V1/V2 范围 |
-| [Task 2 中文规划](../Smart_Recipe_and_Pantry_Planner_Project_Planning_CN_Revised_task2.docx) | 用户、问题与范围的中文依据 | 面向家庭烹饪者、学生和上班族，优先解决库存核对与采购 |
-| [Task 3 Final](../Smart_Recipe_and_Pantry_Planner_Task3_Project_Plan_Final.docx)，第 2–6 节 | 四人职责、优先级、两个五工作日迭代、完成标准、单服务单数据库 | 保留责任人和十工作日排期；V1 由服务处理校验与计算 |
+| Task 2 英文规划，第 2、5 节 | 迭代增量开发；V1 核心流程、V2 增强功能；两个版本分别可演示 | V0 为准备基线，保留 V1/V2 范围 |
+| Task 2 中文规划 | 用户、问题与范围的中文依据 | 面向家庭烹饪者、学生和上班族，优先解决库存核对与采购 |
+| Task 3 Final，第 2–6 节 | 四人职责、优先级、两个五工作日迭代、完成标准、单服务单数据库 | 保留责任人和十工作日排期；V1 由服务处理校验与计算 |
 | [中文 PRD](PRD.zh-CN.md)，第 2 节 | V0 的交互、示例、重置、小屏和键盘要求 | 设计四个任务页面、两个入口和状态处理 |
 | [V0 四人分工](V0-team.md) | V0 在正式迭代之前准备；分工与交接 | 采用原有四人职责，安排交叉评审与干净环境复现 |
 | [Task 4](task4/README.md) 与 [T4-01](task4/requirement.md) | 单道菜缺口函数、真实断言、CI、独立贡献证据 | 先完成依赖，保留接口和各成员真实贡献 |
 | [远端 README](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/blob/main/README.md) | 完整应用仍待开发；初始化替代原有 V0 review 前提 | 先补 V0，再进入正式 Day 1 评估 |
+
+Task 2 与 Task 3 的规划决策汇总在[第一轮项目总结完整版](iteration-1-report.zh-CN.docx)。
 
 发生理解冲突时，以 Task 2 的产品范围和 Task 3 Final 的交付要求为准，PRD 补充交互细节。本计划补充具体实施方式，不修改课程任务原文。`Task3_Project_Plan_Visual.docx` 是本地参考版本，未作为替代 Final 的依据。
 

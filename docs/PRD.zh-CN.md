@@ -4,7 +4,7 @@
 
 **状态：已按 Task 3 Final 对齐，待团队评审。** V0 是团队从零制作的交互原型；V1、V2 是两个分别可运行、可演示的发布版本。下述测试门槛和运行安排是建议，尚无实测结果。
 
-对齐依据：[Smart_Recipe_and_Pantry_Planner_Task3_Project_Plan_Final.docx](../Smart_Recipe_and_Pantry_Planner_Task3_Project_Plan_Final.docx)。V0 是第 1 天检查并继续扩展的原型基线，可复用代码以当天检查为准。两个各五个工作日的迭代覆盖 V1、V2；V0 准备在此之前。
+对齐依据：Task 3 最终计划，主要内容见[第一轮项目总结完整版](iteration-1-report.zh-CN.docx)。V0 是第 1 天检查并继续扩展的原型基线，可复用代码以当天检查为准。两个各五个工作日的迭代覆盖 V1、V2；V0 准备在此之前。
 
 ## 1. 用户想解决什么问题
 
