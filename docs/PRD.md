@@ -4,7 +4,7 @@
 
 **Status: draft aligned with Task 3 Final.** V0 is an interactive prototype built from scratch. V1 and V2 are separate working releases that can each be demonstrated. Test thresholds and operating arrangements below are proposals; no results are claimed.
 
-Alignment baseline: Task 3 final plan, summarised in the [Iteration 1 project summary](iteration-1-report.zh-CN.docx). V0 is the prototype baseline to inspect and extend on Day 1; its actual reusable code must be verified then. The two five-working-day iterations cover V1 and V2, after prototype preparation.
+Alignment baseline: Task 3 final plan, summarised in the [Iteration 1 project summary](iteration-1-report.zh-CN.md). V0 is the prototype baseline to inspect and extend on Day 1; its actual reusable code must be verified then. The two five-working-day iterations cover V1 and V2, after prototype preparation.
 
 ## 1. The decision a cook needs to make
 
