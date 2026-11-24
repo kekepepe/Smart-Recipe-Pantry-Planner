@@ -30,7 +30,7 @@ V1 沿用前端、数据约定和纯计算函数，增加 **Express 单一应用
 | [Task 4](task4/README.md) 与 [T4-01](task4/requirement.md) | 单道菜缺口函数、真实断言、CI、独立贡献证据 | 先完成依赖，保留接口和各成员真实贡献 |
 | [远端 README](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/blob/main/README.md) | 完整应用仍待开发；初始化替代原有 V0 review 前提 | 先补 V0，再进入正式 Day 1 评估 |
 
-Task 2 与 Task 3 的规划决策汇总在[第一轮项目总结完整版](iteration-1-report.zh-CN.docx)。
+Task 2 与 Task 3 的规划决策汇总在[第一轮项目总结完整版](iteration-1-report.zh-CN.md)。
 
 发生理解冲突时，以 Task 2 的产品范围和 Task 3 Final 的交付要求为准，PRD 补充交互细节。本计划补充具体实施方式，不修改课程任务原文。`Task3_Project_Plan_Visual.docx` 是本地参考版本，未作为替代 Final 的依据。
 

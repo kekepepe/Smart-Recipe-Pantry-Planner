@@ -30,4 +30,4 @@ V0 在两个迭代之前准备；迭代 1 为第 1–5 个工作日，迭代 2 �
 
 Peng Ke 和 ChangPeng Shi 交叉评审；HaoZhe Feng 支援两人的集成，Peng Ke 替补试用主持。每项完成均需验收通过、评审合并、错误状态可用及说明更新；另一成员复现启动。核心数据丢失、错误可做判断或错误采购总量阻断发布。 / Peng Ke and ChangPeng Shi cross-review. HaoZhe Feng backs up their integration; Peng Ke backs up trial facilitation. Done requires passing acceptance, reviewed/merged code, working errors and updated notes; another member reproduces setup. Data loss, false-ready matches and incorrect shopping totals block release.
 
-Source: Task 3 final plan, summarised in the [Iteration 1 project summary](iteration-1-report.zh-CN.docx).
+Source: Task 3 final plan, summarised in the [Iteration 1 project summary](iteration-1-report.zh-CN.md).

@@ -135,4 +135,4 @@ npm run check:v1
 ## 项目文档
 
 - [产品需求](docs/PRD.zh-CN.md)记录目标用户、版本范围和验收标准。
-- [第一轮项目总结完整版](docs/iteration-1-report.zh-CN.docx)汇总规划决策、实现成果和第一轮 GitHub 证据。
+- [第一轮项目总结完整版](docs/iteration-1-report.zh-CN.md)汇总规划决策、实现成果和第一轮 GitHub 证据。
