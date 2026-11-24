@@ -41,4 +41,4 @@
 ## 样本局限与第二轮衔接
 
 - 第一轮已完成干净目录技术复现（[#11](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/issues/11)）与性能基线实测（[#17](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/pull/17)），但外部真实用户试用样本仍为 `0`，且未覆盖 Safari、Firefox 与手机真机。
-- 第二轮将在 `#20` / `#21` 合入后结合真实外部用户招募完成同任务验证，并与双平台离线安装包（P06/M06/H06）及最终两轮对比数据一并归档；详见 [第一轮成果评审、复盘与证据索引](iteration-1-evidence-and-retrospective.md)。
+- 第二轮将在 `#20` / `#21` 合入后保持相同初始库存（两蛋一番茄）、标准任务与已登记视口开展外部真实用户试用；若外部参与者仅测试第二轮修订版本，则将其结果与第一轮本机开发者走查分开报告，不宣称测得真人前后对比改善。后续将与双平台离线安装包（P06/M06/H06）及两轮对比数据一并归档；详见 [第一轮成果评审、复盘与证据索引](iteration-1-evidence-and-retrospective.md)。
