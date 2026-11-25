@@ -124,6 +124,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
         status: 503,
         json: { error: { code: 'STORAGE_UNAVAILABLE', message: 'Temporary recommendation error.' } },
       }), { times: 1 });
+      await page.locator('.discovery-panel > summary').click();
       await page.getByRole('button', { name: 'Clear filters / 清除筛选', exact: true }).click();
       await expect(page.getByRole('heading', { name: 'Unable to load recommendations' })).toBeVisible();
       await page.getByRole('button', { name: 'Try again', exact: true }).click();
