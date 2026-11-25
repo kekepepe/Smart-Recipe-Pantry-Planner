@@ -2,11 +2,18 @@ import { DomainError, validateItem, evaluateRecipe } from '../../src/evaluate-re
 import { evaluateShopping } from '../../src/evaluate-shopping.js';
 import { parseRecipeFilters, filterRecipes } from '../../src/discover-recipes.js';
 import { recommendByStaples } from '../../src/recommend-by-staples.js';
+import { computeNutrition, indexNutritionMappings } from '../../src/nutrition.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
 export class Store {
-  constructor(db, { workspace = 'local', fault = () => {} } = {}) { this.db = db; this.workspace = workspace; this.fault = fault; }
+  constructor(db, { workspace = 'local', fault = () => {}, nutritionMappings = [] } = {}) {
+    this.db = db; this.workspace = workspace; this.fault = fault;
+    // C03: verified nutrition mapping records (the M02 dataset format frozen in
+    // docs/NUTRITION-CONTRACT.md). Validated once at construction so a bad dataset
+    // fails fast instead of producing fake numbers.
+    this.nutritionById = indexNutritionMappings(nutritionMappings);
+  }
   catalog() {
     const ingredients = this.db.prepare('SELECT * FROM ingredients ORDER BY rowid').all().map(row => ({ ...row, nameZh: row.name_zh, allowedUnits: this.db.prepare('SELECT unit FROM ingredient_units WHERE ingredient_id=? ORDER BY rowid').all(row.id).map(r => r.unit) }));
     const recipes = this.db.prepare('SELECT * FROM recipes ORDER BY rowid').all().map(row => ({
@@ -46,6 +53,33 @@ export class Store {
       appliedFilters: { ...filters, page },
       catalogVersion, pantryRevision: this.state().revision,
     };
+  }
+  // C03: read-only nutrition summaries. Nutrition depends on the current recipe (catalog)
+  // quantities only — never on the pantry — and performs no writes. Until the verified M02
+  // mapping dataset is loaded, every dish reports "unavailable" with its required ingredients
+  // listed; no fabricated 0 kcal values are ever produced.
+  nutritionIndex() {
+    const { recipes, catalogVersion } = this.catalog();
+    const nutrition = recipes.map(recipe => computeNutrition(recipe, this.nutritionById));
+    return {
+      nutrition,
+      total: nutrition.length,
+      estimatedCount: nutrition.filter(item => item.status === 'estimated').length,
+      mappingsLoaded: this.nutritionById.size,
+      catalogVersion,
+      pantryRevision: this.state().revision,
+    };
+  }
+  nutritionDetail(id) {
+    const { recipes } = this.catalog();
+    const recipe = recipes.find(entry => entry.id === id);
+    if (!recipe) throw new ServiceError(404, 'NOT_FOUND', 'Recipe not found.', 'recipeId');
+    const summary = computeNutrition(recipe, this.nutritionById);
+    // Source details are read on demand here instead of shipping every record in the snapshot.
+    const mappings = summary.usedIngredients
+      .map(ingredientId => this.nutritionById.get(`${ingredientId}|${recipe.requirements.find(r => r.ingredientId === ingredientId).unit}`))
+      .filter(Boolean);
+    return { ...summary, mappings, catalogVersion: this.catalog().catalogVersion, pantryRevision: this.state().revision };
   }
   state() {
     const state = this.db.prepare('SELECT * FROM workspaces WHERE id=?').get(this.workspace);

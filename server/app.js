@@ -2,10 +2,18 @@ import express from 'express';
 import { discoverRecipes } from '../src/discover-recipes.js';
 import { randomUUID } from 'node:crypto';
 import { join } from 'node:path';
+import { readFileSync, existsSync } from 'node:fs';
 import { Store, ServiceError, publicError } from './services/store.js';
 import { root } from './config.js';
-export function createApp(db, { serveStatic = false, fault } = {}) {
-  const app = express(); const store = new Store(db, { fault });
+// C03: production mapping dataset lives at data/nutrition-mappings.json (the M02 format frozen in
+// docs/NUTRITION-CONTRACT.md). The file is intentionally absent until Mao's verified M02 dataset
+// merges; until then every dish honestly reports "unavailable" instead of a fabricated estimate.
+const loadNutritionMappings = () => {
+  const path = join(root, 'data', 'nutrition-mappings.json');
+  return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : [];
+};
+export function createApp(db, { serveStatic = false, fault, nutritionMappings = loadNutritionMappings() } = {}) {
+  const app = express(); const store = new Store(db, { fault, nutritionMappings });
   app.disable('x-powered-by');
   app.use('/api', (req, res, next) => {
     req.requestId = randomUUID(); res.set('Cache-Control', 'no-store'); res.set('X-Content-Type-Options', 'nosniff');
@@ -30,6 +38,8 @@ export function createApp(db, { serveStatic = false, fault } = {}) {
     try { res.json(store.recommendations(new URL(req.originalUrl, 'http://local').searchParams)); }
     catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
   });
+  app.get('/api/nutrition', (req, res) => res.json(store.nutritionIndex()));
+  app.get('/api/nutrition/:recipeId', (req, res) => res.json(store.nutritionDetail(req.params.recipeId)));
   app.get('/api/snapshot', (req, res) => res.json(store.getSnapshot()));
   app.post('/api/onboarding', shape(['mode', 'expectedRevision']), (req, res) => res.json(store.onboard(req.body)));
   app.put('/api/pantry/:id', shape(['quantity', 'unit', 'expectedRevision']), (req, res) => res.json(store.saveItem(req.params.id, req.body)));
