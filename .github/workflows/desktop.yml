@@ -1,0 +1,75 @@
+name: Desktop installer candidates
+on:
+  push:
+    branches: [main, 'feat/p06-offline-installers']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            platform: macos-arm64
+            arguments: --mac --arm64
+          - os: windows-2025
+            platform: windows-x64
+            arguments: --win --x64
+    name: Package and smoke test (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm run package:desktop -- ${{ matrix.arguments }}
+      - name: Mount DMG and smoke test copied app
+        if: runner.os == 'macOS'
+        run: |
+          mount_dir=$(mktemp -d)
+          app_dir=$(mktemp -d)
+          hdiutil attach desktop-dist/*.dmg -readonly -nobrowse -mountpoint "$mount_dir"
+          trap 'hdiutil detach "$mount_dir"' EXIT
+          ditto "$mount_dir/Pantry & Plate.app" "$app_dir/Pantry & Plate.app"
+          node desktop/smoke.js "$app_dir/Pantry & Plate.app/Contents/MacOS/Pantry & Plate"
+      - name: Install NSIS and smoke test
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $installer = Get-Item desktop-dist/*.exe
+          $destination = Join-Path $env:RUNNER_TEMP 'pantry-desktop'
+          $process = Start-Process -FilePath $installer.FullName -ArgumentList @('/S', '/currentuser', "/D=$destination") -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw "Installer exited with $($process.ExitCode)" }
+          node desktop/smoke.js (Join-Path $destination 'Pantry & Plate.exe')
+      - name: Record installer SHA-256 and source commit
+        shell: bash
+        run: |
+          cd desktop-dist
+          shasum -a 256 *.dmg > SHA256SUMS.txt
+          git rev-parse HEAD > SOURCE_COMMIT.txt
+        if: runner.os == 'macOS'
+      - name: Record Windows installer SHA-256 and source commit
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $installer = Get-Item desktop-dist/*.exe
+          $checksum = (Get-FileHash -Algorithm SHA256 $installer.FullName).Hash.ToLowerInvariant()
+          "$checksum  $($installer.Name)" | Set-Content -Encoding ascii desktop-dist/SHA256SUMS.txt
+          git rev-parse HEAD | Set-Content -Encoding ascii desktop-dist/SOURCE_COMMIT.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pantry-desktop-${{ matrix.platform }}-${{ github.sha }}
+          path: |
+            desktop-dist/*.dmg
+            desktop-dist/*.exe
+            desktop-dist/SHA256SUMS.txt
+            desktop-dist/SOURCE_COMMIT.txt
+          if-no-files-found: error
