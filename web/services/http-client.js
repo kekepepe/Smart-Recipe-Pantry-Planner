@@ -19,6 +19,7 @@ export function createHttpClient(fetcher = (...args) => fetch(...args)) {
   }
   return {
     getSnapshot: () => request('/snapshot'),
+    getStapleRecommendations: (query = '') => request(`/recommendations/staples${query ? `?${query}` : ''}`),
     onboard: (mode, expectedRevision) => request('/onboarding', 'POST', { mode, expectedRevision }),
     savePantryItem: (item, expectedRevision) => request(`/pantry/${encodeURIComponent(item.ingredientId)}`, 'PUT', { quantity: item.quantity, unit: item.unit, expectedRevision }),
     deletePantryItem: (id, expectedRevision) => request(`/pantry/${encodeURIComponent(id)}`, 'DELETE', { expectedRevision }),
