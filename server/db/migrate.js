@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-export const migrations = ['001_core.sql', '002_multiple_recipes.sql', '003_recipe_discovery.sql'].map((file, index) => {
+export const migrations = ['001_core.sql', '002_multiple_recipes.sql', '003_recipe_discovery.sql', '004_purchased_marks.sql'].map((file, index) => {
   const sql = readFileSync(new URL(`./migrations/${file}`, import.meta.url), 'utf8');
   return { version: index + 1, sql, checksum: createHash('sha256').update(sql).digest('hex') };
 });

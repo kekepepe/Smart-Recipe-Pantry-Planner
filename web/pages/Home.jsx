@@ -19,7 +19,7 @@ export default function Home() {
       <button className="secondary" onClick={() => start('empty')} disabled={busy}>Add my own ingredients</button>
     </>}</div>
     <p className="helper">{snapshot.initialized ? 'Your saved pantry is ready. Returning home never replaces it.' : 'Try 2 eggs and 1 tomato, or start empty. Your choices are saved on this computer.'}</p>
-    <p className="home-links"><a className="continue-link" href="#/recipes">Browse all {snapshot.recipes.length} recipes</a> · <a className="continue-link" href="?view=staples#/recipes">Use what I have</a></p>
+    <p className="home-links"><a className="continue-link" href="./#/recipes">Browse all {snapshot.recipes.length} recipes</a> · <a className="continue-link" href="?view=staples#/recipes">Use what I have</a> · <a className="continue-link" href="?view=inspiration#/recipes">Today&apos;s daily inspiration</a></p>
     {error ? <p role="alert" className="error">{error}</p> : null}
   </div><figure className="home-image"><img src="/images/recipes/tomato-eggs.jpg" alt="Tomato and egg stir-fry illustration" /><figcaption>A few ingredients. A good place to start.</figcaption></figure></section>;
 }

@@ -81,6 +81,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await expect(page.getByText('Page 2 / 3', { exact: false }).first()).toBeVisible();
 
     // Shared filters + zero-match empty state (hasStapleMatch=true -> offer clearing filters, NOT pantry prompt).
+    await page.locator('.discovery-panel > summary').click();
     await page.getByRole('checkbox', { name: '中国 China', exact: true }).check();
     await expect(page.getByText('8 matched recipes', { exact: false })).toBeVisible();
     await page.getByLabel('Find a recipe').fill('zzz-no-such-dish');
