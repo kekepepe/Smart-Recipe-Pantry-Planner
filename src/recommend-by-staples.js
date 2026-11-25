@@ -40,16 +40,22 @@ export function classifyStaples(recipe, stock) {
   for (const [ingredientId, units] of staples) {
     const have = stock.get(ingredientId);
     let state = 'missing';
+    let shortfallQuantity = null;
     if (have) {
       const requiredMinor = units.get(have.unit);
-      if (requiredMinor === undefined) state = 'unitCheck';
-      else state = Math.round(have.quantity * 100) >= requiredMinor ? 'sufficient' : 'insufficient';
+      if (requiredMinor === undefined) {
+        state = 'unitCheck';
+      } else {
+        shortfallQuantity = Math.max(0, requiredMinor - Math.round(have.quantity * 100)) / 100;
+        state = shortfallQuantity === 0 ? 'sufficient' : 'insufficient';
+      }
     }
     rows.push({
       ingredientId,
       required: [...units].map(([unit, minor]) => ({ unit, quantity: minor / 100 })),
       pantryQuantity: have ? have.quantity : null,
       pantryUnit: have ? have.unit : null,
+      shortfallQuantity,
       state,
     });
   }

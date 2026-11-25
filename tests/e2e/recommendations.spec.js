@@ -136,3 +136,69 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     expect(unexpected).toEqual([]);
   });
 }
+
+test('staple cards display the fractional shortfall supplied by the API', async ({ page, service, database }) => {
+  const store = new Store(database.db);
+  store.saveItem('flour', { quantity: 39.99, unit: 'g', expectedRevision: store.getSnapshot().revision });
+
+  await page.route('**/api/recommendations/staples?q=Katsudon', async route => {
+    const response = await route.fetch();
+    const data = await response.json();
+    const recipe = data.recommendations.find(item => item.recipeId === 'katsudon');
+    const flour = recipe.staples.find(item => item.ingredientId === 'flour');
+    // Use a distinct value to detect any client-side recalculation from the amounts.
+    flour.shortfallQuantity = 0.07;
+    await route.fulfill({ response, json: data });
+  });
+
+  await page.goto(service.url + '/?view=staples&q=Katsudon#/recipes');
+  const staples = page.getByRole('list', { name: 'Staple match details for Katsudon' });
+  await expect(staples).toContainText('Short 0.07 g (have 39.99 g / need 40 g)');
+});
+
+test('a delayed search hides previous staple results until the active response arrives', async ({ page, service, database }) => {
+  const store = new Store(database.db);
+  store.onboard({ mode: 'sample', expectedRevision: store.getSnapshot().revision });
+  await page.goto(service.url + '/?view=staples#/recipes');
+
+  const results = page.getByRole('region', { name: 'Staple-based recommendations' });
+  const previousCount = results.getByText('43 matched recipes', { exact: false });
+  const links = results.getByRole('link', { name: /^View recipe:/ });
+  const pagination = results.getByRole('navigation', { name: 'Recommendation pages' });
+  await expect(previousCount).toBeVisible();
+  await expect(links).toHaveCount(20);
+  await expect(pagination).toBeVisible();
+
+  const query = 'zzz-no-such-dish';
+  const responseReady = Promise.withResolvers();
+  const releaseResponse = Promise.withResolvers();
+  await page.route('**/api/recommendations/staples?q=' + query, async route => {
+    const response = await route.fetch();
+    responseReady.resolve();
+    await releaseResponse.promise;
+    await route.fulfill({ response });
+  });
+
+  const search = page.getByLabel('Find a recipe');
+  const loading = results.getByRole('status').filter({ hasText: 'Checking recipes against your main ingredients' });
+  const empty = results.getByRole('heading', { name: 'No matching staple recommendations' });
+  try {
+    await search.fill(query);
+    await responseReady.promise;
+    await expect(search).toHaveValue(query);
+    await expect(page).toHaveURL(service.url + '/?view=staples&q=' + query + '#/recipes');
+    await expect(loading).toBeVisible();
+    await expect(previousCount).toHaveCount(0);
+    await expect(results.getByRole('article')).toHaveCount(0);
+    await expect(links).toHaveCount(0);
+    await expect(pagination).toHaveCount(0);
+    await expect(empty).toHaveCount(0);
+  } finally {
+    releaseResponse.resolve();
+  }
+
+  await expect(empty).toBeVisible();
+  await expect(loading).toHaveCount(0);
+  await expect(previousCount).toHaveCount(0);
+  await expect(links).toHaveCount(0);
+});

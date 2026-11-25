@@ -27,13 +27,7 @@ function formatStapleState(staple) {
     return `Enough (have ${staple.pantryQuantity} ${staple.pantryUnit} / need ${needText})`;
   }
   if (staple.state === 'insufficient') {
-    const matchingReq = staple.required.find(item => item.unit === staple.pantryUnit);
-    const shortfall = matchingReq
-      ? Math.max(0, Math.round(matchingReq.quantity * 100) - Math.round(staple.pantryQuantity * 100)) / 100
-      : null;
-    return shortfall !== null
-      ? `Short ${shortfall} ${staple.pantryUnit} (have ${staple.pantryQuantity} ${staple.pantryUnit} / need ${needText})`
-      : `Short (have ${staple.pantryQuantity} ${staple.pantryUnit} / need ${needText})`;
+    return `Short ${staple.shortfallQuantity} ${staple.pantryUnit} (have ${staple.pantryQuantity} ${staple.pantryUnit} / need ${needText})`;
   }
   if (staple.state === 'unitCheck') {
     return `Check units (pantry: ${staple.pantryQuantity} ${staple.pantryUnit}; recipe needs ${needText})`;
@@ -70,7 +64,7 @@ export default function Recipes() {
   const { snapshot, recipeScroll } = useApp();
   const [search, setSearch] = useState(() => window.location.search);
   const [hint, setHint] = useState('');
-  const [recState, setRecState] = useState({ status: 'idle', data: null, error: null });
+  const [recResponse, setRecResponse] = useState(null);
   const [retryTick, setRetryTick] = useState(0);
 
   useEffect(() => {
@@ -85,6 +79,8 @@ export default function Recipes() {
   const view = params.get('view') === 'staples' ? 'staples' : 'all';
   const filterParams = stripViewParam(search);
   const filterQuery = filterParams.toString();
+  const requestKey = JSON.stringify([filterQuery, snapshot.revision, retryTick]);
+  const recState = recResponse?.key === requestKey ? recResponse : null;
 
   const commitParams = (next, { scrollTop = false } = {}) => {
     const query = next.toString();
@@ -96,12 +92,13 @@ export default function Recipes() {
   useEffect(() => {
     if (view !== 'staples') return;
     let cancelled = false;
-    setRecState(prev => ({ status: 'loading', data: prev.data, error: null }));
+    setRecResponse(null);
     client.getStapleRecommendations(filterQuery)
       .then(data => {
         if (cancelled) return;
-        setRecState({ status: 'ready', data, error: null });
+        setRecResponse({ key: requestKey, data });
         const currentParams = new URLSearchParams(window.location.search);
+        if (currentParams.get('view') !== 'staples' || stripViewParam(currentParams).toString() !== filterQuery) return;
         const requestedPage = currentParams.get('page');
         const effectivePage = data.appliedFilters?.page;
         if (requestedPage && effectivePage && String(effectivePage) !== requestedPage) {
@@ -112,10 +109,10 @@ export default function Recipes() {
         }
       })
       .catch(error => {
-        if (!cancelled) setRecState({ status: 'error', data: null, error });
+        if (!cancelled) setRecResponse({ key: requestKey, error });
       });
     return () => { cancelled = true; };
-  }, [view, filterQuery, snapshot.revision, retryTick]);
+  }, [view, filterQuery, requestKey]);
 
   const setView = nextView => {
     const next = new URLSearchParams(search);
@@ -211,15 +208,15 @@ export default function Recipes() {
       </>
     ) : (
       <section className="staples-section" aria-label="Staple-based recommendations">
-        {recState.status === 'error' ? (
-          recState.error?.code === 'INVALID_FILTER'
+        {!recState ? (
+          <p role="status" className="loading">Checking recipes against your main ingredients…</p>
+        ) : recState.error ? (
+          recState.error.code === 'INVALID_FILTER'
             ? <div className="error" role="alert">{recState.error.message} <button className="text-button" onClick={clear}>Clear invalid filters</button></div>
             : <EmptyState title="Unable to load recommendations" action={<button type="button" onClick={() => setRetryTick(n => n + 1)}>Try again</button>}>
-                <span role="alert">{recState.error?.message || 'Could not load staple recommendations.'}</span>
+                <span role="alert">{recState.error.message || 'Could not load staple recommendations.'}</span>
               </EmptyState>
-        ) : recState.status === 'loading' && !recState.data ? (
-          <p role="status" className="loading">Checking recipes against your main ingredients…</p>
-        ) : recState.data ? (
+        ) : (
           !recState.data.hasStapleMatch ? (
             <EmptyState
               title="No staple match yet"
@@ -310,7 +307,7 @@ export default function Recipes() {
               </nav>
             ) : null}
           </>
-        ) : null}
+        )}
       </section>
     )}
   </>;

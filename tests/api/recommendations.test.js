@@ -36,7 +36,7 @@ test('staple recommendations API: candidates, ordering and explainability on the
     group: 'staplesReady', stapleTotal: 1, ownedKinds: 1, sufficientKinds: 1,
     insufficientKinds: 0, missingKinds: 0, unitCheckKinds: 0,
     sufficientRatio: 1, ownedRatio: 1,
-    staples: [{ ingredientId: 'egg', required: [{ unit: 'piece', quantity: 2 }], pantryQuantity: 2, pantryUnit: 'piece', state: 'sufficient' }],
+    staples: [{ ingredientId: 'egg', required: [{ unit: 'piece', quantity: 2 }], pantryQuantity: 2, pantryUnit: 'piece', shortfallQuantity: 0, state: 'sufficient' }],
     missingSeasonings: [{ ingredientId: 'salt', quantity: 2, unit: 'g' }], // staples ready, seasonings still missing
   });
 
@@ -44,8 +44,8 @@ test('staple recommendations API: candidates, ordering and explainability on the
   const tomatoEggs = recommendations.find(x => x.recipeId === 'tomato-eggs');
   assert.equal(tomatoEggs.group, 'partialMatch');
   assert.deepEqual(tomatoEggs.staples, [
-    { ingredientId: 'egg', required: [{ unit: 'piece', quantity: 3 }], pantryQuantity: 2, pantryUnit: 'piece', state: 'insufficient' },
-    { ingredientId: 'tomato', required: [{ unit: 'piece', quantity: 2 }], pantryQuantity: 1, pantryUnit: 'piece', state: 'insufficient' },
+    { ingredientId: 'egg', required: [{ unit: 'piece', quantity: 3 }], pantryQuantity: 2, pantryUnit: 'piece', shortfallQuantity: 1, state: 'insufficient' },
+    { ingredientId: 'tomato', required: [{ unit: 'piece', quantity: 2 }], pantryQuantity: 1, pantryUnit: 'piece', shortfallQuantity: 1, state: 'insufficient' },
   ]);
   assert.equal(tomatoEggs.sufficientRatio, 0);
   assert.equal(tomatoEggs.ownedRatio, 1);
@@ -53,6 +53,26 @@ test('staple recommendations API: candidates, ordering and explainability on the
 
   // Seasonings never generate candidates or alter scores: salt/oil do not appear as staples.
   assert(recommendations.every(x => x.staples.every(s => !['salt', 'oil', 'soy-sauce'].includes(s.ingredientId))));
+});
+
+test('staple recommendations API: returns the exact fractional shortfall in the matching unit', async t => {
+  const f = fixture(); const api = await listen(createApp(f.db));
+  t.after(async () => { await api.close(); f.close(); });
+
+  const saved = await api.request('/pantry/flour', 'PUT', { quantity: 39.99, unit: 'g', expectedRevision: 0 });
+  assert.equal(saved.status, 200);
+
+  const r = await api.request('/recommendations/staples?q=Katsudon');
+  assert.equal(r.status, 200);
+  const katsudon = r.data.recommendations.find(recipe => recipe.recipeId === 'katsudon');
+  assert.deepEqual(katsudon.staples.find(staple => staple.ingredientId === 'flour'), {
+    ingredientId: 'flour',
+    required: [{ unit: 'g', quantity: 40 }],
+    pantryQuantity: 39.99,
+    pantryUnit: 'g',
+    shortfallQuantity: 0.01,
+    state: 'insufficient',
+  });
 });
 
 test('staple recommendations API: pagination slices the ranked list without re-ranking it', async t => {
@@ -153,6 +173,7 @@ test('staple recommendations API: uncomparable units force checkUnits and are ne
   const tomato = tomatoEggs.staples.find(x => x.ingredientId === 'tomato');
   assert.equal(tomato.state, 'unitCheck');
   assert.equal(tomato.pantryUnit, 'g');
+  assert.equal(tomato.shortfallQuantity, null);
   assert.equal(tomatoEggs.unitCheckKinds, 1);
   assert.equal(tomatoEggs.sufficientKinds, 0); // egg 2/3 is insufficient; only the comparable kinds score
   assert.equal(tomatoEggs.insufficientKinds, 1);
