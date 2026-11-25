@@ -26,5 +26,11 @@ export function createHttpClient(fetcher = (...args) => fetch(...args)) {
     selectShoppingRecipe: (recipeId, expectedRevision) => request('/shopping-selection', 'PUT', { recipeId, expectedRevision }),
     removeShoppingRecipe: (id, expectedRevision) => request(`/shopping-selection/${encodeURIComponent(id)}`, 'DELETE', { expectedRevision }),
     clearShoppingSelection: (_, expectedRevision) => request('/shopping-selection', 'DELETE', { expectedRevision }),
+    markPurchased: ({ ingredientId, unit, quantity }, expectedRevision) => request(
+      `/purchased-marks/${encodeURIComponent(ingredientId)}`, 'PUT', { unit, expectedQuantity: quantity, expectedRevision },
+    ),
+    unmarkPurchased: ({ ingredientId, unit }, expectedRevision) => request(
+      `/purchased-marks/${encodeURIComponent(ingredientId)}`, 'DELETE', { unit, expectedRevision },
+    ),
   };
 }
