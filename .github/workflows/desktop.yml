@@ -62,8 +62,8 @@ jobs:
         run: |
           $installer = Get-Item desktop-dist/*.exe
           $checksum = (Get-FileHash -Algorithm SHA256 $installer.FullName).Hash.ToLowerInvariant()
-          "$checksum  $($installer.Name)" | Set-Content -Encoding ascii desktop-dist/SHA256SUMS.txt
-          git rev-parse HEAD | Set-Content -Encoding ascii desktop-dist/SOURCE_COMMIT.txt
+          ("$checksum  $($installer.Name)" + [char]10) | Set-Content -NoNewline -Encoding ascii desktop-dist/SHA256SUMS.txt
+          ((git rev-parse HEAD) + [char]10) | Set-Content -NoNewline -Encoding ascii desktop-dist/SOURCE_COMMIT.txt
       - uses: actions/upload-artifact@v4
         with:
           name: pantry-desktop-${{ matrix.platform }}-${{ github.sha }}
