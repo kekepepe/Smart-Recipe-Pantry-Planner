@@ -31,6 +31,8 @@ jobs:
         if: runner.os == 'Linux'
       - run: npm run test:e2e
         if: runner.os == 'Linux'
+        env:
+          PLAYWRIGHT_OUTPUT_DIR: test-results
       - uses: actions/upload-artifact@v4
         if: always() && runner.os == 'Linux'
         with:
