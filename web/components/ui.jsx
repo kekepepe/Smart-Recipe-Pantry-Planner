@@ -25,7 +25,20 @@ export function IngredientAmount({ item, compact = false }) {
 export function RecipeStatus({ evaluation }) {
   if (evaluation.status === 'ready') return <span className="recipe-status ready"><Icon name="check" />Can make now</span>;
   if (evaluation.status === 'checkUnits') return <span className="recipe-status units">Check units</span>;
-  return <span className="recipe-status missing">Need {evaluation.shortages.slice(0, 3).map((item, index) => <span key={item.ingredientId}>{index ? ', ' : ''}<IngredientAmount item={item} /></span>)}{evaluation.shortages.length > 3 ? <span> + {evaluation.shortages.length - 3} more</span> : null}</span>;
+  const visible = evaluation.shortages.slice(0, 3);
+  const remaining = evaluation.shortages.length - visible.length;
+  return (
+    <span className="recipe-status missing">
+      {'Need '}
+      {visible.map((item, index) => (
+        <span key={item.ingredientId} className="shortage-part">
+          <IngredientAmount item={item} />
+          {index < visible.length - 1 ? ', ' : ''}
+        </span>
+      ))}
+      {remaining > 0 ? ` + ${remaining} more` : ''}
+    </span>
+  );
 }
 
 export function EmptyState({ title, children, action }) {
