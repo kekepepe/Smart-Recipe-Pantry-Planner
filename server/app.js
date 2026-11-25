@@ -12,8 +12,8 @@ const loadNutritionMappings = () => {
   const path = join(root, 'data', 'nutrition-mappings.json');
   return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : [];
 };
-export function createApp(db, { serveStatic = false, fault, nutritionMappings = loadNutritionMappings() } = {}) {
-  const app = express(); const store = new Store(db, { fault, nutritionMappings });
+export function createApp(db, { serveStatic = false, fault, now, nutritionMappings = loadNutritionMappings() } = {}) {
+  const app = express(); const store = new Store(db, { fault, now, nutritionMappings });
   app.disable('x-powered-by');
   app.use('/api', (req, res, next) => {
     req.requestId = randomUUID(); res.set('Cache-Control', 'no-store'); res.set('X-Content-Type-Options', 'nosniff');
@@ -40,6 +40,10 @@ export function createApp(db, { serveStatic = false, fault, nutritionMappings = 
   });
   app.get('/api/nutrition', (req, res) => res.json(store.nutritionIndex()));
   app.get('/api/nutrition/:recipeId', (req, res) => res.json(store.nutritionDetail(req.params.recipeId)));
+  app.get('/api/inspiration', (req, res) => {
+    try { res.json(store.inspiration(new URL(req.originalUrl, 'http://local').searchParams)); }
+    catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
+  });
   app.get('/api/snapshot', (req, res) => res.json(store.getSnapshot()));
   app.post('/api/onboarding', shape(['mode', 'expectedRevision']), (req, res) => res.json(store.onboard(req.body)));
   app.put('/api/pantry/:id', shape(['quantity', 'unit', 'expectedRevision']), (req, res) => res.json(store.saveItem(req.params.id, req.body)));

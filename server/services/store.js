@@ -4,12 +4,13 @@ import { parseRecipeFilters, filterRecipes } from '../../src/discover-recipes.js
 import { recommendByStaples } from '../../src/recommend-by-staples.js';
 import { computeNutrition, indexNutritionMappings } from '../../src/nutrition.js';
 import { computePurchaseGaps, reconcilePurchasedMarks } from '../../src/purchased-marks.js';
+import { selectDailyInspiration } from '../../src/daily-inspiration.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
 export class Store {
-  constructor(db, { workspace = 'local', fault = () => {}, nutritionMappings = [] } = {}) {
-    this.db = db; this.workspace = workspace; this.fault = fault;
+  constructor(db, { workspace = 'local', fault = () => {}, nutritionMappings = [], now = () => new Date() } = {}) {
+    this.db = db; this.workspace = workspace; this.fault = fault; this.now = now;
     // C03: verified nutrition mapping records (the M02 dataset format frozen in
     // docs/NUTRITION-CONTRACT.md). Validated once at construction so a bad dataset
     // fails fast instead of producing fake numbers.
@@ -54,6 +55,15 @@ export class Store {
       appliedFilters: { ...filters, page },
       catalogVersion, pantryRevision: this.state().revision,
     };
+  }
+  // P01: read-only daily inspiration service. Selection is strictly pantry-independent;
+  // real pantry evaluations are attached afterwards for display only and never write or bump revision.
+  inspiration(query) {
+    const { ingredients, recipes, catalogVersion } = this.catalog();
+    const result = selectDailyInspiration({ recipes, ingredients, catalogVersion }, query, { now: this.now });
+    const pantry = this.pantry();
+    const evaluations = result.recipes.map(recipe => evaluateRecipe(recipe, pantry, ingredients));
+    return { ...result, evaluations, pantryRevision: this.state().revision };
   }
   // C03: read-only nutrition summaries. Nutrition depends on the current recipe (catalog)
   // quantities only — never on the pantry — and performs no writes. Until the verified M02
