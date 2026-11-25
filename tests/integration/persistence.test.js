@@ -31,7 +31,7 @@ test('A15/A14: repeat migrations and seed preserve pantry, revision and selectio
   const f = fixture(); t.after(f.close); const store = new Store(f.db);
   let s = store.onboard({ mode: 'sample', expectedRevision: 0 }); s = store.selectRecipe({ recipeId: 'tomato-skillet', expectedRevision: s.revision });
   migrate(f.db); assert.equal(seed(f.db), false); assert.deepEqual(store.getSnapshot(), s);
-  assert.equal(f.db.prepare('SELECT count(*) n FROM schema_migrations').get().n, 3);
+  assert.equal(f.db.prepare('SELECT count(*) n FROM schema_migrations').get().n, 4);
 });
 
 test('A15: unknown migration versions and changed checksums stop startup/migration', t => {
