@@ -35,7 +35,7 @@ Explainability fields per candidate:
 | `sufficientKinds` / `insufficientKinds` / `missingKinds` / `unitCheckKinds` | Kinds with sufficient quantity / insufficient quantity / completely missing / unit uncomparable |
 | `ownedKinds` | Owned kinds = sufficient + insufficient + unitCheck (stock > 0 counts as owned, but an uncomparable unit never counts as sufficient) |
 | `sufficientRatio` / `ownedRatio` | Exact count/total fractions over main foods only; **never** to be presented as a nutrition fit or an algorithm-accuracy claim |
-| `staples[]` | Per-staple detail: `ingredientId`, `required[{unit,quantity}]` (after per-unit merging of duplicate IDs), `pantryQuantity`/`pantryUnit` (null when absent), `state` (`sufficient`/`insufficient`/`missing`/`unitCheck`) |
+| `staples[]` | Per-staple detail: `ingredientId`, `required[{unit,quantity}]` (after per-unit merging of duplicate IDs), `pantryQuantity`/`pantryUnit` (null when absent), `state` (`sufficient`/`insufficient`/`missing`/`unitCheck`), `shortfallQuantity` (API-calculated gap in `pantryUnit` for a matching unit, `0` when sufficient, `null` for `missing` or `unitCheck`) |
 | `missingSeasonings[]` | Missing required seasonings `{ingredientId,quantity,unit}`; same-unit stock is deducted to an exact shortfall, an uncomparable unit or absence reports the full amount. **When `group=staplesReady` and this array is non-empty the page must prompt "main foods ready, seasonings still missing" and must not claim "everything is in stock"** |
 
 ## 3. Candidate and ordering rules
@@ -54,9 +54,9 @@ Explainability fields per candidate:
   - `total=0` while `hasStapleMatch=true`: the pantry has candidates but the active filters matched nothing → **offer to clear the filters** instead of prompting for pantry items.
 - **Pagination**: render controls from `page`/`pages`/`pageSize`; `total` is the pre-slice count and is unaffected by slicing. When restoring URL state use `appliedFilters.page` (the effective, clamped page), not the raw request.
 - Group labels and ordering follow the API order exactly; the front end must not re-sort, re-slice or recompute gaps/ratios locally.
-- "Owns X of Y staples" uses `ownedKinds/stapleTotal`; per-staple gaps come from `staples[].state` and `required` vs `pantryQuantity`.
+- "Owns X of Y staples" uses `ownedKinds/stapleTotal`. For an `insufficient` staple, display `shortfallQuantity` and `pantryUnit` directly. The API subtracts stock from the merged requirement for the matching unit using integer hundredths.
 - `checkUnits` candidates may show the candidate and the unit-check reason (`staples[].state='unitCheck'`), never as sufficient quantity.
-- Filter changes write back through `appliedFilters` so navigating away and back preserves conditions.
+- Filter changes write back through `appliedFilters` so navigating away and back preserves conditions. Show a loading status while awaiting the active request, then display its count, cards and pagination.
 
 ## 5. Implementation and handover boundaries
 
@@ -76,11 +76,12 @@ Explainability fields per candidate:
 | Staples ready with missing seasonings | `staplesReady` + `missingSeasonings` shortfalls (partial 1/2 g shortfall, full amount on uncomparable units) | same file |
 | Unit-check flag forces the group, never sufficient | `checkUnits`, `unitCheckKinds=1`, `sufficientKinds` excludes the checked item | same file |
 | Group order, in-group ratios, missing count, stable ID | `ready-gap > same-1 > same-2 > mostly-missing > dup-merge > unit-issue` | same file |
-| Decimal aggregation 0.1+0.2=0.3 (minor-unit arithmetic) | merged need exactly 0.3; 0.29 → insufficient | same file |
+| Decimal aggregation 0.1+0.2=0.3 (minor-unit arithmetic) | merged need exactly 0.3; 0.29 → insufficient with a 0.01 shortfall | same file |
 | Input order never affects output | reversed input `deepEqual` | same file |
 | Real-catalog end to end (sample pantry: egg 2, tomato 1) | `total=43`; first two `scrambled-eggs`/`steamed-eggs`; tomato-eggs detail; seasonings never in staples | `tests/api/recommendations.test.js` |
 | Pagination slices the ranked list, never re-ranks | pages 1/2 disjoint, 2 items each, together = first 4 of the ranked list; `total` stays 43 | same file |
 | Out-of-range page clamped, effective page echoed | `page=999` → `page=22`, `appliedFilters.page=22`, 1 item | same file |
+| Delayed zero-result search | Loading status replaces the previous count, cards and pagination until the response arrives | `tests/e2e/recommendations.spec.js` |
 | Zero-result query keeps valid metadata | `q` with no matches → `recommendations=[]`, `page=1`, `pages=1` | same file |
 | Shared filters and 400 validation parity (incl. category) | `countries=cn` 8 results, `q=steamed` 1; `category=bad-category-zz` → 400 `INVALID_FILTER` on **both** `/api/recipes` and this endpoint; three invalid parameters 400 | same file |
 | Two empty states distinguishable | zero-match search with usable pantry → `total=0` but `hasStapleMatch=true`; empty/seasoning-only pantry → both `false` | same file |

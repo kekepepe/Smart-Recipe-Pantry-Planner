@@ -9,6 +9,7 @@ const labels = { countries: '国家 / Country', regions: '地区菜系 / Regiona
 const dimensionKeys = Object.keys(taxonomy);
 const discoveryViews = [
   { id: 'all', label: 'All recipes · 全部菜谱' },
+  { id: 'staples', label: 'Use what I have · 用现有食材' },
   { id: 'inspiration', label: 'Daily inspiration · 每日灵感' },
 ];
 
@@ -27,12 +28,56 @@ function stripViewParam(search) {
   return next;
 }
 
+function formatRequiredList(required) {
+  return required.map(item => `${item.quantity} ${item.unit}`).join(' + ');
+}
+
+function formatStapleState(staple) {
+  const needText = formatRequiredList(staple.required);
+  if (staple.state === 'sufficient') {
+    return `Enough (have ${staple.pantryQuantity} ${staple.pantryUnit} / need ${needText})`;
+  }
+  if (staple.state === 'insufficient') {
+    return `Short ${staple.shortfallQuantity} ${staple.pantryUnit} (have ${staple.pantryQuantity} ${staple.pantryUnit} / need ${needText})`;
+  }
+  if (staple.state === 'unitCheck') {
+    return `Check units (pantry: ${staple.pantryQuantity} ${staple.pantryUnit}; recipe needs ${needText})`;
+  }
+  return `Missing (need ${needText})`;
+}
+
+function groupBadgeMeta(rec) {
+  if (rec.group === 'staplesReady') {
+    if (rec.missingSeasonings.length > 0) {
+      return {
+        className: 'group-badge group-staples-seasoning',
+        text: 'Main foods ready, seasonings still missing · 主食材齐全，仍缺调料',
+      };
+    }
+    return {
+      className: 'group-badge group-staples-ready',
+      text: 'Main foods ready · 主食材齐全',
+    };
+  }
+  if (rec.group === 'checkUnits') {
+    return {
+      className: 'group-badge group-check-units',
+      text: 'Check staple units · 主食材单位待核对',
+    };
+  }
+  return {
+    className: 'group-badge group-partial-match',
+    text: 'Partial staple match · 部分匹配',
+  };
+}
+
 export default function Recipes() {
   const { snapshot, recipeScroll } = useApp();
   const [search, setSearch] = useState(() => window.location.search);
   const [filtersOpen, setFiltersOpen] = useState(() => hasActiveDimensions(window.location.search));
   const [hint, setHint] = useState('');
   const [inspiration, setInspiration] = useState({ status: 'idle', data: null, error: null });
+  const [recResponse, setRecResponse] = useState(null);
   const [retryTick, setRetryTick] = useState(0);
 
   useEffect(() => {
@@ -47,9 +92,11 @@ export default function Recipes() {
   }, [recipeScroll]);
 
   const params = new URLSearchParams(search);
-  const view = params.get('view') === 'inspiration' ? 'inspiration' : 'all';
+  const view = discoveryViews.find(tab => tab.id === params.get('view'))?.id || 'all';
   const filterParams = stripViewParam(search);
   const filterQuery = filterParams.toString();
+  const requestKey = JSON.stringify([filterQuery, snapshot.revision, retryTick]);
+  const recState = recResponse?.key === requestKey ? recResponse : null;
 
   useEffect(() => {
     if (view !== 'inspiration') return;
@@ -71,6 +118,31 @@ export default function Recipes() {
     setSearch(query ? '?' + query : '');
     if (scrollTop) window.scrollTo({ top: 0 });
   };
+
+  useEffect(() => {
+    if (view !== 'staples') return;
+    let cancelled = false;
+    setRecResponse(null);
+    client.getStapleRecommendations(filterQuery)
+      .then(data => {
+        if (cancelled) return;
+        setRecResponse({ key: requestKey, data });
+        const currentParams = new URLSearchParams(window.location.search);
+        if (currentParams.get('view') !== 'staples' || stripViewParam(currentParams).toString() !== filterQuery) return;
+        const requestedPage = currentParams.get('page');
+        const effectivePage = data.appliedFilters?.page;
+        if (requestedPage && effectivePage && String(effectivePage) !== requestedPage) {
+          currentParams.set('page', String(effectivePage));
+          const updated = currentParams.toString();
+          window.history.replaceState(null, '', `${window.location.pathname}${updated ? '?' + updated : ''}${window.location.hash}`);
+          setSearch(updated ? '?' + updated : '');
+        }
+      })
+      .catch(error => {
+        if (!cancelled) setRecResponse({ key: requestKey, error });
+      });
+    return () => { cancelled = true; };
+  }, [view, filterQuery, requestKey]);
 
   const setView = nextView => {
     const next = new URLSearchParams(search);
@@ -124,6 +196,8 @@ export default function Recipes() {
 
   const toggle = (dimension, id) => update(dimension, values(dimension).includes(id) ? values(dimension).filter(v => v !== id) : [...values(dimension), id]);
   const evaluations = new Map(snapshot.evaluations.map(item => [item.recipeId, item]));
+  const recipeMap = new Map(snapshot.recipes.map(item => [item.id, item]));
+  const ingredientMap = new Map(snapshot.ingredients.map(item => [item.id, item]));
   const categories = [...new Set(snapshot.recipes.map(r => r.category))];
 
   const inspirationEvaluations = new Map(
@@ -171,7 +245,110 @@ export default function Recipes() {
         {!result.total ? <EmptyState title="No recipes in this view" action={<button className="secondary" onClick={clear}>Show all recipes</button>}>没有符合全部条件的菜谱。Try removing a filter; your pantry and shopping list are kept.</EmptyState> : null}</div>
         {result.pages > 1 ? <nav className="pagination" aria-label="Recipe pages"><button className="secondary" disabled={result.page === 1} onClick={() => update('page', String(result.page - 1))}>Previous</button><span>Page {result.page} / {result.pages}</span><button className="secondary" disabled={result.page === result.pages} onClick={() => update('page', String(result.page + 1))}>Next</button></nav> : null}
       </>}
-    </> : <section className="inspiration-section" aria-label="Daily inspiration">
+    </> : view === 'staples' ? (
+      <section className="staples-section" aria-label="Staple-based recommendations">
+        {!recState ? (
+          <p role="status" className="loading">Checking recipes against your main ingredients…</p>
+        ) : recState.error ? (
+          recState.error.code === 'INVALID_FILTER'
+            ? <div className="error" role="alert">{recState.error.message} <button className="text-button" onClick={clear}>Clear invalid filters</button></div>
+            : <EmptyState title="Unable to load recommendations" action={<button type="button" onClick={() => setRetryTick(n => n + 1)}>Try again</button>}>
+                <span role="alert">{recState.error.message || 'Could not load staple recommendations.'}</span>
+              </EmptyState>
+        ) : (
+          !recState.data.hasStapleMatch ? (
+            <EmptyState
+              title="No staple match yet"
+              action={
+                <div className="empty-actions">
+                  <a className="button" href="#/pantry">Add pantry ingredients</a>
+                  <button type="button" className="secondary" onClick={() => setView('all')}>Browse all recipes</button>
+                  <a className="button secondary" href="?view=inspiration#/recipes">Daily inspiration</a>
+                </div>
+              }
+            >
+              暂无主食材匹配。Add at least one main food ingredient with a positive quantity to your pantry. Seasonings alone never generate staple matches.
+            </EmptyState>
+          ) : !recState.data.total ? (
+            <EmptyState
+              title="No matching staple recommendations"
+              action={<button type="button" className="secondary" onClick={clear}>Clear filters</button>}
+            >
+              您的库存有可匹配的菜谱，但没有菜谱同时符合当前筛选条件。Clear filters to see your pantry matches; your pantry and shopping list are kept.
+            </EmptyState>
+          ) : <>
+            <div className="view-banner" role="status">
+              <div>
+                <strong>Use what I have · {recState.data.total} matched {recState.data.total === 1 ? 'recipe' : 'recipes'}</strong>
+                <p className="helper">
+                  Page {recState.data.page} / {recState.data.pages} · Ranked by main foods only: main foods ready, partial match, then unit check. Seasonings do not affect ranking, and full-ingredient availability is shown separately. 按主食材匹配排序，调料不计分。
+                </p>
+              </div>
+            </div>
+            <div className="recipe-list">
+              {recState.data.recommendations.map(rec => {
+                const recipe = recipeMap.get(rec.recipeId);
+                if (!recipe) return null;
+                const badge = groupBadgeMeta(rec);
+                return (
+                  <article className="recipe-row recommendation-row" key={rec.recipeId}>
+                    <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.imageAlt} width="190" height="166" />
+                    <div className="recipe-copy">
+                      <p className={badge.className}>{badge.text}</p>
+                      <h2>{recipe.title}</h2>
+                      <p className="recipe-zh" lang="zh-CN">{recipe.titleZh}</p>
+                      <p className="recipe-meta">{recipe.servings} serving{recipe.servings === 1 ? '' : 's'} · {recipe.time} min</p>
+                      <p className="staple-coverage">
+                        <strong>Owned {rec.ownedKinds}/{rec.stapleTotal} staples</strong>
+                        <span> · 已有 {rec.ownedKinds}/{rec.stapleTotal} 种主食材</span>
+                        <span> · Enough: {rec.sufficientKinds}/{rec.stapleTotal}</span>
+                        {rec.unitCheckKinds > 0 ? <span> · Unit check: {rec.unitCheckKinds}</span> : null}
+                      </p>
+                      <ul className="staple-breakdown" aria-label={`Staple match details for ${recipe.title}`}>
+                        {rec.staples.map(staple => {
+                          const ing = ingredientMap.get(staple.ingredientId);
+                          return (
+                            <li key={staple.ingredientId} className={`staple-item staple-${staple.state}`}>
+                              <strong>{ing?.name || staple.ingredientId}</strong>: {formatStapleState(staple)}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      {rec.missingSeasonings.length > 0 ? (
+                        <p className="seasoning-gap">
+                          <strong>Missing seasonings / 缺调料:</strong>{' '}
+                          {rec.missingSeasonings.map((item, idx) => (
+                            <span key={`${item.ingredientId}-${item.unit}`}>
+                              {idx ? ', ' : ''}
+                              <IngredientAmount item={item} />
+                            </span>
+                          ))}
+                        </p>
+                      ) : null}
+                      <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => taxonomy[d].find(t => t.id === id)?.label)).join(' · ')}</p>
+                    </div>
+                    <div className="recipe-actions">
+                      <div className="status-block">
+                        <span className="status-caption">All ingredients</span>
+                        <RecipeStatus evaluation={evaluations.get(recipe.id)} />
+                      </div>
+                      <a className="button" href={`#/recipes/${recipe.id}`} aria-label={`View recipe: ${recipe.title}`}>View recipe</a>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+            {recState.data.pages > 1 ? (
+              <nav className="pagination" aria-label="Recommendation pages">
+                <button className="secondary" disabled={recState.data.page === 1} onClick={() => update('page', String(recState.data.page - 1))}>Previous</button>
+                <span>Page {recState.data.page} / {recState.data.pages}</span>
+                <button className="secondary" disabled={recState.data.page === recState.data.pages} onClick={() => update('page', String(recState.data.page + 1))}>Next</button>
+              </nav>
+            ) : null}
+          </>
+        )}
+      </section>
+    ) : <section className="inspiration-section" aria-label="Daily inspiration">
       {inspiration.status === 'error' ? (
         inspiration.error?.code === 'INVALID_FILTER'
           ? <div className="error" role="alert">{inspiration.error.message} <button className="text-button" onClick={clear}>Clear invalid filters</button></div>
