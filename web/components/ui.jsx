@@ -1,4 +1,5 @@
 import { useApp } from '../AppProvider.jsx';
+import { getIngredientName, getUnitLabel, useI18n } from '../i18n/index.jsx';
 
 export function Icon({ name, ...props }) {
   const paths = {
@@ -16,27 +17,35 @@ export function PageHeading({ title, subtitle, children }) {
 
 export function IngredientAmount({ item, compact = false }) {
   const { snapshot } = useApp();
+  const { lang } = useI18n();
   const ingredient = snapshot.ingredients.find(entry => entry.id === item.ingredientId);
   if (!ingredient) return null;
+  if (lang === 'zh-CN') {
+    const unit = getUnitLabel(item.unit, lang);
+    const name = getIngredientName(ingredient, lang);
+    return <>{item.quantity} {unit}{compact ? '' : name}</>;
+  }
   if (item.unit === 'piece') return <>{item.quantity} {item.quantity === 1 ? ingredient.singular : ingredient.name.toLowerCase()}</>;
   return <>{item.quantity} {item.unit}{compact ? '' : ` ${ingredient.name.toLowerCase()}`}</>;
 }
 
 export function RecipeStatus({ evaluation }) {
-  if (evaluation.status === 'ready') return <span className="recipe-status ready"><Icon name="check" />Can make now</span>;
-  if (evaluation.status === 'checkUnits') return <span className="recipe-status units">Check units</span>;
+  const { lang, t } = useI18n();
+  if (evaluation.status === 'ready') return <span className="recipe-status ready"><Icon name="check" />{t.canMakeNow}</span>;
+  if (evaluation.status === 'checkUnits') return <span className="recipe-status units">{t.checkUnits}</span>;
   const visible = evaluation.shortages.slice(0, 3);
   const remaining = evaluation.shortages.length - visible.length;
+  const sep = lang === 'zh-CN' ? '、' : ', ';
   return (
     <span className="recipe-status missing">
-      {'Need '}
+      {t.needPrefix}
       {visible.map((item, index) => (
         <span key={item.ingredientId} className="shortage-part">
           <IngredientAmount item={item} />
-          {index < visible.length - 1 ? ', ' : ''}
+          {index < visible.length - 1 ? sep : ''}
         </span>
       ))}
-      {remaining > 0 ? ` + ${remaining} more` : ''}
+      {remaining > 0 ? t.moreCount(remaining) : ''}
     </span>
   );
 }

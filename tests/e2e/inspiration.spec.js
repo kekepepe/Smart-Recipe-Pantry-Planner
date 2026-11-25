@@ -24,7 +24,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await page.goto(service.url + '/#/recipes');
 
     // Switch to Daily inspiration tab on empty pantry (B11).
-    const tab = page.getByRole('tab', { name: 'Daily inspiration · 每日灵感', exact: true });
+    const tab = page.getByRole('tab', { name: 'Daily inspiration', exact: true });
     await tab.click();
     await expect(tab).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByText('2026-11-25 (Asia/Shanghai)', { exact: false })).toBeVisible();
@@ -43,14 +43,14 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
       rev = store.saveItem(req.ingredientId, { quantity: req.quantity, unit: req.unit, expectedRevision: rev }).revision;
     }
     await page.reload();
-    await expect(page.getByRole('tab', { name: 'Daily inspiration · 每日灵感', exact: true })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: 'Daily inspiration', exact: true })).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByRole('article')).toHaveCount(3);
     expect(await page.locator('article h2').allTextContents()).toEqual(initialTitles);
     await expect(page.getByRole('article').first()).toContainText('Can make now');
 
     // Filter sharing (<3 candidates) + zero results + clear without affecting pantry (C11).
     await page.locator('.discovery-panel > summary').click();
-    await page.getByRole('checkbox', { name: '川菜 Sichuan', exact: true }).check();
+    await page.getByRole('checkbox', { name: 'Sichuan', exact: true }).check();
     await expect(page.getByRole('article')).toHaveCount(2);
     await expect(page.getByText('2 daily picks from 2 matching recipes', { exact: false })).toBeVisible();
 
@@ -70,16 +70,16 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
 
     // Return to recipes preserves view=inspiration AND active Sichuan filter across navigation and refresh.
     await page.getByRole('link', { name: 'Add more recipes', exact: true }).click();
-    await expect(page.getByRole('tab', { name: 'Daily inspiration · 每日灵感', exact: true })).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByRole('checkbox', { name: '川菜 Sichuan', exact: true })).toBeChecked();
+    await expect(page.getByRole('tab', { name: 'Daily inspiration', exact: true })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('checkbox', { name: 'Sichuan', exact: true })).toBeChecked();
     await expect(page.getByRole('article')).toHaveCount(2);
     await page.reload();
     await expect(page.getByRole('article')).toHaveCount(2);
 
     // Zero matches state and clear filters.
-    await page.getByRole('checkbox', { name: '苦 Bitter', exact: true }).check();
+    await page.getByRole('checkbox', { name: 'Bitter', exact: true }).check();
     await expect(page.getByRole('heading', { name: 'No inspiration matches these filters' })).toBeVisible();
-    await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
+    await page.locator('.inspiration-section').getByRole('button', { name: 'Clear filters', exact: true }).click();
     await expect(page.getByRole('article')).toHaveCount(3);
     expect((await service.request('/snapshot')).data.shoppingRecipeIds.length).toBe(2);
 
@@ -89,7 +89,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
         status: 503,
         json: { error: { code: 'STORAGE_UNAVAILABLE', message: 'Temporary inspiration error.' } },
       }), { times: 1 });
-      await page.getByRole('checkbox', { name: '日本 Japan', exact: true }).check();
+      await page.getByRole('checkbox', { name: 'Japan', exact: true }).check();
       await expect(page.getByRole('heading', { name: 'Unable to load daily inspiration' })).toBeVisible();
       await page.getByRole('button', { name: 'Try again', exact: true }).click();
       await expect(page.getByRole('article')).toHaveCount(3);

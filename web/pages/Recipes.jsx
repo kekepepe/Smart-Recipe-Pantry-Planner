@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useApp } from '../AppProvider.jsx';
 import { client } from '../services/client.js';
 import { discoverRecipes, taxonomy } from '../../src/discover-recipes.js';
 import { EmptyState, IngredientAmount, PageHeading, RecipeStatus } from '../components/ui.jsx';
 
-const availabilityOptions = [['all', 'All recipes'], ['ready', 'Can make now'], ['needsShopping', 'Need ingredients'], ['checkUnits', 'Check units']];
-const labels = { countries: '国家 / Country', regions: '地区菜系 / Regional cuisine', tastes: '口味 / Taste', meals: '餐次 / Meal' };
+import { formatQuantity, getCategoryLabel, getIngredientName, getLocalizedRecipe, getTagLabel, translateError, useI18n } from '../i18n/index.jsx';
+import { ZH_INGREDIENTS } from '../i18n/zh-ingredients.js';
+
 const dimensionKeys = Object.keys(taxonomy);
 const discoveryViews = [
-  { id: 'all', label: 'All recipes · 全部菜谱' },
-  { id: 'staples', label: 'Use what I have · 用现有食材' },
-  { id: 'inspiration', label: 'Daily inspiration · 每日灵感' },
+  { id: 'all', labelKey: 'allRecipesView' },
+  { id: 'staples', labelKey: 'staplesView' },
+  { id: 'inspiration', labelKey: 'inspirationView' },
 ];
 
 function readDimensionValues(params, dimension) {
@@ -28,51 +29,34 @@ function stripViewParam(search) {
   return next;
 }
 
-function formatRequiredList(required) {
-  return required.map(item => `${item.quantity} ${item.unit}`).join(' + ');
+function formatRequiredList(required, lang) {
+  return required.map(item => formatQuantity(item.quantity, item.unit, lang)).join(' + ');
 }
 
-function formatStapleState(staple) {
-  const needText = formatRequiredList(staple.required);
-  if (staple.state === 'sufficient') {
-    return `Enough (have ${staple.pantryQuantity} ${staple.pantryUnit} / need ${needText})`;
-  }
-  if (staple.state === 'insufficient') {
-    return `Short ${staple.shortfallQuantity} ${staple.pantryUnit} (have ${staple.pantryQuantity} ${staple.pantryUnit} / need ${needText})`;
-  }
-  if (staple.state === 'unitCheck') {
-    return `Check units (pantry: ${staple.pantryQuantity} ${staple.pantryUnit}; recipe needs ${needText})`;
-  }
-  return `Missing (need ${needText})`;
+function formatStapleState(staple, lang, t) {
+  const need = formatRequiredList(staple.required, lang);
+  if (staple.state === 'missing') return t.stapleMissing(need);
+
+  const have = formatQuantity(staple.pantryQuantity, staple.pantryUnit, lang);
+  if (staple.state === 'sufficient') return t.stapleEnough(have, need);
+  if (staple.state === 'unitCheck') return t.stapleUnitCheck(have, need);
+
+  return t.stapleShort(formatQuantity(staple.shortfallQuantity, staple.pantryUnit, lang), have, need);
 }
 
-function groupBadgeMeta(rec) {
+function groupBadgeMeta(rec, t) {
   if (rec.group === 'staplesReady') {
-    if (rec.missingSeasonings.length > 0) {
-      return {
-        className: 'group-badge group-staples-seasoning',
-        text: 'Main foods ready, seasonings still missing · 主食材齐全，仍缺调料',
-      };
-    }
-    return {
-      className: 'group-badge group-staples-ready',
-      text: 'Main foods ready · 主食材齐全',
-    };
+    return rec.missingSeasonings.length > 0
+      ? { className: 'group-staples-seasoning', text: t.staplesSeasoningGap }
+      : { className: 'group-staples-ready', text: t.staplesReady };
   }
-  if (rec.group === 'checkUnits') {
-    return {
-      className: 'group-badge group-check-units',
-      text: 'Check staple units · 主食材单位待核对',
-    };
-  }
-  return {
-    className: 'group-badge group-partial-match',
-    text: 'Partial staple match · 部分匹配',
-  };
+  if (rec.group === 'checkUnits') return { className: 'group-check-units', text: t.staplesCheckUnits };
+  return { className: 'group-partial-match', text: t.staplesPartial };
 }
 
 export default function Recipes() {
   const { snapshot, recipeScroll } = useApp();
+  const { lang, t } = useI18n();
   const [search, setSearch] = useState(() => window.location.search);
   const [filtersOpen, setFiltersOpen] = useState(() => hasActiveDimensions(window.location.search));
   const [hint, setHint] = useState('');
@@ -160,14 +144,23 @@ export default function Recipes() {
     setView(discoveryViews[nextIndex].id);
   };
 
+  // Enrich ingredients with full Chinese names for client-side search without altering server catalogVersion.
+  const searchSnapshot = useMemo(() => ({
+    ...snapshot,
+    ingredients: snapshot.ingredients.map(item => ({
+      ...item,
+      nameZh: item.nameZh || ZH_INGREDIENTS[item.id] || '',
+    })),
+  }), [snapshot]);
+
   let result, error;
   if (view === 'all') {
-    try { result = discoverRecipes(snapshot, filterParams); } catch (e) { error = e.message; }
+    try { result = discoverRecipes(searchSnapshot, filterParams); } catch (e) { error = e; }
   }
 
   const values = dimension => readDimensionValues(params, dimension);
   const selectedLabels = dimensionKeys.flatMap(dimension =>
-    values(dimension).map(id => taxonomy[dimension].find(tag => tag.id === id)?.label || id),
+    values(dimension).map(id => getTagLabel(dimension, id, lang)),
   );
   const update = (key, value) => {
     const next = new URLSearchParams(search);
@@ -181,7 +174,7 @@ export default function Recipes() {
       const compatible = regions.filter(id => !countries.length || countries.includes(taxonomy.regions.find(r => r.id === id)?.parent));
       if (compatible.length !== regions.length) {
         next.delete('regions'); compatible.forEach(id => next.append('regions', id));
-        setHint('Region selection updated to match your countries. 已清除不兼容的地区。');
+        setHint('regionHint');
       }
     }
     commitParams(next, { scrollTop: key === 'page' });
@@ -205,10 +198,10 @@ export default function Recipes() {
   );
 
   return <>
-    <PageHeading title="What can you make?" subtitle="Explore the world, one home-cooked dish at a time."><a href="#/pantry" className="heading-link">Edit pantry</a></PageHeading>
-    <div className="pantry-summary"><strong>Your pantry:</strong>{snapshot.pantry.length ? <span>{snapshot.pantry.map((item, index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</span> : <span>Empty for now. Browse below or <a href="#/pantry">add ingredients</a>.</span>}</div>
+    <PageHeading title={t.recipesTitle} subtitle={t.recipesSubtitle}><a href="#/pantry" className="heading-link">{t.editPantryLink}</a></PageHeading>
+    <div className="pantry-summary"><strong>{t.yourPantryLabel}</strong>{snapshot.pantry.length ? <span>{snapshot.pantry.map((item, index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</span> : <span>{t.pantryEmptyInlineBefore}<a href="#/pantry">{t.pantryEmptyInlineLink}</a>{t.pantryEmptyInlineAfter}</span>}</div>
     <div className="recipe-discovery-controls">
-      <div className="view-tabs" role="tablist" aria-label="Recipe discovery views">
+      <div className="view-tabs" role="tablist" aria-label={t.discoveryViewsAria}>
         {discoveryViews.map((tab, index) => (
           <button
             key={tab.id}
@@ -219,180 +212,187 @@ export default function Recipes() {
             onClick={() => setView(tab.id)}
             onKeyDown={event => onTabKeyDown(event, index)}
           >
-            {tab.label}
+            {t[tab.labelKey]}
           </button>
         ))}
       </div>
-      {view === 'all' ? <div className="filters" role="group" aria-label="Filter recipes">{availabilityOptions.map(([id, label]) => <button key={id} className="filter-button" aria-pressed={(params.get('availability') || 'all') === id} onClick={() => update('availability', id)}>{label}</button>)}</div> : null}
+      {view === 'all' ? <div className="filters" role="group" aria-label={t.availabilityGroupAria}>{t.availabilityOptions.map(([id, label]) => <button key={id} className="filter-button" aria-pressed={(params.get('availability') || 'all') === id} onClick={() => update('availability', id)}>{label}</button>)}</div> : null}
     </div>
-    <div className="recipe-search"><div><label htmlFor="recipe-search">Find a recipe</label><input id="recipe-search" type="search" placeholder="菜名或食材 · English or 中文" value={params.get('q') || ''} onChange={e => update('q', e.target.value)} /></div><div><label htmlFor="recipe-category">Category</label><select id="recipe-category" value={params.get('category') || 'all'} onChange={e => update('category', e.target.value)}><option value="all">All categories</option>{categories.map(c => <option key={c}>{c}</option>)}</select></div></div>
+    <div className="recipe-search"><div><label htmlFor="recipe-search">{t.findRecipeLabel}</label><input id="recipe-search" type="search" placeholder={t.findRecipePlaceholder} value={params.get('q') || ''} onChange={e => update('q', e.target.value)} /></div><div><label htmlFor="recipe-category">{t.categoryLabel}</label><select id="recipe-category" value={params.get('category') || 'all'} onChange={e => update('category', e.target.value)}><option value="all">{t.allCategories}</option>{categories.map(c => <option key={c} value={c}>{getCategoryLabel(c, lang)}</option>)}</select></div></div>
     <details className="discovery-panel" open={filtersOpen} onToggle={event => setFiltersOpen(event.currentTarget.open)}>
-      <summary>筛选菜谱 · Filter recipes <span>{selectedLabels.length} selected{selectedLabels.length ? ` · ${selectedLabels.slice(0, 3).join(', ')}${selectedLabels.length > 3 ? ` +${selectedLabels.length - 3}` : ''}` : ''}</span></summary>
-      <p className="helper">任选一项或组合使用。每组内任一匹配，不同组需同时匹配。Any within a group; all across groups.</p>
-      <div className="discovery-grid">{Object.entries(taxonomy).map(([dimension, tags]) => <fieldset key={dimension}><legend>{labels[dimension]}</legend><div className="discovery-options">{tags.filter(t => dimension !== 'regions' || !values('countries').length || values('countries').includes(t.parent)).map(tag => <label className="tag-option" key={tag.id}><input type="checkbox" checked={values(dimension).includes(tag.id)} onChange={() => toggle(dimension, tag.id)} />{tag.label}</label>)}</div></fieldset>)}</div>
-      <button className="text-button" onClick={clear}>Clear filters / 清除筛选</button>
-      {hint ? <p className="helper" role="status">{hint}</p> : null}
+      <summary>{t.filterRecipesSummary} <span>{t.selectedCount(selectedLabels.length)}{selectedLabels.length ? ` · ${selectedLabels.slice(0, 3).join(lang === 'zh-CN' ? '、' : ', ')}${selectedLabels.length > 3 ? ` +${selectedLabels.length - 3}` : ''}` : ''}</span></summary>
+      <p className="helper">{t.filterRecipesHelper}</p>
+      <div className="discovery-grid">{Object.entries(taxonomy).map(([dimension, tags]) => <fieldset key={dimension}><legend>{t.dimensionLabels[dimension]}</legend><div className="discovery-options">{tags.filter(tag => dimension !== 'regions' || !values('countries').length || values('countries').includes(tag.parent)).map(tag => <label className="tag-option" key={tag.id}><input type="checkbox" checked={values(dimension).includes(tag.id)} onChange={() => toggle(dimension, tag.id)} />{getTagLabel(dimension, tag.id, lang, tag.label)}</label>)}</div></fieldset>)}</div>
+      <button className="text-button" onClick={clear}>{t.clearFilters}</button>
+      {hint ? <p className="helper" role="status">{t[hint]}</p> : null}
     </details>
-
     {view === 'all' ? <>
-      {error ? <div className="error" role="alert">{error} <button className="text-button" onClick={clear}>Clear invalid filters</button></div> : <>
-        <p className="helper" role="status">{result.total} of {snapshot.recipes.length} recipes · Page {result.page} / {result.pages} · Fixed recipe portions. Image credits in each recipe.</p>
-        <div className="recipe-list">{result.recipes.map(recipe => <article className="recipe-row" key={recipe.id}>
-          <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.imageAlt} width="190" height="166" />
-          <div className="recipe-copy"><h2>{recipe.title}</h2><p className="recipe-zh" lang="zh-CN">{recipe.titleZh}</p><p className="recipe-meta">{recipe.servings} serving{recipe.servings === 1 ? '' : 's'} · {recipe.time} min</p><p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => taxonomy[d].find(t => t.id === id)?.label)).join(' · ')}</p><p className="description">{recipe.description}</p><p className="ingredient-caption"><strong>Ingredients:</strong> {recipe.requirements.map((item, index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</p></div>
-          <div className="recipe-actions"><RecipeStatus evaluation={evaluations.get(recipe.id)} /><a className="button" href={`#/recipes/${recipe.id}`} aria-label={`View recipe: ${recipe.title}`}>View recipe</a></div>
-        </article>)}
-        {!result.total ? <EmptyState title="No recipes in this view" action={<button className="secondary" onClick={clear}>Show all recipes</button>}>没有符合全部条件的菜谱。Try removing a filter; your pantry and shopping list are kept.</EmptyState> : null}</div>
-        {result.pages > 1 ? <nav className="pagination" aria-label="Recipe pages"><button className="secondary" disabled={result.page === 1} onClick={() => update('page', String(result.page - 1))}>Previous</button><span>Page {result.page} / {result.pages}</span><button className="secondary" disabled={result.page === result.pages} onClick={() => update('page', String(result.page + 1))}>Next</button></nav> : null}
-      </>}
+      {error ? <div className="error" role="alert">{translateError(error, lang)} <button className="text-button" onClick={clear}>{t.clearInvalidFilters}</button></div> : <>
+      <p className="helper" role="status">{t.recipesSummaryLine(result.total, snapshot.recipes.length, result.page, result.pages)}</p>
+      <div className="recipe-list">{result.recipes.map(rawRecipe => {
+        const recipe = getLocalizedRecipe(rawRecipe, lang);
+        return <article className="recipe-row" key={recipe.id}>
+          <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.displayImageAlt} width="190" height="166" />
+          <div className="recipe-copy">
+            <h2>{recipe.displayTitle}</h2>
+            <p className="recipe-meta">{t.servingsMeta(recipe.servings, recipe.time)}</p>
+            <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => getTagLabel(d, id, lang, id))).join(' · ')}</p>
+            <p className="description">{recipe.displayDescription}</p>
+            <p className="ingredient-caption"><strong>{t.ingredientsPrefix}</strong> {recipe.requirements.map((item, index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</p>
+          </div>
+          <div className="recipe-actions"><RecipeStatus evaluation={evaluations.get(recipe.id)} /><a className="button" href={`#/recipes/${recipe.id}`} aria-label={t.viewRecipeAria(recipe.displayTitle)}>{t.viewRecipe}</a></div>
+        </article>;
+      })}
+      {!result.total ? <EmptyState title={t.noRecipesTitle} action={<button className="secondary" onClick={clear}>{t.noRecipesAction}</button>}>{t.noRecipesCopy}</EmptyState> : null}</div>
+      {result.pages > 1 ? <nav className="pagination" aria-label={t.recipePagesAria}><button className="secondary" disabled={result.page === 1} onClick={() => update('page', String(result.page - 1))}>{t.previousPage}</button><span>{t.pageOf(result.page, result.pages)}</span><button className="secondary" disabled={result.page === result.pages} onClick={() => update('page', String(result.page + 1))}>{t.nextPage}</button></nav> : null}
+    </>}
     </> : view === 'staples' ? (
-      <section className="staples-section" aria-label="Staple-based recommendations">
+      <section className="staples-section" aria-label={t.staplesAria}>
         {!recState ? (
-          <p role="status" className="loading">Checking recipes against your main ingredients…</p>
+          <p role="status" className="loading">{t.staplesLoading}</p>
         ) : recState.error ? (
           recState.error.code === 'INVALID_FILTER'
-            ? <div className="error" role="alert">{recState.error.message} <button className="text-button" onClick={clear}>Clear invalid filters</button></div>
-            : <EmptyState title="Unable to load recommendations" action={<button type="button" onClick={() => setRetryTick(n => n + 1)}>Try again</button>}>
-                <span role="alert">{recState.error.message || 'Could not load staple recommendations.'}</span>
+            ? <div className="error" role="alert">{translateError(recState.error, lang)} <button className="text-button" onClick={clear}>{t.clearInvalidFilters}</button></div>
+            : <EmptyState title={t.staplesLoadError} action={<button type="button" onClick={() => setRetryTick(n => n + 1)}>{t.tryAgain}</button>}>
+                <span role="alert">{translateError(recState.error, lang)}</span>
               </EmptyState>
         ) : (
           !recState.data.hasStapleMatch ? (
             <EmptyState
-              title="No staple match yet"
+              title={t.staplesEmptyTitle}
               action={
                 <div className="empty-actions">
-                  <a className="button" href="#/pantry">Add pantry ingredients</a>
-                  <button type="button" className="secondary" onClick={() => setView('all')}>Browse all recipes</button>
-                  <a className="button secondary" href="?view=inspiration#/recipes">Daily inspiration</a>
+                  <a className="button" href="#/pantry">{t.addPantryIngredients}</a>
+                  <button type="button" className="secondary" onClick={() => setView('all')}>{t.browseAllAction}</button>
+                  <a className="button secondary" href="?view=inspiration#/recipes">{t.inspirationView}</a>
                 </div>
               }
             >
-              暂无主食材匹配。Add at least one main food ingredient with a positive quantity to your pantry. Seasonings alone never generate staple matches.
+              {t.staplesEmptyCopy}
             </EmptyState>
           ) : !recState.data.total ? (
             <EmptyState
-              title="No matching staple recommendations"
-              action={<button type="button" className="secondary" onClick={clear}>Clear filters</button>}
+              title={t.staplesNoResultsTitle}
+              action={<button type="button" className="secondary" onClick={clear}>{t.clearFilters}</button>}
             >
-              您的库存有可匹配的菜谱，但没有菜谱同时符合当前筛选条件。Clear filters to see your pantry matches; your pantry and shopping list are kept.
+              {t.staplesNoResultsCopy}
             </EmptyState>
           ) : <>
             <div className="view-banner" role="status">
               <div>
-                <strong>Use what I have · {recState.data.total} matched {recState.data.total === 1 ? 'recipe' : 'recipes'}</strong>
+                <strong>{t.staplesCount(recState.data.total)}</strong>
                 <p className="helper">
-                  Page {recState.data.page} / {recState.data.pages} · Ranked by main foods only: main foods ready, partial match, then unit check. Seasonings do not affect ranking, and full-ingredient availability is shown separately. 按主食材匹配排序，调料不计分。
+                  {t.pageOf(recState.data.page, recState.data.pages)} · {t.staplesRankCopy}
                 </p>
               </div>
             </div>
             <div className="recipe-list">
               {recState.data.recommendations.map(rec => {
-                const recipe = recipeMap.get(rec.recipeId);
-                if (!recipe) return null;
-                const badge = groupBadgeMeta(rec);
+                const rawRecipe = recipeMap.get(rec.recipeId);
+                if (!rawRecipe) return null;
+                const recipe = getLocalizedRecipe(rawRecipe, lang);
+                const badge = groupBadgeMeta(rec, t);
                 return (
                   <article className="recipe-row recommendation-row" key={rec.recipeId}>
-                    <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.imageAlt} width="190" height="166" />
+                    <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.displayImageAlt} width="190" height="166" />
                     <div className="recipe-copy">
-                      <p className={badge.className}>{badge.text}</p>
-                      <h2>{recipe.title}</h2>
-                      <p className="recipe-zh" lang="zh-CN">{recipe.titleZh}</p>
-                      <p className="recipe-meta">{recipe.servings} serving{recipe.servings === 1 ? '' : 's'} · {recipe.time} min</p>
+                      <p className={`group-badge ${badge.className}`}>{badge.text}</p>
+                      <h2>{recipe.displayTitle}</h2>
+                      <p className="recipe-meta">{t.servingsMeta(recipe.servings, recipe.time)}</p>
                       <p className="staple-coverage">
-                        <strong>Owned {rec.ownedKinds}/{rec.stapleTotal} staples</strong>
-                        <span> · 已有 {rec.ownedKinds}/{rec.stapleTotal} 种主食材</span>
-                        <span> · Enough: {rec.sufficientKinds}/{rec.stapleTotal}</span>
-                        {rec.unitCheckKinds > 0 ? <span> · Unit check: {rec.unitCheckKinds}</span> : null}
+                        <strong>{t.staplesOwned(rec.ownedKinds, rec.stapleTotal)}</strong>
+                        <span> · {t.staplesEnough(rec.sufficientKinds, rec.stapleTotal)}</span>
+                        {rec.unitCheckKinds > 0 ? <span> · {t.staplesUnitCount(rec.unitCheckKinds)}</span> : null}
                       </p>
-                      <ul className="staple-breakdown" aria-label={`Staple match details for ${recipe.title}`}>
+                      <ul className="staple-breakdown" aria-label={t.staplesDetails(recipe.displayTitle)}>
                         {rec.staples.map(staple => {
                           const ing = ingredientMap.get(staple.ingredientId);
                           return (
                             <li key={staple.ingredientId} className={`staple-item staple-${staple.state}`}>
-                              <strong>{ing?.name || staple.ingredientId}</strong>: {formatStapleState(staple)}
+                              <strong>{getIngredientName(ing, lang)}</strong>: {formatStapleState(staple, lang, t)}
                             </li>
                           );
                         })}
                       </ul>
                       {rec.missingSeasonings.length > 0 ? (
                         <p className="seasoning-gap">
-                          <strong>Missing seasonings / 缺调料:</strong>{' '}
+                          <strong>{t.missingSeasonings}</strong>{' '}
                           {rec.missingSeasonings.map((item, idx) => (
                             <span key={`${item.ingredientId}-${item.unit}`}>
-                              {idx ? ', ' : ''}
+                              {idx ? (lang === 'zh-CN' ? '、' : ', ') : ''}
                               <IngredientAmount item={item} />
                             </span>
                           ))}
                         </p>
                       ) : null}
-                      <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => taxonomy[d].find(t => t.id === id)?.label)).join(' · ')}</p>
+                      <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => getTagLabel(d, id, lang))).join(' · ')}</p>
                     </div>
                     <div className="recipe-actions">
                       <div className="status-block">
-                        <span className="status-caption">All ingredients</span>
+                        <span className="status-caption">{t.allIngredients}</span>
                         <RecipeStatus evaluation={evaluations.get(recipe.id)} />
                       </div>
-                      <a className="button" href={`#/recipes/${recipe.id}`} aria-label={`View recipe: ${recipe.title}`}>View recipe</a>
+                      <a className="button" href={`#/recipes/${recipe.id}`} aria-label={t.viewRecipeAria(recipe.displayTitle)}>{t.viewRecipe}</a>
                     </div>
                   </article>
                 );
               })}
             </div>
             {recState.data.pages > 1 ? (
-              <nav className="pagination" aria-label="Recommendation pages">
-                <button className="secondary" disabled={recState.data.page === 1} onClick={() => update('page', String(recState.data.page - 1))}>Previous</button>
-                <span>Page {recState.data.page} / {recState.data.pages}</span>
-                <button className="secondary" disabled={recState.data.page === recState.data.pages} onClick={() => update('page', String(recState.data.page + 1))}>Next</button>
+              <nav className="pagination" aria-label={t.recommendationPages}>
+                <button className="secondary" disabled={recState.data.page === 1} onClick={() => update('page', String(recState.data.page - 1))}>{t.previousPage}</button>
+                <span>{t.pageOf(recState.data.page, recState.data.pages)}</span>
+                <button className="secondary" disabled={recState.data.page === recState.data.pages} onClick={() => update('page', String(recState.data.page + 1))}>{t.nextPage}</button>
               </nav>
             ) : null}
           </>
         )}
       </section>
-    ) : <section className="inspiration-section" aria-label="Daily inspiration">
+    ) : <section className="inspiration-section" aria-label={t.inspirationView}>
       {inspiration.status === 'error' ? (
         inspiration.error?.code === 'INVALID_FILTER'
-          ? <div className="error" role="alert">{inspiration.error.message} <button className="text-button" onClick={clear}>Clear invalid filters</button></div>
-          : <EmptyState title="Unable to load daily inspiration" action={<button type="button" onClick={() => setRetryTick(n => n + 1)}>Try again</button>}>
-              <span role="alert">{inspiration.error?.message || 'Could not load today’s picks.'}</span>
+          ? <div className="error" role="alert">{translateError(inspiration.error, lang)} <button className="text-button" onClick={clear}>{t.clearInvalidFilters}</button></div>
+          : <EmptyState title={t.inspirationLoadError} action={<button type="button" onClick={() => setRetryTick(n => n + 1)}>{t.tryAgain}</button>}>
+              <span role="alert">{translateError(inspiration.error, lang)}</span>
             </EmptyState>
       ) : inspiration.status === 'loading' && !inspiration.data ? (
-        <p role="status" className="loading">Loading today&apos;s inspiration…</p>
+        <p role="status" className="loading">{t.inspirationLoading}</p>
       ) : inspiration.data ? <>
         <div className="view-banner" role="status">
           <div>
-            <strong>Daily inspiration · {inspiration.data.date} ({inspiration.data.timezone})</strong>
+            <strong>{t.inspirationDate(inspiration.data.date)}</strong>
             <p className="helper">
-              {inspiration.data.count} daily {inspiration.data.count === 1 ? 'pick' : 'picks'} from {inspiration.data.totalCandidates} matching {inspiration.data.totalCandidates === 1 ? 'recipe' : 'recipes'} · Catalog <span title={inspiration.data.catalogVersion}>{inspiration.data.catalogVersion.slice(0, 10)}</span>. Selected independently of your pantry; pantry status below is shown for reference only. 每日灵感不根据库存选菜，同日同条件结果稳定。
+              {t.inspirationCount(inspiration.data.count, inspiration.data.totalCandidates)} · {t.catalogLabel} <span title={inspiration.data.catalogVersion}>{lang === 'en' ? inspiration.data.catalogVersion.slice(0, 10) : t.currentCatalog}</span>. {t.inspirationExplanation}
             </p>
           </div>
-          <button type="button" className="secondary" onClick={() => setView('all')}>Browse all recipes</button>
+          <button type="button" className="secondary" onClick={() => setView('all')}>{t.browseAllAction}</button>
         </div>
         {!inspiration.data.recipes.length ? (
-          <EmptyState title="No inspiration matches these filters" action={<button className="secondary" onClick={clear}>Clear filters</button>}>
-            没有符合当前条件的菜谱。Try clearing a filter to see today&apos;s picks; your pantry and shopping list are kept.
+          <EmptyState title={t.inspirationEmptyTitle} action={<button className="secondary" onClick={clear}>{t.clearFilters}</button>}>
+            {t.inspirationEmptyCopy}
           </EmptyState>
         ) : (
           <div className="recipe-list">
-            {inspiration.data.recipes.map((recipe, index) => {
+            {inspiration.data.recipes.map((rawRecipe, index) => {
+              const recipe = getLocalizedRecipe(rawRecipe, lang);
               const evaluation = inspirationEvaluations.get(recipe.id) || evaluations.get(recipe.id);
               return (
                 <article className="recipe-row" key={recipe.id}>
-                  <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.imageAlt} width="190" height="166" />
+                  <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.displayImageAlt} width="190" height="166" />
                   <div className="recipe-copy">
-                    <p className="pick-badge">Daily pick #{index + 1} · 今日灵感</p>
-                    <h2>{recipe.title}</h2>
-                    <p className="recipe-zh" lang="zh-CN">{recipe.titleZh}</p>
-                    <p className="recipe-meta">{recipe.servings} serving{recipe.servings === 1 ? '' : 's'} · {recipe.time} min</p>
-                    <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => taxonomy[d].find(t => t.id === id)?.label)).join(' · ')}</p>
-                    <p className="description">{recipe.description}</p>
-                    <p className="ingredient-caption"><strong>Ingredients:</strong> {recipe.requirements.map((item, idx) => <span key={item.ingredientId}>{idx ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</p>
+                    <p className="pick-badge">{t.inspirationPick(index + 1)}</p>
+                    <h2>{recipe.displayTitle}</h2>
+                    <p className="recipe-meta">{t.servingsMeta(recipe.servings, recipe.time)}</p>
+                    <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => getTagLabel(d, id, lang))).join(' · ')}</p>
+                    <p className="description">{recipe.displayDescription}</p>
+                    <p className="ingredient-caption"><strong>{t.ingredientsPrefix}</strong> {recipe.requirements.map((item, idx) => <span key={item.ingredientId}>{idx ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</p>
                   </div>
                   <div className="recipe-actions">
                     <div className="status-block">
-                      <span className="status-caption">Current pantry status</span>
+                      <span className="status-caption">{t.currentPantryStatus}</span>
                       <RecipeStatus evaluation={evaluation} />
                     </div>
-                    <a className="button" href={`#/recipes/${recipe.id}`} aria-label={`View recipe: ${recipe.title}`}>View recipe</a>
+                    <a className="button" href={`#/recipes/${recipe.id}`} aria-label={t.viewRecipeAria(recipe.displayTitle)}>{t.viewRecipe}</a>
                   </div>
                 </article>
               );

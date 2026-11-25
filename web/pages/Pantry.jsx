@@ -1,15 +1,17 @@
 import { useRef, useState } from 'react';
 import { useApp } from '../AppProvider.jsx';
 import { EmptyState, Icon, PageHeading } from '../components/ui.jsx';
+import { formatQuantity, getIngredientName, getUnitLabel, translateError, useI18n } from '../i18n/index.jsx';
 
 const blank = { ingredientId: '', quantity: '', unit: '' };
 
 export default function Pantry() {
   const { snapshot, busy, mutate, confirmAction } = useApp();
+  const { lang, t } = useI18n();
   const [draft, setDraft] = useState(blank);
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState(null);
-  const [saved, setSaved] = useState('');
+  const [savedKey, setSavedKey] = useState('');
   const quantityRef = useRef(null);
   const formRef = useRef(null);
   const selected = snapshot.ingredients.find(item => item.id === draft.ingredientId);
@@ -18,7 +20,7 @@ export default function Pantry() {
     setDraft({ ...item, quantity: String(item.quantity) });
     setEditing(true);
     setError(null);
-    setSaved('');
+    setSavedKey('');
     requestAnimationFrame(() => { quantityRef.current?.focus(); formRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
   }
 
@@ -35,49 +37,61 @@ export default function Pantry() {
 
   async function save(event) {
     event.preventDefault();
-    setSaved('');
-    if (!draft.quantity.trim()) { setError({ field: 'quantity', message: 'Enter a quantity. Zero is allowed.' }); quantityRef.current?.focus(); return; }
-    const result = await mutate('savePantryItem', { ...draft, quantity: Number(draft.quantity) }, 'Pantry updated. Recipe matches and your list are up to date.');
-    if (result.ok) { cancel(); setSaved('Pantry updated. Recipe matches and your list are up to date.'); }
+    setSavedKey('');
+    if (!draft.quantity.trim()) {
+      setError({ field: 'quantity', key: 'enterQuantityError' });
+      quantityRef.current?.focus();
+      return;
+    }
+    const result = await mutate('savePantryItem', { ...draft, quantity: Number(draft.quantity) }, 'pantryUpdatedNotice');
+    if (result.ok) { cancel(); setSavedKey('pantryUpdatedNotice'); }
     else { setError(result.error); if (result.error.field === 'quantity') quantityRef.current?.focus(); }
   }
 
   async function remove(item) {
-    const name = snapshot.ingredients.find(entry => entry.id === item.ingredientId).name.toLowerCase();
-    if (!await confirmAction({ title: `Remove ${name}?`, message: 'Recipe matches and your selected shopping list will update.', label: 'Remove ingredient' })) return;
-    const result = await mutate('deletePantryItem', item.ingredientId, 'Ingredient removed.');
+    const entry = snapshot.ingredients.find(ing => ing.id === item.ingredientId);
+    const displayName = lang === 'zh-CN' ? getIngredientName(entry, lang) : entry.name.toLowerCase();
+    if (!await confirmAction({ title: t.removeConfirmTitle(displayName), message: t.removeConfirmMessage, label: t.removeConfirmLabel })) return;
+    const result = await mutate('deletePantryItem', item.ingredientId, 'ingredientRemovedNotice');
     if (!result.ok) setError(result.error);
-    else { if (draft.ingredientId === item.ingredientId) cancel(); setSaved('Ingredient removed.'); }
+    else { if (draft.ingredientId === item.ingredientId) cancel(); setSavedKey('ingredientRemovedNotice'); }
   }
 
+  const errorMessage = error ? (error.key ? t[error.key] : translateError(error, lang)) : '';
+
   return <>
-    <PageHeading title="My pantry" subtitle="Keep track of what you have."><a href="#/recipes" className="heading-link">Find recipes <Icon name="arrow" /></a></PageHeading>
+    <PageHeading title={t.pantryTitle} subtitle={t.pantrySubtitle}><a href="#/recipes" className="heading-link">{t.navRecipes} <Icon name="arrow" /></a></PageHeading>
     <div className="pantry-layout">
-      <section aria-label="Your ingredients">
-        {snapshot.pantry.length ? <>{['food','seasoning'].map(kind => <div key={kind}><h2>{kind === 'food' ? '食材 / Food' : '调料 / Seasonings'}</h2><ul className="pantry-list" aria-label={kind === 'food' ? 'Food ingredients' : 'Seasonings'}>{snapshot.pantry.filter(item => snapshot.ingredients.find(i=>i.id===item.ingredientId).kind===kind).map(item => <li className="pantry-row" key={item.ingredientId}>
-          <strong>{snapshot.ingredients.find(entry => entry.id === item.ingredientId).name}</strong>
-          <span className="stock-amount">{item.quantity} {item.unit}</span>
-          <button className="text-button" onClick={() => edit(item)} disabled={busy} aria-label={`Edit ${item.ingredientId}`}>Edit</button>
-          <button className="text-button" onClick={() => remove(item)} disabled={busy} aria-label={`Remove ${item.ingredientId}`}>Remove</button>
-        </li>)}</ul></div>)}</> : <EmptyState title="A fresh start">Add your first ingredient, or browse recipes to see what you could make.</EmptyState>}
-        <p className="helper">Changing your pantry updates recipe matches and your selected shopping list.</p>
-        {saved ? <p className="success" role="status">{saved}</p> : null}
+      <section aria-label={t.yourIngredientsAria}>
+        {snapshot.pantry.length ? <>{['food', 'seasoning'].map(kind => <div key={kind}><h2>{kind === 'food' ? t.foodHeading : t.seasoningsHeading}</h2><ul className="pantry-list" aria-label={kind === 'food' ? t.foodListAria : t.seasoningsListAria}>{snapshot.pantry.filter(item => snapshot.ingredients.find(i => i.id === item.ingredientId).kind === kind).map(item => {
+          const entry = snapshot.ingredients.find(ing => ing.id === item.ingredientId);
+          const displayName = getIngredientName(entry, lang);
+          const ariaTarget = lang === 'zh-CN' ? displayName : item.ingredientId;
+          return <li className="pantry-row" key={item.ingredientId}>
+            <strong>{displayName}</strong>
+            <span className="stock-amount">{formatQuantity(item.quantity, item.unit, lang)}</span>
+            <button className="text-button" onClick={() => edit(item)} disabled={busy} aria-label={t.editItemAria(ariaTarget)}>{t.editBtn}</button>
+            <button className="text-button" onClick={() => remove(item)} disabled={busy} aria-label={t.removeItemAria(ariaTarget)}>{t.removeBtn}</button>
+          </li>;
+        })}</ul></div>)}</> : <EmptyState title={t.pantryEmptyTitle}>{t.pantryEmptyCopy}</EmptyState>}
+        <p className="helper">{t.pantryHelper}</p>
+        {savedKey ? <p className="success" role="status">{t[savedKey]}</p> : null}
       </section>
-      <form className="pantry-form" ref={formRef} onSubmit={save} noValidate aria-label={editing ? 'Edit ingredient' : 'Add ingredient'}>
-        <h2>{editing ? 'Edit ingredient' : 'Add an ingredient'}</h2>
-        <label htmlFor="ingredient">Ingredient</label>
+      <form className="pantry-form" ref={formRef} onSubmit={save} noValidate aria-label={editing ? t.editIngredientHeading : t.addIngredientAria}>
+        <h2>{editing ? t.editIngredientHeading : t.addIngredientHeading}</h2>
+        <label htmlFor="ingredient">{t.ingredientLabel}</label>
         <select id="ingredient" value={draft.ingredientId} onChange={event => selectIngredient(event.target.value)} disabled={busy} aria-invalid={error?.field === 'ingredientId'} aria-describedby={error?.field === 'ingredientId' ? 'form-error' : undefined}>
-          <option value="">Select ingredient</option>{['food','seasoning'].map(kind => <optgroup key={kind} label={kind==='food' ? '食材 / Food' : '调料 / Seasonings'}>{snapshot.ingredients.filter(i=>i.kind===kind).map(item => <option value={item.id} key={item.id}>{item.name}{item.nameZh ? ` · ${item.nameZh}` : ''}</option>)}</optgroup>)}
+          <option value="">{t.selectIngredient}</option>{['food', 'seasoning'].map(kind => <optgroup key={kind} label={kind === 'food' ? t.foodHeading : t.seasoningsHeading}>{snapshot.ingredients.filter(i => i.kind === kind).map(item => <option value={item.id} key={item.id}>{getIngredientName(item, lang)}</option>)}</optgroup>)}
         </select>
         <div className="quantity-fields">
-          <div><label htmlFor="quantity">Quantity</label><input ref={quantityRef} id="quantity" inputMode="decimal" placeholder="e.g. 2" autoComplete="off" value={draft.quantity} onChange={event => setDraft({ ...draft, quantity: event.target.value })} disabled={busy} aria-invalid={error?.field === 'quantity'} aria-describedby={error?.field === 'quantity' ? 'quantity-help form-error' : 'quantity-help'} /></div>
-          <div><label htmlFor="unit">Unit</label><select id="unit" value={draft.unit} onChange={event => setDraft({ ...draft, unit: event.target.value })} disabled={busy || !selected} aria-invalid={error?.field === 'unit'} aria-describedby={error?.field === 'unit' ? 'form-error' : undefined}><option value="">Select unit</option>{selected?.allowedUnits.map(unit => <option key={unit} value={unit}>{unit}</option>)}</select></div>
+          <div><label htmlFor="quantity">{t.quantityLabel}</label><input ref={quantityRef} id="quantity" inputMode="decimal" placeholder={t.quantityPlaceholder} autoComplete="off" value={draft.quantity} onChange={event => setDraft({ ...draft, quantity: event.target.value })} disabled={busy} aria-invalid={error?.field === 'quantity'} aria-describedby={error?.field === 'quantity' ? 'quantity-help form-error' : 'quantity-help'} /></div>
+          <div><label htmlFor="unit">{t.unitLabel}</label><select id="unit" value={draft.unit} onChange={event => setDraft({ ...draft, unit: event.target.value })} disabled={busy || !selected} aria-invalid={error?.field === 'unit'} aria-describedby={error?.field === 'unit' ? 'form-error' : undefined}><option value="">{t.selectUnit}</option>{selected?.allowedUnits.map(unit => <option key={unit} value={unit}>{getUnitLabel(unit, lang)}</option>)}</select></div>
         </div>
-        <p className="helper" id="quantity-help">Whole pieces, or up to 2 decimals for g and ml. Saving sets the total quantity; it does not add to it.</p>
-        {editing ? <p className="helper">If you change units, enter the new quantity too. We do not convert between grams and pieces.</p> : null}
-        {error ? <p className="error" id="form-error" role="alert">{error.message}</p> : null}
-        <button type="submit" disabled={busy}>{busy ? 'Saving…' : editing ? 'Save changes' : 'Add ingredient'}</button>
-        {editing ? <button type="button" className="text-button cancel-button" onClick={cancel} disabled={busy}>Cancel edit</button> : null}
+        <p className="helper" id="quantity-help">{t.quantityHelp}</p>
+        {editing ? <p className="helper">{t.unitChangeHelp}</p> : null}
+        {errorMessage ? <p className="error" id="form-error" role="alert">{errorMessage}</p> : null}
+        <button type="submit" disabled={busy}>{busy ? t.saving : editing ? t.saveChanges : t.addIngredientBtn}</button>
+        {editing ? <button type="button" className="text-button cancel-button" onClick={cancel} disabled={busy}>{t.cancelEdit}</button> : null}
       </form>
     </div>
   </>;
