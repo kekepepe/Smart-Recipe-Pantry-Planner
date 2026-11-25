@@ -34,6 +34,10 @@ export function createApp(db, { serveStatic = false, fault, nutritionMappings = 
     try { const snapshot = store.getSnapshot(); res.json({ ...discoverRecipes(snapshot, new URL(req.originalUrl, 'http://local').searchParams), catalogVersion: snapshot.catalogVersion, pantryRevision: snapshot.revision }); }
     catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
   });
+  app.get('/api/recommendations/staples', (req, res) => {
+    try { res.json(store.recommendations(new URL(req.originalUrl, 'http://local').searchParams)); }
+    catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
+  });
   app.get('/api/nutrition', (req, res) => res.json(store.nutritionIndex()));
   app.get('/api/nutrition/:recipeId', (req, res) => res.json(store.nutritionDetail(req.params.recipeId)));
   app.get('/api/snapshot', (req, res) => res.json(store.getSnapshot()));
