@@ -1,5 +1,7 @@
 import { DomainError, validateItem, evaluateRecipe } from '../../src/evaluate-recipe.js';
 import { evaluateShopping } from '../../src/evaluate-shopping.js';
+import { parseRecipeFilters, filterRecipes } from '../../src/discover-recipes.js';
+import { recommendByStaples } from '../../src/recommend-by-staples.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
@@ -17,6 +19,18 @@ export class Store {
     return { ingredients, recipes, catalogVersion };
   }
   pantry() { return this.db.prepare('SELECT ingredient_id AS ingredientId, quantity_minor/100.0 AS quantity,unit FROM pantry_items WHERE workspace_id=? ORDER BY rowid').all(this.workspace); }
+  // C01: read-only staple recommendation service. Shares the discovery filter parser
+  // and matcher so 全部菜谱/用现有食材/每日灵感 stay on one filter contract; performs
+  // no writes and never advances the revision.
+  recommendations(query) {
+    const { ingredients, recipes, catalogVersion } = this.catalog();
+    const pantry = this.pantry();
+    const filters = parseRecipeFilters(query);
+    const evaluations = recipes.map(recipe => evaluateRecipe(recipe, pantry, ingredients));
+    const filtered = filterRecipes(recipes, filters, { evaluations, ingredients });
+    const result = recommendByStaples({ recipes: filtered, pantry });
+    return { ...result, appliedFilters: filters, catalogVersion, pantryRevision: this.state().revision };
+  }
   state() {
     const state = this.db.prepare('SELECT * FROM workspaces WHERE id=?').get(this.workspace);
     if (!state) throw new ServiceError(404, 'NOT_FOUND', 'Workspace not found.');

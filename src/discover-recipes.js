@@ -34,16 +34,20 @@ export function parseRecipeFilters(input = {}) {
   }
   return result;
 }
-export function discoverRecipes({ recipes, ingredients, evaluations }, input = {}) {
-  const filters = parseRecipeFilters(input);
-  if (filters.category !== 'all' && !recipes.some(r => r.category === filters.category)) throw new DomainError('Choose a valid category.','category','INVALID_FILTER');
+export function filterRecipes(recipes, filters, { evaluations = [], ingredients = [] } = {}) {
   const states = new Map(evaluations.map(e => [e.recipeId,e.status]));
   const names = new Map(ingredients.map(i => [i.id, `${i.name} ${i.nameZh || i.name_zh || ''}`]));
   const query = filters.q.toLocaleLowerCase();
-  const matches = recipes.filter(recipe => dimensions.every(d => !filters[d].length || filters[d].some(tag => recipe[d]?.includes(tag)))
+  return recipes.filter(recipe => dimensions.every(d => !filters[d].length || filters[d].some(tag => recipe[d]?.includes(tag)))
     && (filters.category === 'all' || recipe.category === filters.category)
     && (filters.availability === 'all' || states.get(recipe.id) === filters.availability)
     && (!query || `${recipe.title} ${recipe.titleZh || ''} ${recipe.requirements.map(i => names.get(i.ingredientId)).join(' ')}`.toLocaleLowerCase().includes(query)));
+}
+
+export function discoverRecipes({ recipes, ingredients, evaluations }, input = {}) {
+  const filters = parseRecipeFilters(input);
+  if (filters.category !== 'all' && !recipes.some(r => r.category === filters.category)) throw new DomainError('Choose a valid category.','category','INVALID_FILTER');
+  const matches = filterRecipes(recipes, filters, { evaluations, ingredients });
   const pages = Math.max(1, Math.ceil(matches.length / filters.pageSize));
   const page = Math.min(filters.page,pages);
   return { recipes: matches.slice((page-1)*filters.pageSize,page*filters.pageSize), total: matches.length, page, pages, pageSize: filters.pageSize, appliedFilters: { ...filters, page }, taxonomy };

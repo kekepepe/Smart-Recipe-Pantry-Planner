@@ -26,6 +26,10 @@ export function createApp(db, { serveStatic = false, fault } = {}) {
     try { const snapshot = store.getSnapshot(); res.json({ ...discoverRecipes(snapshot, new URL(req.originalUrl, 'http://local').searchParams), catalogVersion: snapshot.catalogVersion, pantryRevision: snapshot.revision }); }
     catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
   });
+  app.get('/api/recommendations/staples', (req, res) => {
+    try { res.json(store.recommendations(new URL(req.originalUrl, 'http://local').searchParams)); }
+    catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
+  });
   app.get('/api/snapshot', (req, res) => res.json(store.getSnapshot()));
   app.post('/api/onboarding', shape(['mode', 'expectedRevision']), (req, res) => res.json(store.onboard(req.body)));
   app.put('/api/pantry/:id', shape(['quantity', 'unit', 'expectedRevision']), (req, res) => res.json(store.saveItem(req.params.id, req.body)));
