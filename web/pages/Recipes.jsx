@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useApp } from '../AppProvider.jsx';
 import { discoverRecipes, taxonomy } from '../../src/discover-recipes.js';
 import { EmptyState, IngredientAmount, PageHeading, RecipeStatus } from '../components/ui.jsx';
-
-const availabilityOptions = [['all', 'All recipes'], ['ready', 'Can make now'], ['needsShopping', 'Need ingredients'], ['checkUnits', 'Check units']];
-const labels = { countries: '国家 / Country', regions: '地区菜系 / Regional cuisine', tastes: '口味 / Taste', meals: '餐次 / Meal' };
+import { getCategoryLabel, getLocalizedRecipe, getTagLabel, translateError, useI18n } from '../i18n/index.jsx';
+import { ZH_INGREDIENTS } from '../i18n/zh-ingredients.js';
 
 export default function Recipes() {
   const { snapshot, recipeScroll } = useApp();
+  const { lang, t } = useI18n();
   const [search, setSearch] = useState(() => window.location.search);
-  const [hint, setHint] = useState('');
+  const [hintKey, setHintKey] = useState('');
+
   useEffect(() => {
     const onScroll = () => { recipeScroll.current = window.scrollY; };
     const onPop = () => setSearch(window.location.search);
@@ -17,23 +18,33 @@ export default function Recipes() {
     window.addEventListener('popstate', onPop);
     return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('popstate', onPop); };
   }, [recipeScroll]);
+
+  // Enrich ingredients with full Chinese names for client-side search without altering server catalogVersion.
+  const searchSnapshot = useMemo(() => ({
+    ...snapshot,
+    ingredients: snapshot.ingredients.map(item => ({
+      ...item,
+      nameZh: item.nameZh || ZH_INGREDIENTS[item.id] || '',
+    })),
+  }), [snapshot]);
+
   let result, error;
-  try { result = discoverRecipes(snapshot, new URLSearchParams(search)); } catch (e) { error = e.message; }
+  try { result = discoverRecipes(searchSnapshot, new URLSearchParams(search)); } catch (e) { error = e; }
   const params = new URLSearchParams(search);
   const values = dimension => [...new Set(params.getAll(dimension).flatMap(v => v.split(',')).filter(Boolean))];
   const update = (key, value) => {
     const next = new URLSearchParams(search);
     next.delete(key);
-    for (const item of Array.isArray(value) ? value : [value]) if (item && item !== 'all') next.append(key,item);
+    for (const item of Array.isArray(value) ? value : [value]) if (item && item !== 'all') next.append(key, item);
     if (key !== 'page') next.delete('page');
-    setHint('');
+    setHintKey('');
     if (key === 'countries') {
       const countries = Array.isArray(value) ? value : [value];
       const regions = values('regions');
       const compatible = regions.filter(id => !countries.length || countries.includes(taxonomy.regions.find(r => r.id === id)?.parent));
       if (compatible.length !== regions.length) {
-        next.delete('regions'); compatible.forEach(id => next.append('regions',id));
-        setHint('Region selection updated to match your countries. 已清除不兼容的地区。');
+        next.delete('regions'); compatible.forEach(id => next.append('regions', id));
+        setHintKey('regionHint');
       }
     }
     const query = next.toString();
@@ -41,31 +52,42 @@ export default function Recipes() {
     setSearch(query ? '?' + query : '');
     if (key === 'page') window.scrollTo({ top: 0 });
   };
-  const clear = () => { window.history.replaceState(null, '', `${window.location.pathname}${window.location.hash}`); setSearch(''); setHint(''); };
+  const clear = () => { window.history.replaceState(null, '', `${window.location.pathname}${window.location.hash}`); setSearch(''); setHintKey(''); };
   const toggle = (dimension, id) => update(dimension, values(dimension).includes(id) ? values(dimension).filter(v => v !== id) : [...values(dimension), id]);
-  const evaluations = new Map(snapshot.evaluations.map(item => [item.recipeId,item]));
+  const evaluations = new Map(snapshot.evaluations.map(item => [item.recipeId, item]));
   const categories = [...new Set(snapshot.recipes.map(r => r.category))];
+  const selectedDimCount = Object.keys(taxonomy).reduce((n, d) => n + values(d).length, 0);
+
   return <>
-    <PageHeading title="What can you make?" subtitle="Explore the world, one home-cooked dish at a time."><a href="#/pantry" className="heading-link">Edit pantry</a></PageHeading>
-    <div className="pantry-summary"><strong>Your pantry:</strong>{snapshot.pantry.length ? <span>{snapshot.pantry.map((item,index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</span> : <span>Empty for now. Browse below or <a href="#/pantry">add ingredients</a>.</span>}</div>
-    <div className="recipe-search"><div><label htmlFor="recipe-search">Find a recipe</label><input id="recipe-search" type="search" placeholder="菜名或食材 · English or 中文" value={params.get('q') || ''} onChange={e => update('q',e.target.value)} /></div><div><label htmlFor="recipe-category">Category</label><select id="recipe-category" value={params.get('category') || 'all'} onChange={e => update('category',e.target.value)}><option value="all">All categories</option>{categories.map(c => <option key={c}>{c}</option>)}</select></div></div>
+    <PageHeading title={t.recipesTitle} subtitle={t.recipesSubtitle}><a href="#/pantry" className="heading-link">{t.editPantryLink}</a></PageHeading>
+    <div className="pantry-summary"><strong>{t.yourPantryLabel}</strong>{snapshot.pantry.length ? <span>{snapshot.pantry.map((item, index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</span> : <span>{t.pantryEmptyInlineBefore}<a href="#/pantry">{t.pantryEmptyInlineLink}</a>{t.pantryEmptyInlineAfter}</span>}</div>
+    <div className="recipe-search"><div><label htmlFor="recipe-search">{t.findRecipeLabel}</label><input id="recipe-search" type="search" placeholder={t.findRecipePlaceholder} value={params.get('q') || ''} onChange={e => update('q', e.target.value)} /></div><div><label htmlFor="recipe-category">{t.categoryLabel}</label><select id="recipe-category" value={params.get('category') || 'all'} onChange={e => update('category', e.target.value)}><option value="all">{t.allCategories}</option>{categories.map(c => <option key={c} value={c}>{getCategoryLabel(c, lang)}</option>)}</select></div></div>
     <details className="discovery-panel" open>
-      <summary>筛选菜谱 · Filter recipes <span>{Object.keys(taxonomy).reduce((n,d) => n+values(d).length,0)} selected</span></summary>
-      <p className="helper">任选一项或组合使用。每组内任一匹配，不同组需同时匹配。Any within a group; all across groups.</p>
-      <div className="discovery-grid">{Object.entries(taxonomy).map(([dimension,tags]) => <fieldset key={dimension}><legend>{labels[dimension]}</legend><div className="discovery-options">{tags.filter(t => dimension !== 'regions' || !values('countries').length || values('countries').includes(t.parent)).map(tag => <label className="tag-option" key={tag.id}><input type="checkbox" checked={values(dimension).includes(tag.id)} onChange={() => toggle(dimension,tag.id)} />{tag.label}</label>)}</div></fieldset>)}</div>
-      <button className="text-button" onClick={clear}>Clear filters / 清除筛选</button>
-      {hint ? <p className="helper" role="status">{hint}</p> : null}
+      <summary>{t.filterRecipesSummary} <span>{t.selectedCount(selectedDimCount)}</span></summary>
+      <p className="helper">{t.filterRecipesHelper}</p>
+      <div className="discovery-grid">{Object.entries(taxonomy).map(([dimension, tags]) => <fieldset key={dimension}><legend>{t.dimensionLabels[dimension]}</legend><div className="discovery-options">{tags.filter(tag => dimension !== 'regions' || !values('countries').length || values('countries').includes(tag.parent)).map(tag => <label className="tag-option" key={tag.id}><input type="checkbox" checked={values(dimension).includes(tag.id)} onChange={() => toggle(dimension, tag.id)} />{getTagLabel(dimension, tag.id, lang, tag.label)}</label>)}</div></fieldset>)}</div>
+      <button className="text-button" onClick={clear}>{t.clearFilters}</button>
+      {hintKey ? <p className="helper" role="status">{t[hintKey]}</p> : null}
     </details>
-    <div className="filters" role="group" aria-label="Filter recipes">{availabilityOptions.map(([id,label]) => <button key={id} className="filter-button" aria-pressed={(params.get('availability') || 'all') === id} onClick={() => update('availability',id)}>{label}</button>)}</div>
-    {error ? <div className="error" role="alert">{error} <button className="text-button" onClick={clear}>Clear invalid filters</button></div> : <>
-      <p className="helper" role="status">{result.total} of {snapshot.recipes.length} recipes · Page {result.page} / {result.pages} · Fixed recipe portions. Image credits in each recipe.</p>
-      <div className="recipe-list">{result.recipes.map(recipe => <article className="recipe-row" key={recipe.id}>
-        <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.imageAlt} width="190" height="166" />
-        <div className="recipe-copy"><h2>{recipe.title}</h2><p className="recipe-zh" lang="zh-CN">{recipe.titleZh}</p><p className="recipe-meta">{recipe.servings} serving{recipe.servings === 1 ? '' : 's'} · {recipe.time} min</p><p className="recipe-tags">{['countries','regions','tastes','meals'].flatMap(d => (recipe[d] || []).map(id => taxonomy[d].find(t=>t.id===id)?.label)).join(' · ')}</p><p className="description">{recipe.description}</p><p className="ingredient-caption"><strong>Ingredients:</strong> {recipe.requirements.map((item,index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</p></div>
-        <div className="recipe-actions"><RecipeStatus evaluation={evaluations.get(recipe.id)} /><a className="button" href={`#/recipes/${recipe.id}`} aria-label={`View recipe: ${recipe.title}`}>View recipe</a></div>
-      </article>)}
-      {!result.total ? <EmptyState title="No recipes in this view" action={<button className="secondary" onClick={clear}>Show all recipes</button>}>没有符合全部条件的菜谱。Try removing a filter; your pantry and shopping list are kept.</EmptyState> : null}</div>
-      {result.pages > 1 ? <nav className="pagination" aria-label="Recipe pages"><button className="secondary" disabled={result.page===1} onClick={() => update('page',String(result.page-1))}>Previous</button><span>Page {result.page} / {result.pages}</span><button className="secondary" disabled={result.page===result.pages} onClick={() => update('page',String(result.page+1))}>Next</button></nav> : null}
+    <div className="filters" role="group" aria-label={t.availabilityGroupAria}>{t.availabilityOptions.map(([id, label]) => <button key={id} className="filter-button" aria-pressed={(params.get('availability') || 'all') === id} onClick={() => update('availability', id)}>{label}</button>)}</div>
+    {error ? <div className="error" role="alert">{translateError(error, lang)} <button className="text-button" onClick={clear}>{t.clearInvalidFilters}</button></div> : <>
+      <p className="helper" role="status">{t.recipesSummaryLine(result.total, snapshot.recipes.length, result.page, result.pages)}</p>
+      <div className="recipe-list">{result.recipes.map(rawRecipe => {
+        const recipe = getLocalizedRecipe(rawRecipe, lang);
+        return <article className="recipe-row" key={recipe.id}>
+          <img loading="lazy" className="recipe-photo" src={recipe.image} alt={recipe.displayImageAlt} width="190" height="166" />
+          <div className="recipe-copy">
+            <h2>{recipe.displayTitle}</h2>
+            <p className="recipe-meta">{t.servingsMeta(recipe.servings, recipe.time)}</p>
+            <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => getTagLabel(d, id, lang, id))).join(' · ')}</p>
+            <p className="description">{recipe.displayDescription}</p>
+            <p className="ingredient-caption"><strong>{t.ingredientsPrefix}</strong> {recipe.requirements.map((item, index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</p>
+          </div>
+          <div className="recipe-actions"><RecipeStatus evaluation={evaluations.get(recipe.id)} /><a className="button" href={`#/recipes/${recipe.id}`} aria-label={t.viewRecipeAria(recipe.displayTitle)}>{t.viewRecipe}</a></div>
+        </article>;
+      })}
+      {!result.total ? <EmptyState title={t.noRecipesTitle} action={<button className="secondary" onClick={clear}>{t.noRecipesAction}</button>}>{t.noRecipesCopy}</EmptyState> : null}</div>
+      {result.pages > 1 ? <nav className="pagination" aria-label={t.recipePagesAria}><button className="secondary" disabled={result.page === 1} onClick={() => update('page', String(result.page - 1))}>{t.previousPage}</button><span>{t.pageOf(result.page, result.pages)}</span><button className="secondary" disabled={result.page === result.pages} onClick={() => update('page', String(result.page + 1))}>{t.nextPage}</button></nav> : null}
     </>}
   </>;
 }

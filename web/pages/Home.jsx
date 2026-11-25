@@ -1,25 +1,28 @@
 import { useState } from 'react';
 import { useApp } from '../AppProvider.jsx';
 import { Icon, PageHeading } from '../components/ui.jsx';
+import { translateError, useI18n } from '../i18n/index.jsx';
+
 export default function Home() {
   const { snapshot, busy, mutate } = useApp();
-  const [error, setError] = useState('');
+  const { lang, t } = useI18n();
+  const [error, setError] = useState(null);
   async function start(mode) {
     const result = await mutate('onboard', mode);
     if (result.ok) window.location.hash = mode === 'sample' ? '/recipes' : '/pantry';
-    else setError(result.error.message);
+    else setError(result.error);
   }
   return <section className="home-layout"><div className="home-copy">
-    <PageHeading title="Good food starts with what you have." subtitle="Keep your ingredients in one place. Find a dish you can make, and know exactly what to buy for the next one." />
+    <PageHeading title={t.homeTitle} subtitle={t.homeSubtitle} />
     <div className="home-actions">{snapshot.initialized ? <>
-      <a className="button" href="#/recipes">Continue with my pantry <Icon name="arrow" /></a>
-      <a className="button secondary" href="#/pantry">Edit saved ingredients</a>
+      <a className="button" href="#/recipes">{t.continuePantry} <Icon name="arrow" /></a>
+      <a className="button secondary" href="#/pantry">{t.editSavedIngredients}</a>
     </> : <>
-      <button onClick={() => start('sample')} disabled={busy}>Use sample pantry <Icon name="arrow" /></button>
-      <button className="secondary" onClick={() => start('empty')} disabled={busy}>Add my own ingredients</button>
+      <button onClick={() => start('sample')} disabled={busy}>{t.useSamplePantry} <Icon name="arrow" /></button>
+      <button className="secondary" onClick={() => start('empty')} disabled={busy}>{t.addOwnIngredients}</button>
     </>}</div>
-    <p className="helper">{snapshot.initialized ? 'Your saved pantry is ready. Returning home never replaces it.' : 'Try 2 eggs and 1 tomato, or start empty. Your choices are saved on this computer.'}</p>
-    <a className="continue-link" href="#/recipes">Browse all {snapshot.recipes.length} recipes</a>
-    {error ? <p role="alert" className="error">{error}</p> : null}
-  </div><figure className="home-image"><img src="/images/recipes/tomato-eggs.jpg" alt="Tomato and egg stir-fry illustration" /><figcaption>A few ingredients. A good place to start.</figcaption></figure></section>;
+    <p className="helper">{snapshot.initialized ? t.homeHelperInitialized : t.homeHelperFresh}</p>
+    <a className="continue-link" href="#/recipes">{t.browseAllRecipes(snapshot.recipes.length)}</a>
+    {error ? <p role="alert" className="error">{translateError(error, lang)}</p> : null}
+  </div><figure className="home-image"><img src="/images/recipes/tomato-eggs.jpg" alt={t.homeImageAlt} /><figcaption>{t.homeImageCaption}</figcaption></figure></section>;
 }

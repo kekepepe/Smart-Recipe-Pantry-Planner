@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { useI18n } from '../i18n/index.jsx';
 
 export default function Confirmation({ request, resolve }) {
+  const { t } = useI18n();
   const ref = useRef(null);
   useEffect(() => {
     const previous = document.activeElement;
@@ -10,6 +12,6 @@ export default function Confirmation({ request, resolve }) {
   }, []);
   return <dialog ref={ref} className="confirmation" aria-labelledby="confirm-title" aria-describedby="confirm-message" onCancel={event => { event.preventDefault(); resolve(false); }}>
     <h2 id="confirm-title">{request.title}</h2><p id="confirm-message">{request.message}</p>
-    <div className="confirm-actions"><button className="secondary" autoFocus onClick={() => resolve(false)}>Cancel</button><button onClick={() => resolve(true)}>{request.label}</button></div>
+    <div className="confirm-actions"><button className="secondary" autoFocus onClick={() => resolve(false)}>{t.cancel}</button><button onClick={() => resolve(true)}>{request.label}</button></div>
   </dialog>;
 }

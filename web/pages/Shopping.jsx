@@ -1,52 +1,57 @@
 import { useState } from 'react';
 import { useApp } from '../AppProvider.jsx';
 import { EmptyState, Icon, PageHeading } from '../components/ui.jsx';
+import { formatQuantity, getIngredientName, getLocalizedRecipe, translateError, useI18n } from '../i18n/index.jsx';
 
 export default function Shopping() {
   const { snapshot, busy, mutate, confirmAction } = useApp();
-  const [error, setError] = useState('');
+  const { lang, t } = useI18n();
+  const [error, setError] = useState(null);
   const selected = snapshot.shoppingRecipes || [];
   const selection = snapshot.shopping;
-  const names = new Map(snapshot.ingredients.map(item => [item.id, item.name]));
+  const ingredientsById = new Map(snapshot.ingredients.map(item => [item.id, item]));
   const recipes = new Map(snapshot.recipes.map(recipe => [recipe.id, recipe]));
   const pantry = new Map(snapshot.pantry.map(item => [item.ingredientId, item]));
+  const nameOf = id => getIngredientName(ingredientsById.get(id), lang);
+  const listSep = lang === 'zh-CN' ? '、' : ', ';
+
   async function remove(id) {
-    setError('');
-    const result = await mutate('removeShoppingRecipe', id, 'Recipe removed. Combined shopping quantities updated.');
-    if (!result.ok) setError(result.error.message);
+    setError(null);
+    const result = await mutate('removeShoppingRecipe', id, 'recipeRemovedNotice');
+    if (!result.ok) setError(result.error);
   }
   async function clear() {
-    if (!await confirmAction({ title: 'Clear your shopping list?', message: 'This removes all selected recipes. Your pantry will stay as it is.', label: 'Clear list' })) return;
-    setError('');
-    const result = await mutate('clearShoppingSelection', null, 'Shopping list cleared.');
-    if (!result.ok) setError(result.error.message);
+    if (!await confirmAction({ title: t.clearListConfirmTitle, message: t.clearListConfirmMessage, label: t.clearListConfirmLabel })) return;
+    setError(null);
+    const result = await mutate('clearShoppingSelection', null, 'listClearedNotice');
+    if (!result.ok) setError(result.error);
   }
   return <>
-    <PageHeading title="Shopping list" subtitle="Your meals, one combined list."><a href="#/recipes" className="heading-link">Add more recipes <Icon name="arrow" /></a></PageHeading>
-    {error ? <p role="alert" className="error">{error}</p> : null}
-    {!selected.length ? <EmptyState title="Your next meal starts here" action={<a className="button" href="#/recipes">Choose a recipe</a>}>Add one or more recipes. Your choices stay saved until you remove them.</EmptyState> : <>
-      <div className="shopping-overview"><p><strong>{selected.length} {selected.length === 1 ? 'recipe' : 'recipes'} saved</strong><span> · Shared ingredients are added together. Your pantry is subtracted once.</span></p><button className="text-button" onClick={clear} disabled={busy}>Clear list</button></div>
-      <section className="combined-shopping" aria-label="Combined shopping list">
-        <h2>Buy for all recipes</h2>
-        <p className="helper">Use these totals when you shop. Your pantry stock has not been used up.</p>
-        {selection.status === 'checkUnits' ? <EmptyState title="Check your pantry units" action={<a className="button" href="#/pantry">Edit pantry</a>}>Some ingredient units cannot be combined reliably. Check {selection.unitIssues.map(issue => names.get(issue.ingredientId)).join(', ')} before using a shopping total.</EmptyState> : !selection.shortages.length ? <EmptyState title="Nothing to buy" action={<a className="button" href="#/recipes">Find more recipes</a>}>You have enough ingredients for all {selected.length} selected {selected.length === 1 ? 'recipe' : 'recipes'} together.</EmptyState> : <>
-          <ul className="shopping-items" aria-label="Missing ingredients">{selection.shortages.map(item => {
+    <PageHeading title={t.shoppingTitle} subtitle={t.shoppingSubtitle}><a href="#/recipes" className="heading-link">{t.addMoreRecipes} <Icon name="arrow" /></a></PageHeading>
+    {error ? <p role="alert" className="error">{translateError(error, lang)}</p> : null}
+    {!selected.length ? <EmptyState title={t.shoppingEmptyTitle} action={<a className="button" href="#/recipes">{t.chooseRecipe}</a>}>{t.shoppingEmptyCopy}</EmptyState> : <>
+      <div className="shopping-overview"><p><strong>{t.recipesSavedCount(selected.length)}</strong><span>{t.shoppingOverviewDetail}</span></p><button className="text-button" onClick={clear} disabled={busy}>{t.clearList}</button></div>
+      <section className="combined-shopping" aria-label={t.combinedShoppingAria}>
+        <h2>{t.buyForAllRecipes}</h2>
+        <p className="helper">{t.useTotalsHelper}</p>
+        {selection.status === 'checkUnits' ? <EmptyState title={t.checkPantryUnitsTitle} action={<a className="button" href="#/pantry">{t.editPantryLink}</a>}>{t.checkPantryUnitsCopy(selection.unitIssues.map(issue => nameOf(issue.ingredientId)).join(listSep))}</EmptyState> : !selection.shortages.length ? <EmptyState title={t.nothingToBuyTitle} action={<a className="button" href="#/recipes">{t.findMoreRecipes}</a>}>{t.nothingToBuyCopy(selected.length)}</EmptyState> : <>
+          <ul className="shopping-items" aria-label={t.missingIngredientsAria}>{selection.shortages.map(item => {
             const required = selection.requirements.find(row => row.ingredientId === item.ingredientId);
             const stock = pantry.get(item.ingredientId);
-            return <li key={item.ingredientId}><div><strong>{names.get(item.ingredientId)}</strong><span>Total needed: {required.quantity} {item.unit} · In pantry: {stock?.quantity ?? 0} {item.unit}</span></div><strong className="shopping-quantity">{item.quantity} {item.unit}</strong></li>;
+            return <li key={item.ingredientId}><div><strong>{nameOf(item.ingredientId)}</strong><span>{t.totalNeededInPantry(formatQuantity(required.quantity, item.unit, lang), formatQuantity(stock?.quantity ?? 0, item.unit, lang))}</span></div><strong className="shopping-quantity">{formatQuantity(item.quantity, item.unit, lang)}</strong></li>;
           })}</ul>
-          <p className="list-note"><Icon name="check" />Up to date with your pantry. Adding the same recipe again will not duplicate it.</p>
+          <p className="list-note"><Icon name="check" />{t.upToDateNote}</p>
         </>}
-        <a className="button secondary" href="#/pantry">Update my pantry</a>
+        <a className="button secondary" href="#/pantry">{t.updateMyPantry}</a>
       </section>
-      <section className="selected-recipes" aria-label="Selected recipes">
-        <h2>Your selected recipes</h2>
-        <p className="recipe-gap-explanation">Each recipe below is compared with your pantry <strong>on its own</strong>. These gaps are a reference; use the combined totals above to buy enough for every recipe.</p>
+      <section className="selected-recipes" aria-label={t.selectedRecipesAria}>
+        <h2>{t.selectedRecipesHeading}</h2>
+        <p className="recipe-gap-explanation">{t.recipeGapPrefix}<strong>{t.recipeGapEmphasis}</strong>{t.recipeGapSuffix}</p>
         {selected.map(evaluation => {
-          const recipe = recipes.get(evaluation.recipeId);
-          return <article className="selected-recipe" key={recipe.id} aria-label={`Recipe: ${recipe.title}`}>
-            <div className="selected-recipe-heading"><img src={recipe.image} alt={recipe.imageAlt} loading="lazy" /><div><h3>{recipe.title}</h3><p className="recipe-zh" lang="zh-CN">{recipe.titleZh}</p><a href={`#/recipes/${recipe.id}`}>View recipe</a></div><button className="text-button" aria-label={`Remove ${recipe.title} from list`} onClick={() => remove(recipe.id)} disabled={busy}>Remove</button></div>
-            {evaluation.status === 'checkUnits' ? <p className="error">Check units in your pantry before calculating this recipe.</p> : evaluation.shortages.length ? <ul className="recipe-gap-list" aria-label={`Missing for ${recipe.title}`}>{evaluation.shortages.map(item => <li key={item.ingredientId}><span>{names.get(item.ingredientId)}</span><strong>{item.quantity} {item.unit}</strong></li>)}</ul> : <p className="success">No missing ingredients for this recipe on its own.</p>}
+          const recipe = getLocalizedRecipe(recipes.get(evaluation.recipeId), lang);
+          return <article className="selected-recipe" key={recipe.id} aria-label={t.recipeCardAria(recipe.displayTitle)}>
+            <div className="selected-recipe-heading"><img src={recipe.image} alt={recipe.displayImageAlt} loading="lazy" /><div><h3>{recipe.displayTitle}</h3><a href={`#/recipes/${recipe.id}`}>{t.viewRecipe}</a></div><button className="text-button" aria-label={t.removeRecipeAria(recipe.displayTitle)} onClick={() => remove(recipe.id)} disabled={busy}>{t.removeBtn}</button></div>
+            {evaluation.status === 'checkUnits' ? <p className="error">{t.checkUnitsInPantry}</p> : evaluation.shortages.length ? <ul className="recipe-gap-list" aria-label={t.missingForAria(recipe.displayTitle)}>{evaluation.shortages.map(item => <li key={item.ingredientId}><span>{nameOf(item.ingredientId)}</span><strong>{formatQuantity(item.quantity, item.unit, lang)}</strong></li>)}</ul> : <p className="success">{t.noMissingForRecipe}</p>}
           </article>;
         })}
       </section>
