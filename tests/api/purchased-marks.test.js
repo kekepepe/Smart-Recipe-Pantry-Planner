@@ -102,6 +102,38 @@ test('purchased marks HTTP: checkUnits rejects new marks, clears conflicted mark
   assert.deepEqual(s.purchasedMarks.map(m => m.ingredientId), ['egg']);
 });
 
+test('purchased marks HTTP: recipe-to-recipe unit conflict clears the mark even with an empty pantry (real catalog)', async t => {
+  const f = fixture(); const api = await listen(createApp(f.db));
+  t.after(async () => { await api.close(); f.close(); });
+  // Peng's reproduction: empty pantry, Warm tomato skillet (tomato 2 pieces),
+  // mark the 2-piece gap, then add Ratatouille (tomato 600 g).
+  let s = (await api.request('/onboarding', 'POST', { mode: 'empty', expectedRevision: 0 })).data;
+  s = (await api.request('/shopping-selection', 'PUT', { recipeId: 'tomato-skillet', expectedRevision: s.revision })).data;
+  assert.deepEqual(s.shopping.shortages, [{ ingredientId: 'tomato', quantity: 2, unit: 'piece' }]);
+  const marked = await api.request('/purchased-marks/tomato', 'PUT', { unit: 'piece', expectedQuantity: 2, expectedRevision: s.revision });
+  assert.equal(marked.status, 200);
+  s = marked.data;
+  assert.deepEqual(s.purchasedMarks.map(m => m.ingredientId), ['tomato']);
+
+  // The shipped catalog demands tomatoes in two different units with no pantry
+  // row: the snapshot reports checkUnits and the tomato mark is cleared.
+  s = (await api.request('/shopping-selection', 'PUT', { recipeId: 'ratatouille', expectedRevision: s.revision })).data;
+  assert.equal(s.shopping.status, 'checkUnits');
+  assert.deepEqual(s.shopping.unitIssues.find(i => i.ingredientId === 'tomato'), { ingredientId: 'tomato', requiredUnits: ['piece', 'g'], availableUnit: null });
+  assert.deepEqual(s.purchasedMarks, []);
+
+  // A fresh mark is refused with the documented prompt-ready error.
+  const rejected = await api.request('/purchased-marks/tomato', 'PUT', { unit: 'piece', expectedQuantity: 2, expectedRevision: s.revision });
+  assert.equal(rejected.status, 422);
+  assert.equal(rejected.data.error.code, 'UNIT_CHECK_REQUIRED');
+
+  // Removing Ratatouille makes the original row reappear - unmarked, never revived.
+  s = (await api.request('/shopping-selection/ratatouille', 'DELETE', { expectedRevision: s.revision })).data;
+  assert.equal(s.shopping.status, 'needsShopping');
+  assert.deepEqual(s.shopping.shortages, [{ ingredientId: 'tomato', quantity: 2, unit: 'piece' }]);
+  assert.deepEqual(s.purchasedMarks, []);
+});
+
 test('purchased marks HTTP: requirement change cancels the stale mark; re-marking uses the new gap', async t => {
   const f = fixture(); const api = await listen(createApp(f.db));
   t.after(async () => { await api.close(); f.close(); });

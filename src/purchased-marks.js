@@ -11,8 +11,10 @@
 //   - the gap reached zero (stock covers the need)  -> cancelled
 // Cancelled marks are deleted, so they never revive automatically when a gap later
 // returns - the user must mark the item again. Unrelated changes that leave a mark's
-// gap untouched leave the mark alone. Ingredients with an uncomparable pantry unit
-// (a unit conflict) have no gap at all, so their marks are cancelled.
+// gap untouched leave the mark alone. Unit-conflicted ingredients have no gap at all,
+// so their marks are cancelled: either the pantry unit cannot be compared to the
+// demanded unit, or two selected recipes demand different units of the same
+// ingredient (a recipe-to-recipe conflict, even with no pantry row).
 // Quantities are compared in integer minor units (quantity * 100) so the gap math
 // behaves exactly like the shopping-list arithmetic.
 
@@ -20,20 +22,32 @@
 // `requirements` holds combined rows [{ingredientId, quantity, unit}]; `pantry` holds
 // [{ingredientId, quantity, unit}]. Returns { gaps, conflicted }:
 //   - gaps: Map `${ingredientId}|${unit}` -> positive gap in minor units (only > 0)
-//   - conflicted: Set of ingredientIds whose pantry unit cannot be compared to the
-//     required unit - these have no gap and their marks must be cleared
+//   - conflicted: Set of unit-conflicted ingredientIds - no gap exists for them and
+//     their marks must be cleared. Conflicts mirror evaluateShopping's combined
+//     unitIssues rule exactly: several required units for one ingredient
+//     (recipe-to-recipe), or a pantry unit outside the required units.
 // This is the single server-side gap calculation shared by the PUT check and the
 // reconciliation pass.
 export function computePurchaseGaps(requirements, pantry) {
   const stock = new Map(pantry.map(item => [item.ingredientId, item]));
+  const unitsByIngredient = new Map();
+  for (const item of requirements) {
+    let units = unitsByIngredient.get(item.ingredientId);
+    if (!units) { units = new Set(); unitsByIngredient.set(item.ingredientId, units); }
+    units.add(item.unit);
+  }
   const gaps = new Map();
   const conflicted = new Set();
-  for (const item of requirements) {
-    const available = stock.get(item.ingredientId);
-    if (available && available.unit !== item.unit) {
-      conflicted.add(item.ingredientId);
-      continue; // unit conflict: no comparable gap exists for this ingredient
+  for (const [ingredientId, units] of unitsByIngredient) {
+    const available = stock.get(ingredientId);
+    if (units.size > 1 || (available && !units.has(available.unit))) {
+      conflicted.add(ingredientId); // unit conflict: no comparable gap exists for this ingredient
+      continue;
     }
+  }
+  for (const item of requirements) {
+    if (conflicted.has(item.ingredientId)) continue;
+    const available = stock.get(item.ingredientId);
     const gap = Math.max(Math.round(item.quantity * 100) - Math.round((available?.quantity || 0) * 100), 0);
     if (gap > 0) gaps.set(`${item.ingredientId}|${item.unit}`, gap);
   }
