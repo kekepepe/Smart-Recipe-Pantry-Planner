@@ -2,10 +2,10 @@ import { DomainError, validateItem, evaluateRecipe } from '../../src/evaluate-re
 import { evaluateShopping } from '../../src/evaluate-shopping.js';
 import { parseRecipeFilters, filterRecipes } from '../../src/discover-recipes.js';
 import { recommendByStaples } from '../../src/recommend-by-staples.js';
-import { computePurchaseGaps, reconcilePurchasedMarks } from '../../src/purchased-marks.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
+import { computePurchaseGaps, reconcilePurchasedMarks } from '../../src/purchased-marks.js';
 export class Store {
   constructor(db, { workspace = 'local', fault = () => {} } = {}) { this.db = db; this.workspace = workspace; this.fault = fault; }
   catalog() {
