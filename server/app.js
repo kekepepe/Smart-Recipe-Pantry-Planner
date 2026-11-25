@@ -26,6 +26,10 @@ export function createApp(db, { serveStatic = false, fault, now } = {}) {
     try { const snapshot = store.getSnapshot(); res.json({ ...discoverRecipes(snapshot, new URL(req.originalUrl, 'http://local').searchParams), catalogVersion: snapshot.catalogVersion, pantryRevision: snapshot.revision }); }
     catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
   });
+  app.get('/api/recommendations/staples', (req, res) => {
+    try { res.json(store.recommendations(new URL(req.originalUrl, 'http://local').searchParams)); }
+    catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
+  });
   app.get('/api/inspiration', (req, res) => {
     try { res.json(store.inspiration(new URL(req.originalUrl, 'http://local').searchParams)); }
     catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
