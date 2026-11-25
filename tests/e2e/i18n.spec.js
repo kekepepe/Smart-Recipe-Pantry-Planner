@@ -54,6 +54,14 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await expect(page.getByRole('article')).toHaveCount(20);
     assertPureEnglish(await collectVisibleAndControlText(page), `${name} EN Recipes`);
 
+    await page.getByRole('tab', { name: 'Daily inspiration', exact: true }).click();
+    await expect(page.getByRole('region', { name: 'Daily inspiration' }).getByRole('article')).toHaveCount(3);
+    assertPureEnglish(await collectVisibleAndControlText(page), `${name} EN Inspiration`);
+    await page.getByRole('tab', { name: 'Use what I have', exact: true }).click();
+    await expect(page.getByRole('region', { name: 'Staple-based recommendations' }).getByRole('article')).toHaveCount(20);
+    assertPureEnglish(await collectVisibleAndControlText(page), `${name} EN Staples`);
+    await page.getByRole('tab', { name: 'All recipes', exact: true }).click();
+
     await page.getByRole('link', { name: 'My pantry', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'My pantry' })).toBeVisible();
     assertPureEnglish(await collectVisibleAndControlText(page), `${name} EN Pantry`);
@@ -68,6 +76,9 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await page.getByRole('button', { name: 'Add missing ingredients to list', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Shopping list' })).toBeVisible();
     assertPureEnglish(await collectVisibleAndControlText(page), `${name} EN Shopping`);
+
+    await page.getByRole('list', { name: 'Missing ingredients', exact: true }).getByRole('checkbox', { name: 'Tomatoes', exact: true }).click();
+    await expect(page.getByRole('list', { name: 'Purchased ingredients' }).getByRole('checkbox').first()).toBeChecked();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 
     // 2. Switch to Chinese mode: dynamic <html lang="zh-CN"> + 100% pure Chinese across every page
@@ -79,6 +90,8 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await page.reload();
     await expect(page.getByRole('heading', { name: '购物清单' })).toBeVisible();
     assertPureChinese(await collectVisibleAndControlText(page), `${name} ZH Shopping after reload`);
+
+    await expect(page.getByRole('list', { name: '已购食材' }).getByRole('checkbox').first()).toBeChecked();
 
     // Home in Chinese
     await page.getByRole('link', { name: '食库与餐盘首页' }).click();
@@ -94,6 +107,14 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await page.getByRole('link', { name: '查找菜谱', exact: true }).first().click();
     await expect(page.getByRole('heading', { name: '今天可以做什么？' })).toBeVisible();
     assertPureChinese(await collectVisibleAndControlText(page), `${name} ZH Recipes page 1`);
+
+    await page.getByRole('tab', { name: '每日灵感', exact: true }).click();
+    await expect(page.getByRole('region', { name: '每日灵感' }).getByRole('article')).toHaveCount(3);
+    assertPureChinese(await collectVisibleAndControlText(page), `${name} ZH Inspiration`);
+    await page.getByRole('tab', { name: '用现有食材', exact: true }).click();
+    await expect(page.getByRole('region', { name: '主食材推荐' }).getByRole('article')).toHaveCount(20);
+    assertPureChinese(await collectVisibleAndControlText(page), `${name} ZH Staples`);
+    await page.getByRole('tab', { name: '全部菜谱', exact: true }).click();
     await page.screenshot({ path: info.outputPath(`i18n-zh-recipes-${name}.png`) });
 
     await page.getByRole('button', { name: '下一页', exact: true }).click();

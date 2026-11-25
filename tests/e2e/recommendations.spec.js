@@ -21,7 +21,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await page.goto(service.url + '/#/recipes');
 
     // C02: Empty pantry -> explicit "No staple match yet" empty state with pantry/browse/inspiration links.
-    const tab = page.getByRole('tab', { name: 'Use what I have · 用现有食材', exact: true });
+    const tab = page.getByRole('tab', { name: 'Use what I have', exact: true });
     await tab.click();
     await expect(tab).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByRole('heading', { name: 'No staple match yet' })).toBeVisible();
@@ -47,20 +47,20 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     const firstCard = page.getByRole('article').nth(0);
     const secondCard = page.getByRole('article').nth(1);
     await expect(firstCard).toContainText('Simple scrambled eggs');
-    await expect(firstCard).toContainText('Main foods ready · 主食材齐全');
+    await expect(firstCard).toContainText('Main foods ready');
     await expect(secondCard).toContainText('Silky steamed eggs');
-    await expect(secondCard).toContainText('Main foods ready, seasonings still missing · 主食材齐全，仍缺调料');
+    await expect(secondCard).toContainText('Main foods ready, seasonings still missing');
     await expect(secondCard).toContainText('Owned 1/1 staples');
-    await expect(secondCard).toContainText('Missing seasonings / 缺调料:');
+    await expect(secondCard).toContainText('Missing seasonings:');
     await expect(secondCard).toContainText('Need 2 g salt');
     await expect(secondCard).not.toContainText('Can make now');
 
     // Partial match card shows staple coverage, shortages and missing seasonings.
     const tomatoEggsCard = page.getByRole('article').filter({ hasText: 'Tomato & egg stir-fry' });
-    await expect(tomatoEggsCard).toContainText('Partial staple match · 部分匹配');
+    await expect(tomatoEggsCard).toContainText('Partial staple match');
     await expect(tomatoEggsCard).toContainText('Owned 2/2 staples');
     await expect(tomatoEggsCard).toContainText('Short 1 piece');
-    await expect(tomatoEggsCard).toContainText('Missing seasonings / 缺调料:');
+    await expect(tomatoEggsCard).toContainText('Missing seasonings:');
     await page.screenshot({ path: info.outputPath(`recommendations-${name}.png`), fullPage: true });
 
     // C06: Adding salt keeps recommendation order and staple counts identical while steamed-eggs becomes Can make now.
@@ -68,7 +68,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await page.reload();
     await expect(page.getByRole('article').nth(0)).toContainText('Simple scrambled eggs');
     await expect(page.getByRole('article').nth(1)).toContainText('Silky steamed eggs');
-    await expect(page.getByRole('article').nth(1)).toContainText('Main foods ready · 主食材齐全');
+    await expect(page.getByRole('article').nth(1)).toContainText('Main foods ready');
     await expect(page.getByRole('article').nth(1)).toContainText('Can make now');
 
     // Pagination slices the ranked list and survives refresh.
@@ -82,12 +82,12 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
 
     // Shared filters + zero-match empty state (hasStapleMatch=true -> offer clearing filters, NOT pantry prompt).
     await page.locator('.discovery-panel > summary').click();
-    await page.getByRole('checkbox', { name: '中国 China', exact: true }).check();
+    await page.getByRole('checkbox', { name: 'China', exact: true }).check();
     await expect(page.getByText('8 matched recipes', { exact: false })).toBeVisible();
     await page.getByLabel('Find a recipe').fill('zzz-no-such-dish');
     await expect(page.getByRole('heading', { name: 'No matching staple recommendations' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'No staple match yet' })).toHaveCount(0);
-    await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
+    await page.locator('.staples-section').getByRole('button', { name: 'Clear filters', exact: true }).click();
     await expect(page.getByText('43 matched recipes', { exact: false })).toBeVisible();
 
     // C05: Uncomparable unit (tomato 500 g) puts tomato-eggs into checkUnits and never sufficient.
@@ -96,7 +96,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await page.getByLabel('Find a recipe').fill('Tomato & egg stir-fry');
     await expect(page.getByRole('article')).toHaveCount(1);
     const unitCard = page.getByRole('article').first();
-    await expect(unitCard).toContainText('Check staple units · 主食材单位待核对');
+    await expect(unitCard).toContainText('Check staple units');
     await expect(unitCard).toContainText('Check units (pantry: 500 g; recipe needs 2 piece)');
     await expect(unitCard).not.toContainText('Main foods ready');
 
@@ -114,7 +114,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
 
     // Returning to recipes preserves view=staples and the active search query.
     await page.getByRole('link', { name: 'Add more recipes', exact: true }).click();
-    await expect(page.getByRole('tab', { name: 'Use what I have · 用现有食材', exact: true })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: 'Use what I have', exact: true })).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByLabel('Find a recipe')).toHaveValue('Silky steamed eggs');
     await expect(page.getByRole('article')).toHaveCount(1);
 
@@ -124,7 +124,8 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
         status: 503,
         json: { error: { code: 'STORAGE_UNAVAILABLE', message: 'Temporary recommendation error.' } },
       }), { times: 1 });
-      await page.getByRole('button', { name: 'Clear filters / 清除筛选', exact: true }).click();
+      await page.locator('.discovery-panel > summary').click();
+      await page.locator('.discovery-panel').getByRole('button', { name: 'Clear filters', exact: true }).click();
       await expect(page.getByRole('heading', { name: 'Unable to load recommendations' })).toBeVisible();
       await page.getByRole('button', { name: 'Try again', exact: true }).click();
       await expect(page.getByText('43 matched recipes', { exact: false })).toBeVisible();

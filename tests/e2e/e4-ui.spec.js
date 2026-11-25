@@ -84,11 +84,11 @@ for (const [label, viewport] of [
     await page.getByRole('button', { name: 'All recipes', exact: true }).click();
     await panel.locator('> summary').click();
     await expect(panel).toHaveAttribute('open', '');
-    await page.getByRole('checkbox', { name: '中国 China', exact: true }).check();
+    await page.getByRole('checkbox', { name: 'China', exact: true }).check();
     await expect(panel.locator('> summary')).toContainText('1 selected');
     await page.reload();
     await expect(panel).toHaveAttribute('open', '');
-    await expect(page.getByRole('checkbox', { name: '中国 China', exact: true })).toBeChecked();
+    await expect(page.getByRole('checkbox', { name: 'China', exact: true })).toBeChecked();
 
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     expect(errors).toEqual([]);
