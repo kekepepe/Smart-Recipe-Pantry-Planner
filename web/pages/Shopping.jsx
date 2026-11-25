@@ -61,7 +61,9 @@ export default function Shopping() {
       checked ? 'Item marked as purchased.' : 'Item moved back to To buy.');
     if (!result.ok) {
       const { error } = result;
-      if (error.status === 409 ||
+      if (error.code === 'UNIT_CHECK_REQUIRED') {
+        setError('Resolve the flagged unit conflicts before marking items purchased.');
+      } else if (error.status === 409 ||
           ['PURCHASED_MARK_STALE', 'PURCHASED_MARK_NOT_REQUIRED', 'NO_ACTIVE_LIST', 'UNIT_MISMATCH'].includes(error.code)) {
         setError('The shopping list changed. Review the current quantity before trying again.');
       } else if (!error.status) {
