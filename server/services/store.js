@@ -1,10 +1,11 @@
 import { DomainError, validateItem, evaluateRecipe } from '../../src/evaluate-recipe.js';
 import { evaluateShopping } from '../../src/evaluate-shopping.js';
+import { selectDailyInspiration } from '../../src/daily-inspiration.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
 export class Store {
-  constructor(db, { workspace = 'local', fault = () => {} } = {}) { this.db = db; this.workspace = workspace; this.fault = fault; }
+  constructor(db, { workspace = 'local', fault = () => {}, now = () => new Date() } = {}) { this.db = db; this.workspace = workspace; this.fault = fault; this.now = now; }
   catalog() {
     const ingredients = this.db.prepare('SELECT * FROM ingredients ORDER BY rowid').all().map(row => ({ ...row, nameZh: row.name_zh, allowedUnits: this.db.prepare('SELECT unit FROM ingredient_units WHERE ingredient_id=? ORDER BY rowid').all(row.id).map(r => r.unit) }));
     const recipes = this.db.prepare('SELECT * FROM recipes ORDER BY rowid').all().map(row => ({
@@ -17,6 +18,15 @@ export class Store {
     return { ingredients, recipes, catalogVersion };
   }
   pantry() { return this.db.prepare('SELECT ingredient_id AS ingredientId, quantity_minor/100.0 AS quantity,unit FROM pantry_items WHERE workspace_id=? ORDER BY rowid').all(this.workspace); }
+  // P01: read-only daily inspiration service. Selection is strictly pantry-independent;
+  // real pantry evaluations are attached afterwards for display only and never write or bump revision.
+  inspiration(query) {
+    const { ingredients, recipes, catalogVersion } = this.catalog();
+    const result = selectDailyInspiration({ recipes, ingredients, catalogVersion }, query, { now: this.now });
+    const pantry = this.pantry();
+    const evaluations = result.recipes.map(recipe => evaluateRecipe(recipe, pantry, ingredients));
+    return { ...result, evaluations, pantryRevision: this.state().revision };
+  }
   state() {
     const state = this.db.prepare('SELECT * FROM workspaces WHERE id=?').get(this.workspace);
     if (!state) throw new ServiceError(404, 'NOT_FOUND', 'Workspace not found.');

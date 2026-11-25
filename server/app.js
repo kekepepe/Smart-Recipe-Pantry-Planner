@@ -4,8 +4,8 @@ import { randomUUID } from 'node:crypto';
 import { join } from 'node:path';
 import { Store, ServiceError, publicError } from './services/store.js';
 import { root } from './config.js';
-export function createApp(db, { serveStatic = false, fault } = {}) {
-  const app = express(); const store = new Store(db, { fault });
+export function createApp(db, { serveStatic = false, fault, now } = {}) {
+  const app = express(); const store = new Store(db, { fault, now });
   app.disable('x-powered-by');
   app.use('/api', (req, res, next) => {
     req.requestId = randomUUID(); res.set('Cache-Control', 'no-store'); res.set('X-Content-Type-Options', 'nosniff');
@@ -24,6 +24,10 @@ export function createApp(db, { serveStatic = false, fault } = {}) {
   app.get('/api/health', (req, res) => { db.prepare('SELECT 1').get(); res.json({ status: 'ok' }); });
   app.get('/api/recipes', (req, res) => {
     try { const snapshot = store.getSnapshot(); res.json({ ...discoverRecipes(snapshot, new URL(req.originalUrl, 'http://local').searchParams), catalogVersion: snapshot.catalogVersion, pantryRevision: snapshot.revision }); }
+    catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
+  });
+  app.get('/api/inspiration', (req, res) => {
+    try { res.json(store.inspiration(new URL(req.originalUrl, 'http://local').searchParams)); }
     catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }
   });
   app.get('/api/snapshot', (req, res) => res.json(store.getSnapshot()));
