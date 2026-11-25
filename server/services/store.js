@@ -1,6 +1,6 @@
 import { DomainError, validateItem, evaluateRecipe } from '../../src/evaluate-recipe.js';
 import { evaluateShopping } from '../../src/evaluate-shopping.js';
-import { reconcilePurchasedMarks } from '../../src/purchased-marks.js';
+import { computePurchaseGaps, reconcilePurchasedMarks } from '../../src/purchased-marks.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
@@ -60,20 +60,22 @@ export class Store {
   rebuildShopping() {
     const { ingredients, recipes, catalogVersion } = this.catalog();
     const result = this.shoppingState(recipes, this.pantry(), ingredients);
-    // Requirement changes coordinate the marks in the same transaction: marks
-    // bound to a changed/removed requirement are cancelled here (C02 rules).
-    this.reconcilePurchasedMarks(result ? result.combined.requirements : []);
+    // Purchase-gap changes coordinate the marks in the same transaction: marks
+    // bound to a changed/zeroed gap, a dropped unit or a unit-conflicted ingredient
+    // are cancelled here (C02 rules).
+    this.reconcilePurchasedMarks(result ? result.combined.requirements : [], this.pantry());
     if (!result) { this.db.prepare('DELETE FROM shopping_lists WHERE workspace_id=?').run(this.workspace); return; }
     const { combined } = result;
     this.db.prepare('INSERT INTO shopping_lists VALUES (?,?,?,?) ON CONFLICT(workspace_id) DO UPDATE SET status=excluded.status,pantry_version=excluded.pantry_version,catalog_version=excluded.catalog_version').run(this.workspace, combined.status, this.state().pantry_version, catalogVersion);
     this.db.prepare('DELETE FROM shopping_list_items WHERE workspace_id=?').run(this.workspace);
     combined.shortages.forEach((item, position) => this.db.prepare('INSERT INTO shopping_list_items VALUES (?,?,?,?,?)').run(this.workspace, item.ingredientId, Math.round(item.quantity * 100), item.unit, position));
   }
-  reconcilePurchasedMarks(requirements) {
-    const { kept } = reconcilePurchasedMarks(this.purchasedMarks(), requirements);
+  reconcilePurchasedMarks(requirements, pantry) {
+    const { gaps, conflicted } = computePurchaseGaps(requirements, pantry);
+    const { kept } = reconcilePurchasedMarks(this.purchasedMarks(), gaps);
     const surviving = new Set(kept.map(mark => `${mark.ingredientId}|${mark.unit}`));
     for (const mark of this.purchasedMarks()) {
-      if (!surviving.has(`${mark.ingredientId}|${mark.unit}`)) {
+      if (conflicted.has(mark.ingredientId) || !surviving.has(`${mark.ingredientId}|${mark.unit}`)) {
         this.db.prepare('DELETE FROM purchased_marks WHERE workspace_id=? AND ingredient_id=? AND unit=?').run(this.workspace, mark.ingredientId, mark.unit);
       }
     }
@@ -89,11 +91,16 @@ export class Store {
       const { recipes } = this.catalog();
       const result = this.shoppingState(recipes, this.pantry(), ingredients);
       if (!result) throw new ServiceError(422, 'NO_ACTIVE_LIST', 'Select a recipe before marking purchased items.');
-      const required = result.combined.requirements.find(entry => entry.ingredientId === id && entry.unit === item.unit);
-      if (!required) throw new ServiceError(422, 'PURCHASED_MARK_NOT_REQUIRED', 'This ingredient is not part of the current shopping list.');
-      if (Math.round(required.quantity * 100) !== Math.round(item.quantity * 100)) throw new ServiceError(422, 'PURCHASED_MARK_STALE', 'The shopping list changed. Reload the latest quantities and mark again.');
+      // While a unit conflict blocks the list there is no trustworthy gap for anyone:
+      // the public shortages array is empty, so reject marking instead of guessing.
+      if (result.combined.status === 'checkUnits') throw new ServiceError(422, 'UNIT_CHECK_REQUIRED', 'Fix the flagged pantry units first; the list cannot compute purchase gaps while units conflict.');
+      // The authoritative amount is the current positive purchase gap, not the raw requirement.
+      const { gaps } = computePurchaseGaps(result.combined.requirements, this.pantry());
+      const gap = gaps.get(`${id}|${item.unit}`);
+      if (gap === undefined) throw new ServiceError(422, 'PURCHASED_MARK_NOT_REQUIRED', 'Nothing is left to buy for this ingredient in the current list.');
+      if (gap !== Math.round(item.quantity * 100)) throw new ServiceError(422, 'PURCHASED_MARK_STALE', 'The purchase gap changed. Reload the latest shopping rows and mark the to-buy quantity again.');
       this.db.prepare('INSERT INTO purchased_marks(workspace_id,ingredient_id,unit,expected_quantity_minor,marked_at) VALUES (?,?,?,?,?) ON CONFLICT(workspace_id,ingredient_id,unit) DO UPDATE SET expected_quantity_minor=excluded.expected_quantity_minor,marked_at=excluded.marked_at')
-        .run(this.workspace, id, item.unit, Math.round(item.quantity * 100), new Date().toISOString());
+        .run(this.workspace, id, item.unit, gap, new Date().toISOString());
     });
   }
   unmarkPurchased(id, body) {
