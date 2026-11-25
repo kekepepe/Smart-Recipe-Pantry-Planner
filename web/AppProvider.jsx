@@ -8,6 +8,7 @@ export function AppProvider({ children }) {
   const epoch = useRef(0);
   const lock = useRef(false);
   const [busy, setBusy] = useState(false);
+  const [purchaseReview, setPurchaseReview] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [notice, setNotice] = useState('');
   const [loadError, setLoadError] = useState('');
@@ -18,7 +19,22 @@ export function AppProvider({ children }) {
   const recipeScroll = useRef(0);
   const [confirmation, setConfirmation] = useState(null);
   const confirmationResolver = useRef(null);
-  const accept = useCallback(next => { latest.current = next; setSnapshot(next); }, []);
+  const accept = useCallback(next => {
+    const previous = latest.current;
+    latest.current = next;
+    setSnapshot(next);
+    if (!previous) return;
+    // Track quantity changes even when the authoritative update arrives on the pantry page.
+    const previousMarks = new Map((previous.purchasedMarks ?? []).map(mark => [mark.ingredientId, mark]));
+    const nextMarks = new Map((next.purchasedMarks ?? []).map(mark => [mark.ingredientId, mark]));
+    setPurchaseReview(current => (next.shopping?.shortages ?? []).flatMap(item => {
+      const mark = nextMarks.get(item.ingredientId);
+      if (mark?.unit === item.unit && mark.expectedQuantity === item.quantity) return [];
+      const previousMark = previousMarks.get(item.ingredientId);
+      const changed = previousMark && (previousMark.unit !== item.unit || previousMark.expectedQuantity !== item.quantity);
+      return changed || current.includes(item.ingredientId) ? [item.ingredientId] : [];
+    }));
+  }, []);
   const refresh = useCallback(async () => {
     if (lock.current) return;
     const token = ++epoch.current;
@@ -54,16 +70,21 @@ export function AppProvider({ children }) {
       accept(next); setSyncError(''); setNotice(message);
       return { ok: true };
     } catch (error) {
-      if (error.status === 409 || !error.status || error.status >= 500) {
+      const purchaseUpdate = method === 'markPurchased' || method === 'unmarkPurchased';
+      if (error.status === 409 || !error.status || error.status >= 500 || (purchaseUpdate && error.status === 422)) {
         try {
           accept(await client.getSnapshot());
-          setSyncError('Latest saved data loaded. Check your draft against it before saving again.');
-        } catch { setSyncError('Connection unavailable. Your draft is kept; reload the latest data when the service returns.'); }
+          setSyncError(purchaseUpdate ? '' : 'Latest saved data loaded. Check your draft against it before saving again.');
+        } catch {
+          setSyncError(purchaseUpdate
+            ? 'Could not reload the shopping list. Use Reload saved data when the service is available.'
+            : 'Connection unavailable. Your draft is kept; reload the latest data when the service returns.');
+        }
       }
       return { ok: false, error };
     } finally { lock.current = false; setBusy(false); }
   }
-  return <AppContext.Provider value={{ snapshot, busy, notice, loadError, syncError, refreshing, refresh, mutate, filter, setFilter, query, setQuery, category, setCategory, recipeScroll, confirmAction }}>
+  return <AppContext.Provider value={{ snapshot, busy, purchaseReview, notice, loadError, syncError, refreshing, refresh, mutate, filter, setFilter, query, setQuery, category, setCategory, recipeScroll, confirmAction }}>
     {children}{confirmation ? <Confirmation request={confirmation} resolve={resolveConfirmation} /> : null}
   </AppContext.Provider>;
 }
