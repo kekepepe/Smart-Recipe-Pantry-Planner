@@ -27,9 +27,25 @@ export class Store {
     const pantry = this.pantry();
     const filters = parseRecipeFilters(query);
     const evaluations = recipes.map(recipe => evaluateRecipe(recipe, pantry, ingredients));
+    // hasStapleMatch is a pantry signal, computed from the UNFILTERED candidate set:
+    // the page pairs it with the filtered total (0 = the active filters matched nothing)
+    // to tell the two empty states apart - prompt for pantry items vs offer clearing filters.
+    const hasStapleMatch = recommendByStaples({ recipes, pantry }).hasStapleMatch;
     const filtered = filterRecipes(recipes, filters, { evaluations, ingredients });
     const result = recommendByStaples({ recipes: filtered, pantry });
-    return { ...result, appliedFilters: filters, catalogVersion, pantryRevision: this.state().revision };
+    // Pagination follows the discovery convention: the ranked list is fully computed
+    // first and then sliced; total stays the pre-slice count and an out-of-range page
+    // request is clamped to the effective page, echoed in appliedFilters.page.
+    const pages = Math.max(1, Math.ceil(result.recommendations.length / filters.pageSize));
+    const page = Math.min(filters.page, pages);
+    return {
+      recommendations: result.recommendations.slice((page - 1) * filters.pageSize, page * filters.pageSize),
+      total: result.recommendations.length,
+      page, pages, pageSize: filters.pageSize,
+      hasStapleMatch,
+      appliedFilters: { ...filters, page },
+      catalogVersion, pantryRevision: this.state().revision,
+    };
   }
   state() {
     const state = this.db.prepare('SELECT * FROM workspaces WHERE id=?').get(this.workspace);

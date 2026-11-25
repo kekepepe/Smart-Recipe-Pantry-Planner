@@ -11,7 +11,7 @@ test('staple recommendations API: candidates, ordering and explainability on the
   t.after(async () => { await api.close(); f.close(); });
   await api.request('/onboarding', 'POST', { mode: 'sample', expectedRevision: 0 }); // egg 2 piece, tomato 1 piece
 
-  const r = await api.request('/recommendations/staples');
+  const r = await api.request('/recommendations/staples?pageSize=50'); // one page for the whole ranked list
   assert.equal(r.status, 200);
   const { recommendations, total, hasStapleMatch, appliedFilters, catalogVersion, pantryRevision } = r.data;
   assert.equal(total, 43); // fixed seeded catalog; hand-verified against the 100-dish catalog
@@ -19,6 +19,9 @@ test('staple recommendations API: candidates, ordering and explainability on the
   assert.equal(appliedFilters.q, '');
   assert.equal(typeof catalogVersion, 'string');
   assert.equal(pantryRevision, 1);
+  // Pagination metadata follows the discovery convention.
+  assert.deepEqual({ page: r.data.page, pages: r.data.pages, pageSize: r.data.pageSize }, { page: 1, pages: 1, pageSize: 50 });
+  assert.equal(recommendations.length, total); // unsliced view of the ranked list
 
   // Group ordering: staplesReady first, then partialMatch, then checkUnits.
   const ranks = recommendations.map(x => GROUP_RANK[x.group]);
@@ -52,6 +55,40 @@ test('staple recommendations API: candidates, ordering and explainability on the
   assert(recommendations.every(x => x.staples.every(s => !['salt', 'oil', 'soy-sauce'].includes(s.ingredientId))));
 });
 
+test('staple recommendations API: pagination slices the ranked list without re-ranking it', async t => {
+  const f = fixture(); const api = await listen(createApp(f.db));
+  t.after(async () => { await api.close(); f.close(); });
+  await api.request('/onboarding', 'POST', { mode: 'sample', expectedRevision: 0 });
+
+  const full = (await api.request('/recommendations/staples?pageSize=50')).data; // the reference ranking
+  const page1 = await api.request('/recommendations/staples?page=1&pageSize=2');
+  const page2 = await api.request('/recommendations/staples?page=2&pageSize=2');
+  assert.equal(page1.status, 200);
+  assert.equal(page2.status, 200);
+
+  // Both pages have two items, share no recipe IDs, and together match the
+  // first four entries of the ranked results - slicing, not re-ranking.
+  const ids1 = page1.data.recommendations.map(x => x.recipeId);
+  const ids2 = page2.data.recommendations.map(x => x.recipeId);
+  assert.equal(ids1.length, 2);
+  assert.equal(ids2.length, 2);
+  assert.equal(ids1.filter(id => ids2.includes(id)).length, 0);
+  assert.deepEqual([...ids1, ...ids2], full.recommendations.slice(0, 4).map(x => x.recipeId));
+
+  // total stays the pre-slice count; pagination metadata is consistent.
+  assert.equal(page1.data.total, 43);
+  assert.equal(page2.data.total, 43);
+  assert.deepEqual({ page: page1.data.page, pages: page1.data.pages, pageSize: page1.data.pageSize }, { page: 1, pages: 22, pageSize: 2 });
+  assert.equal(page2.data.page, 2);
+
+  // An out-of-range request is clamped to the effective page, echoed in appliedFilters.
+  const clamped = await api.request('/recommendations/staples?page=999&pageSize=2');
+  assert.equal(clamped.status, 200);
+  assert.equal(clamped.data.page, 22); // ceil(43/2)
+  assert.equal(clamped.data.appliedFilters.page, 22);
+  assert.equal(clamped.data.recommendations.length, 1); // 43 = 21 full pages + 1
+});
+
 test('staple recommendations API: shares the discovery filters and validates them identically', async t => {
   const f = fixture(); const api = await listen(createApp(f.db));
   t.after(async () => { await api.close(); f.close(); });
@@ -71,11 +108,36 @@ test('staple recommendations API: shares the discovery filters and validates the
   assert.equal(multi.status, 200);
   assert(multi.data.recommendations.every(x => x.recipeId !== 'tomato-eggs')); // tomato-eggs is not a breakfast tag
 
+  // The same invalid category is rejected identically on BOTH routes (shared
+  // catalog-aware validation): /api/recipes and the recommendation endpoint.
+  for (const path of ['recipes', 'recommendations/staples']) {
+    const r = await api.request('/' + path + '?category=bad-category-zz');
+    assert.equal(r.status, 400, path);
+    assert.equal(r.data.error.code, 'INVALID_FILTER', path);
+  }
   for (const bad of ['meals=bad', 'unexpected=x', 'countries=jp&regions=sichuan']) {
     const r = await api.request('/recommendations/staples?' + bad);
     assert.equal(r.status, 400, bad);
     assert.equal(r.data.error.code, 'INVALID_FILTER', bad);
   }
+});
+
+test('staple recommendations API: the two empty states are distinguishable signals', async t => {
+  const f = fixture(); const api = await listen(createApp(f.db));
+  t.after(async () => { await api.close(); f.close(); });
+  await api.request('/onboarding', 'POST', { mode: 'sample', expectedRevision: 0 });
+
+  // A search that matches nothing still leaves the pantry usable: P02 offers to
+  // clear the filters (hasStapleMatch is computed from the UNFILTERED candidates).
+  const noMatch = await api.request('/recommendations/staples?q=' + encodeURIComponent('zzz-no-such-dish'));
+  assert.equal(noMatch.status, 200);
+  assert.equal(noMatch.data.total, 0);
+  assert.equal(noMatch.data.hasStapleMatch, true);
+  assert.deepEqual(noMatch.data.recommendations, []);
+  assert.deepEqual({ page: noMatch.data.page, pages: noMatch.data.pages, pageSize: noMatch.data.pageSize }, { page: 1, pages: 1, pageSize: 20 });
+
+  // Zero-result query metadata stays valid even when the page is empty.
+  assert.equal(noMatch.data.appliedFilters.q, 'zzz-no-such-dish');
 });
 
 test('staple recommendations API: uncomparable units force checkUnits and are never sufficient', async t => {
@@ -84,7 +146,8 @@ test('staple recommendations API: uncomparable units force checkUnits and are ne
   let s = (await api.request('/onboarding', 'POST', { mode: 'sample', expectedRevision: 0 })).data;
   s = (await api.request('/pantry/tomato', 'PUT', { quantity: 500, unit: 'g', expectedRevision: s.revision })).data;
 
-  const r = await api.request('/recommendations/staples');
+  // checkUnits entries rank last, so fetch one full page to see tomato-eggs.
+  const r = await api.request('/recommendations/staples?pageSize=50');
   const tomatoEggs = r.data.recommendations.find(x => x.recipeId === 'tomato-eggs');
   assert.equal(tomatoEggs.group, 'checkUnits'); // 500 g cannot be compared against a 2-piece need
   const tomato = tomatoEggs.staples.find(x => x.ingredientId === 'tomato');
@@ -104,6 +167,7 @@ test('staple recommendations API: empty or seasoning-only pantry yields no candi
   assert.equal(ghost.status, 200);
   assert.equal(ghost.data.total, 0);
   assert.equal(ghost.data.hasStapleMatch, false);
+  assert.equal(ghost.data.pages, 1);
 
   await api.request('/onboarding', 'POST', { mode: 'empty', expectedRevision: 0 });
   const empty = await api.request('/recommendations/staples');
@@ -111,7 +175,8 @@ test('staple recommendations API: empty or seasoning-only pantry yields no candi
   assert.equal(empty.data.total, 0);
   assert.equal(empty.data.hasStapleMatch, false);
 
-  // Only seasonings in stock: still the "no staple match" empty state.
+  // Only seasonings in stock: still the "no staple match" empty state - P02
+  // prompts for pantry items rather than offering to clear filters.
   let s = (await api.request('/snapshot')).data;
   s = (await api.request('/pantry/salt', 'PUT', { quantity: 100, unit: 'g', expectedRevision: s.revision })).data;
   const seasoningOnly = await api.request('/recommendations/staples');

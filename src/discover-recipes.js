@@ -35,6 +35,10 @@ export function parseRecipeFilters(input = {}) {
   return result;
 }
 export function filterRecipes(recipes, filters, { evaluations = [], ingredients = [] } = {}) {
+  // Catalog-aware category validation lives here so every route sharing this
+  // matcher (discovery and staple recommendations) rejects unknown categories
+  // with the same 400 INVALID_FILTER contract.
+  if (filters.category !== 'all' && !recipes.some(r => r.category === filters.category)) throw new DomainError('Choose a valid category.','category','INVALID_FILTER');
   const states = new Map(evaluations.map(e => [e.recipeId,e.status]));
   const names = new Map(ingredients.map(i => [i.id, `${i.name} ${i.nameZh || i.name_zh || ''}`]));
   const query = filters.q.toLocaleLowerCase();
@@ -46,7 +50,6 @@ export function filterRecipes(recipes, filters, { evaluations = [], ingredients 
 
 export function discoverRecipes({ recipes, ingredients, evaluations }, input = {}) {
   const filters = parseRecipeFilters(input);
-  if (filters.category !== 'all' && !recipes.some(r => r.category === filters.category)) throw new DomainError('Choose a valid category.','category','INVALID_FILTER');
   const matches = filterRecipes(recipes, filters, { evaluations, ingredients });
   const pages = Math.max(1, Math.ceil(matches.length / filters.pageSize));
   const page = Math.min(filters.page,pages);
