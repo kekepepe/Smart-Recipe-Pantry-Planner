@@ -1,5 +1,7 @@
 import { DomainError, validateItem, evaluateRecipe } from '../../src/evaluate-recipe.js';
 import { evaluateShopping } from '../../src/evaluate-shopping.js';
+import { parseRecipeFilters, filterRecipes } from '../../src/discover-recipes.js';
+import { recommendByStaples } from '../../src/recommend-by-staples.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
@@ -17,6 +19,34 @@ export class Store {
     return { ingredients, recipes, catalogVersion };
   }
   pantry() { return this.db.prepare('SELECT ingredient_id AS ingredientId, quantity_minor/100.0 AS quantity,unit FROM pantry_items WHERE workspace_id=? ORDER BY rowid').all(this.workspace); }
+  // C01: read-only staple recommendation service. Shares the discovery filter parser
+  // and matcher so All recipes / Use what I have / Daily inspiration stay on one
+  // filter contract; performs no writes and never advances the revision.
+  recommendations(query) {
+    const { ingredients, recipes, catalogVersion } = this.catalog();
+    const pantry = this.pantry();
+    const filters = parseRecipeFilters(query);
+    const evaluations = recipes.map(recipe => evaluateRecipe(recipe, pantry, ingredients));
+    // hasStapleMatch is a pantry signal, computed from the UNFILTERED candidate set:
+    // the page pairs it with the filtered total (0 = the active filters matched nothing)
+    // to tell the two empty states apart - prompt for pantry items vs offer clearing filters.
+    const hasStapleMatch = recommendByStaples({ recipes, pantry }).hasStapleMatch;
+    const filtered = filterRecipes(recipes, filters, { evaluations, ingredients });
+    const result = recommendByStaples({ recipes: filtered, pantry });
+    // Pagination follows the discovery convention: the ranked list is fully computed
+    // first and then sliced; total stays the pre-slice count and an out-of-range page
+    // request is clamped to the effective page, echoed in appliedFilters.page.
+    const pages = Math.max(1, Math.ceil(result.recommendations.length / filters.pageSize));
+    const page = Math.min(filters.page, pages);
+    return {
+      recommendations: result.recommendations.slice((page - 1) * filters.pageSize, page * filters.pageSize),
+      total: result.recommendations.length,
+      page, pages, pageSize: filters.pageSize,
+      hasStapleMatch,
+      appliedFilters: { ...filters, page },
+      catalogVersion, pantryRevision: this.state().revision,
+    };
+  }
   state() {
     const state = this.db.prepare('SELECT * FROM workspaces WHERE id=?').get(this.workspace);
     if (!state) throw new ServiceError(404, 'NOT_FOUND', 'Workspace not found.');
