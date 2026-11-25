@@ -22,7 +22,7 @@ export default function Home() {
       <button className="secondary" onClick={() => start('empty')} disabled={busy}>{t.addOwnIngredients}</button>
     </>}</div>
     <p className="helper">{snapshot.initialized ? t.homeHelperInitialized : t.homeHelperFresh}</p>
-    <a className="continue-link" href="#/recipes">{t.browseAllRecipes(snapshot.recipes.length)}</a>
+    <p className="home-links"><a className="continue-link" href="./#/recipes">{t.browseAllRecipes(snapshot.recipes.length)}</a> · <a className="continue-link" href="?view=staples#/recipes">{t.staplesView}</a> · <a className="continue-link" href="?view=inspiration#/recipes">{t.inspirationHome}</a></p>
     {error ? <p role="alert" className="error">{translateError(error, lang)}</p> : null}
   </div><figure className="home-image"><img src="/images/recipes/tomato-eggs.jpg" alt={t.homeImageAlt} /><figcaption>{t.homeImageCaption}</figcaption></figure></section>;
 }

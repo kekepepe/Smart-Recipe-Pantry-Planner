@@ -19,11 +19,19 @@ export function createHttpClient(fetcher = (...args) => fetch(...args)) {
   }
   return {
     getSnapshot: () => request('/snapshot'),
+    getStapleRecommendations: (query = '') => request(`/recommendations/staples${query ? `?${query}` : ''}`),
+    getDailyInspiration: (query = '') => request(`/inspiration${query ? `?${query}` : ''}`),
     onboard: (mode, expectedRevision) => request('/onboarding', 'POST', { mode, expectedRevision }),
     savePantryItem: (item, expectedRevision) => request(`/pantry/${encodeURIComponent(item.ingredientId)}`, 'PUT', { quantity: item.quantity, unit: item.unit, expectedRevision }),
     deletePantryItem: (id, expectedRevision) => request(`/pantry/${encodeURIComponent(id)}`, 'DELETE', { expectedRevision }),
     selectShoppingRecipe: (recipeId, expectedRevision) => request('/shopping-selection', 'PUT', { recipeId, expectedRevision }),
     removeShoppingRecipe: (id, expectedRevision) => request(`/shopping-selection/${encodeURIComponent(id)}`, 'DELETE', { expectedRevision }),
     clearShoppingSelection: (_, expectedRevision) => request('/shopping-selection', 'DELETE', { expectedRevision }),
+    markPurchased: ({ ingredientId, unit, quantity }, expectedRevision) => request(
+      `/purchased-marks/${encodeURIComponent(ingredientId)}`, 'PUT', { unit, expectedQuantity: quantity, expectedRevision },
+    ),
+    unmarkPurchased: ({ ingredientId, unit }, expectedRevision) => request(
+      `/purchased-marks/${encodeURIComponent(ingredientId)}`, 'DELETE', { unit, expectedRevision },
+    ),
   };
 }

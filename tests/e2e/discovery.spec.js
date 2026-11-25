@@ -10,6 +10,8 @@ for(const [name,viewport] of [['desktop',{width:1440,height:1000}],['mobile',{wi
   const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await page.setViewportSize(viewport);await page.goto(service.url+'/#/recipes');
   await expect(page).toHaveTitle(/Pantry & Plate/);await expect(page.getByRole('article')).toHaveCount(20);await expect(page.getByText('100 of 100 recipes',{exact:false})).toBeVisible();
+  await expect(page.locator('.discovery-panel')).not.toHaveAttribute('open','');
+  await page.locator('.discovery-panel > summary').click();
   await page.getByRole('checkbox',{name:'Japan',exact:true}).check();await expect(page.getByRole('article')).toHaveCount(7);
   await page.getByRole('button',{name:'Clear filters',exact:true}).click();
   await page.getByRole('checkbox',{name:'Sichuan',exact:true}).check();await expect(page.getByRole('article')).toHaveCount(2);

@@ -40,7 +40,7 @@ export function RecipeStatus({ evaluation }) {
     <span className="recipe-status missing">
       {t.needPrefix}
       {visible.map((item, index) => (
-        <span key={item.ingredientId}>
+        <span key={item.ingredientId} className="shortage-part">
           <IngredientAmount item={item} />
           {index < visible.length - 1 ? sep : ''}
         </span>

@@ -72,7 +72,7 @@ test('C01 rules: per-kind states, exact ratios and explainability fields', t => 
   assert.equal(chicken.pantryUnit, 'piece');
   assert.equal(chicken.state, 'sufficient');
   assert.deepEqual(result.staples.find(s => s.ingredientId === 'egg'), {
-    ingredientId: 'egg', required: [{ unit: 'piece', quantity: 1 }], pantryQuantity: null, pantryUnit: null, state: 'missing',
+    ingredientId: 'egg', required: [{ unit: 'piece', quantity: 1 }], pantryQuantity: null, pantryUnit: null, shortfallQuantity: null, state: 'missing',
   });
 });
 
@@ -99,7 +99,7 @@ test('C01 rules: a unit-check flag forces the last group and never counts as suf
   const result = classifyStaples(unitIssue, pantry);
   assert.equal(result.group, 'checkUnits');
   assert.deepEqual(result.staples.find(s => s.ingredientId === 'egg'), {
-    ingredientId: 'egg', required: [{ unit: 'g', quantity: 100 }], pantryQuantity: 2, pantryUnit: 'piece', state: 'unitCheck',
+    ingredientId: 'egg', required: [{ unit: 'g', quantity: 100 }], pantryQuantity: 2, pantryUnit: 'piece', shortfallQuantity: null, state: 'unitCheck',
   });
   assert.equal(result.unitCheckKinds, 1);
   assert.equal(result.sufficientKinds, 1); // chicken still counts as sufficient
@@ -129,9 +129,11 @@ test('C01 rules: minor-unit arithmetic survives decimal aggregation (0.1 + 0.2)'
   const result = classifyStaples(decimal, new Map([['tofu', { ingredientId: 'tofu', quantity: 0.3, unit: 'g' }]]));
   assert.deepEqual(result.staples[0].required, [{ unit: 'g', quantity: 0.3 }]);
   assert.equal(result.staples[0].state, 'sufficient');
+  assert.equal(result.staples[0].shortfallQuantity, 0);
   // 0.29 against 0.3 is insufficient.
   const shy = classifyStaples(decimal, new Map([['tofu', { ingredientId: 'tofu', quantity: 0.29, unit: 'g' }]]));
   assert.equal(shy.staples[0].state, 'insufficient');
+  assert.equal(shy.staples[0].shortfallQuantity, 0.01);
 });
 
 test('C01 rules: total equals candidate count and result is deterministic across runs', t => {
