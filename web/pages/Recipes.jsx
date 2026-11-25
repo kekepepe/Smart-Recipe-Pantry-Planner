@@ -6,10 +6,20 @@ import { EmptyState, IngredientAmount, PageHeading, RecipeStatus } from '../comp
 
 const availabilityOptions = [['all', 'All recipes'], ['ready', 'Can make now'], ['needsShopping', 'Need ingredients'], ['checkUnits', 'Check units']];
 const labels = { countries: '国家 / Country', regions: '地区菜系 / Regional cuisine', tastes: '口味 / Taste', meals: '餐次 / Meal' };
+const dimensionKeys = Object.keys(taxonomy);
 const discoveryViews = [
   { id: 'all', label: 'All recipes · 全部菜谱' },
   { id: 'inspiration', label: 'Daily inspiration · 每日灵感' },
 ];
+
+function readDimensionValues(params, dimension) {
+  return [...new Set(params.getAll(dimension).flatMap(value => value.split(',')).filter(Boolean))];
+}
+
+function hasActiveDimensions(search) {
+  const params = new URLSearchParams(search);
+  return dimensionKeys.some(dimension => readDimensionValues(params, dimension).length > 0);
+}
 
 function stripViewParam(search) {
   const next = new URLSearchParams(search);
@@ -20,13 +30,17 @@ function stripViewParam(search) {
 export default function Recipes() {
   const { snapshot, recipeScroll } = useApp();
   const [search, setSearch] = useState(() => window.location.search);
+  const [filtersOpen, setFiltersOpen] = useState(() => hasActiveDimensions(window.location.search));
   const [hint, setHint] = useState('');
   const [inspiration, setInspiration] = useState({ status: 'idle', data: null, error: null });
   const [retryTick, setRetryTick] = useState(0);
 
   useEffect(() => {
     const onScroll = () => { recipeScroll.current = window.scrollY; };
-    const onPop = () => setSearch(window.location.search);
+    const onPop = () => {
+      setSearch(window.location.search);
+      if (hasActiveDimensions(window.location.search)) setFiltersOpen(true);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('popstate', onPop);
     return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('popstate', onPop); };
@@ -79,7 +93,10 @@ export default function Recipes() {
     try { result = discoverRecipes(snapshot, filterParams); } catch (e) { error = e.message; }
   }
 
-  const values = dimension => [...new Set(params.getAll(dimension).flatMap(v => v.split(',')).filter(Boolean))];
+  const values = dimension => readDimensionValues(params, dimension);
+  const selectedLabels = dimensionKeys.flatMap(dimension =>
+    values(dimension).map(id => taxonomy[dimension].find(tag => tag.id === id)?.label || id),
+  );
   const update = (key, value) => {
     const next = new URLSearchParams(search);
     next.delete(key);
@@ -116,24 +133,27 @@ export default function Recipes() {
   return <>
     <PageHeading title="What can you make?" subtitle="Explore the world, one home-cooked dish at a time."><a href="#/pantry" className="heading-link">Edit pantry</a></PageHeading>
     <div className="pantry-summary"><strong>Your pantry:</strong>{snapshot.pantry.length ? <span>{snapshot.pantry.map((item, index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</span> : <span>Empty for now. Browse below or <a href="#/pantry">add ingredients</a>.</span>}</div>
-    <div className="view-tabs" role="tablist" aria-label="Recipe discovery views">
-      {discoveryViews.map((tab, index) => (
-        <button
-          key={tab.id}
-          type="button"
-          role="tab"
-          aria-selected={view === tab.id}
-          className="view-tab"
-          onClick={() => setView(tab.id)}
-          onKeyDown={event => onTabKeyDown(event, index)}
-        >
-          {tab.label}
-        </button>
-      ))}
+    <div className="recipe-discovery-controls">
+      <div className="view-tabs" role="tablist" aria-label="Recipe discovery views">
+        {discoveryViews.map((tab, index) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={view === tab.id}
+            className="view-tab"
+            onClick={() => setView(tab.id)}
+            onKeyDown={event => onTabKeyDown(event, index)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      {view === 'all' ? <div className="filters" role="group" aria-label="Filter recipes">{availabilityOptions.map(([id, label]) => <button key={id} className="filter-button" aria-pressed={(params.get('availability') || 'all') === id} onClick={() => update('availability', id)}>{label}</button>)}</div> : null}
     </div>
     <div className="recipe-search"><div><label htmlFor="recipe-search">Find a recipe</label><input id="recipe-search" type="search" placeholder="菜名或食材 · English or 中文" value={params.get('q') || ''} onChange={e => update('q', e.target.value)} /></div><div><label htmlFor="recipe-category">Category</label><select id="recipe-category" value={params.get('category') || 'all'} onChange={e => update('category', e.target.value)}><option value="all">All categories</option>{categories.map(c => <option key={c}>{c}</option>)}</select></div></div>
-    <details className="discovery-panel" open>
-      <summary>筛选菜谱 · Filter recipes <span>{Object.keys(taxonomy).reduce((n, d) => n + values(d).length, 0)} selected</span></summary>
+    <details className="discovery-panel" open={filtersOpen} onToggle={event => setFiltersOpen(event.currentTarget.open)}>
+      <summary>筛选菜谱 · Filter recipes <span>{selectedLabels.length} selected{selectedLabels.length ? ` · ${selectedLabels.slice(0, 3).join(', ')}${selectedLabels.length > 3 ? ` +${selectedLabels.length - 3}` : ''}` : ''}</span></summary>
       <p className="helper">任选一项或组合使用。每组内任一匹配，不同组需同时匹配。Any within a group; all across groups.</p>
       <div className="discovery-grid">{Object.entries(taxonomy).map(([dimension, tags]) => <fieldset key={dimension}><legend>{labels[dimension]}</legend><div className="discovery-options">{tags.filter(t => dimension !== 'regions' || !values('countries').length || values('countries').includes(t.parent)).map(tag => <label className="tag-option" key={tag.id}><input type="checkbox" checked={values(dimension).includes(tag.id)} onChange={() => toggle(dimension, tag.id)} />{tag.label}</label>)}</div></fieldset>)}</div>
       <button className="text-button" onClick={clear}>Clear filters / 清除筛选</button>
@@ -141,7 +161,6 @@ export default function Recipes() {
     </details>
 
     {view === 'all' ? <>
-      <div className="filters" role="group" aria-label="Filter recipes">{availabilityOptions.map(([id, label]) => <button key={id} className="filter-button" aria-pressed={(params.get('availability') || 'all') === id} onClick={() => update('availability', id)}>{label}</button>)}</div>
       {error ? <div className="error" role="alert">{error} <button className="text-button" onClick={clear}>Clear invalid filters</button></div> : <>
         <p className="helper" role="status">{result.total} of {snapshot.recipes.length} recipes · Page {result.page} / {result.pages} · Fixed recipe portions. Image credits in each recipe.</p>
         <div className="recipe-list">{result.recipes.map(recipe => <article className="recipe-row" key={recipe.id}>

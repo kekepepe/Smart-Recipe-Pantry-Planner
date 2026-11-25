@@ -49,6 +49,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await expect(page.getByRole('article').first()).toContainText('Can make now');
 
     // Filter sharing (<3 candidates) + zero results + clear without affecting pantry (C11).
+    await page.locator('.discovery-panel > summary').click();
     await page.getByRole('checkbox', { name: '川菜 Sichuan', exact: true }).check();
     await expect(page.getByRole('article')).toHaveCount(2);
     await expect(page.getByText('2 daily picks from 2 matching recipes', { exact: false })).toBeVisible();
