@@ -82,3 +82,20 @@ test('H02: SQLite constraints reject invalid marks and derived-row rebuilds cann
   f.db.transaction(() => new Store(f.db).rebuildShopping()).immediate();
   assert.deepEqual(new Store(f.db).getSnapshot(), before);
 });
+
+test('H04: failure after conflict reconciliation restores marks, selection and revision atomically', t => {
+  const f = fixture(); t.after(f.close);
+  const store = new Store(f.db);
+  let before = store.selectRecipe({ recipeId: 'tomato-skillet', expectedRevision: 0 });
+  before = store.markPurchased('tomato', { unit: 'piece', expectedQuantity: 2, expectedRevision: before.revision });
+  class FailAfterRebuild extends Store {
+    rebuildShopping() { super.rebuildShopping(); throw new Error('FAIL_AFTER_RECONCILIATION'); }
+  }
+  assert.throws(() => new FailAfterRebuild(f.db).selectRecipe({ recipeId: 'ratatouille', expectedRevision: before.revision }), /FAIL_AFTER_RECONCILIATION/);
+  assert.deepEqual(store.getSnapshot(), before);
+  const conflicted = store.selectRecipe({ recipeId: 'ratatouille', expectedRevision: before.revision });
+  assert.equal(conflicted.shopping.status, 'checkUnits');
+  assert.deepEqual(conflicted.purchasedMarks, []);
+  const resolved = store.removeRecipe('ratatouille', { expectedRevision: conflicted.revision });
+  assert.deepEqual(resolved.purchasedMarks, []);
+});
