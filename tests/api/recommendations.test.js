@@ -34,7 +34,7 @@ test('staple recommendations API: candidates, ordering and explainability on the
     insufficientKinds: 0, missingKinds: 0, unitCheckKinds: 0,
     sufficientRatio: 1, ownedRatio: 1,
     staples: [{ ingredientId: 'egg', required: [{ unit: 'piece', quantity: 2 }], pantryQuantity: 2, pantryUnit: 'piece', state: 'sufficient' }],
-    missingSeasonings: [{ ingredientId: 'salt', quantity: 2, unit: 'g' }], // 主食材齐全，仍缺调料
+    missingSeasonings: [{ ingredientId: 'salt', quantity: 2, unit: 'g' }], // staples ready, seasonings still missing
   });
 
   // tomato-eggs: both staples insufficient (egg 2/3, tomato 1/2), fully owned, no seasoning hits.
@@ -111,7 +111,7 @@ test('staple recommendations API: empty or seasoning-only pantry yields no candi
   assert.equal(empty.data.total, 0);
   assert.equal(empty.data.hasStapleMatch, false);
 
-  // Only seasonings in stock: still 暂无主食材匹配.
+  // Only seasonings in stock: still the "no staple match" empty state.
   let s = (await api.request('/snapshot')).data;
   s = (await api.request('/pantry/salt', 'PUT', { quantity: 100, unit: 'g', expectedRevision: s.revision })).data;
   const seasoningOnly = await api.request('/recommendations/staples');

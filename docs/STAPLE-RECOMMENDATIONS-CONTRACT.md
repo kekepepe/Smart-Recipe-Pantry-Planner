@@ -1,82 +1,79 @@
-# 主食材推荐接口契约 / Staple-Recommendation Interface Contract (C01)
+# Staple-Recommendation Interface Contract (C01)
 
-> 工作项：§10.2 C01（ChangPeng → ChangPeng，提及 Peng、Hao）。Peng 主审页面消费的字段与行为，Hao 复核 API 集成。
-> Work item: §10.2 C01. Peng reviews the fields/behavior the page consumes; Hao reviews the API integration.
+> Work package: **C01 Staple-based recommendation rules and API service** (§10.2, ChangPeng → ChangPeng, mentions Peng and Hao). Peng reviews the fields and behavior the page consumes; Hao reviews the API integration.
 
-## 1. 端点 / Endpoint
+## 1. Endpoint
 
 ```
-GET /api/recommendations/staples[?<共享筛选参数>]
+GET /api/recommendations/staples[?<shared filter parameters>]
 ```
 
-只读接口：不写入任何表、不推进 revision、不产生 pantry_version 变化。与 `/api/recipes` 完全共用筛选参数、归一化与校验（`parseRecipeFilters` + `filterRecipes`），因此「全部菜谱 / 用现有食材 / 每日灵感」三个入口的筛选合同一致，URL 状态可直接复用。
+Read-only: writes no tables, never advances the revision, never changes `pantry_version`. Filter parameters, normalization and validation are shared verbatim with `/api/recipes` (`parseRecipeFilters` + `filterRecipes`), so the "All recipes / Use what I have / Daily inspiration" tabs stay on one filter contract and URL state can be reused directly.
 
-Read-only: no table writes, no revision or pantry_version change. Filter parameters, normalization and validation are shared verbatim with `/api/recipes`, so the "All recipes / Use what I have / Daily inspiration" tabs stay on one filter contract.
+Filter errors (unknown parameters, invalid dimension values, country/region contradictions, invalid pagination) return `400 INVALID_FILTER`, with the same body structure as `/api/recipes`: `{"error":{"code","message","field","requestId"}}`.
 
-筛选错误（未知参数、非法维度值、国家/地区矛盾、非法分页值等）返回 `400 INVALID_FILTER`，结构与 `/api/recipes` 一致：`{"error":{"code","message","field","requestId"}}`。
+## 2. Response fields
 
-## 2. 响应字段 / Response fields
-
-| 字段 | 类型 | 说明 |
+| Field | Type | Notes |
 | --- | --- | --- |
-| `recommendations` | 数组 | 候选菜列表，已按 §3 排序 |
-| `total` | number | 候选数量 |
-| `hasStapleMatch` | boolean | `false` 表示「暂无主食材匹配」（库存为空或只有调料），页面据此展示空态与录入/浏览/灵感入口 |
-| `appliedFilters` | object | 归一化后的筛选条件（含 page/pageSize），可原样回填 URL |
-| `catalogVersion` | string | 目录版本 |
-| `pantryRevision` | number | 当前 pantry revision（等于快照 revision，供乐观并发参考） |
+| `recommendations` | array | Candidate list, already sorted per §3 |
+| `total` | number | Candidate count |
+| `hasStapleMatch` | boolean | `false` means "no staple match" (empty pantry or seasonings only); the page shows the empty state plus the pantry-entry / browse-all / daily-inspiration entry points |
+| `appliedFilters` | object | Normalized filters (including page/pageSize), ready to be written back into the URL |
+| `catalogVersion` | string | Catalog version |
+| `pantryRevision` | number | Current pantry revision (equals the snapshot revision, for optimistic-concurrency reference) |
 
-每条候选的可解释字段 / Explainability fields per candidate:
+Explainability fields per candidate:
 
-| 字段 | 说明 |
+| Field | Notes |
 | --- | --- |
-| `recipeId` / `title` / `titleZh` | 菜谱标识与展示名 |
-| `group` | `staplesReady`（主食材齐全）· `partialMatch`（部分匹配）· `checkUnits`（含单位待核对） |
-| `stapleTotal` | 必需主食材种类总数（role=food；去重后） |
-| `sufficientKinds` / `insufficientKinds` / `missingKinds` / `unitCheckKinds` | 数量足够 / 不足 / 完全缺少 / 单位待核对的种类数 |
-| `ownedKinds` | 已拥有种类数 = sufficient + insufficient + unitCheck（库存量 > 0 即算拥有，但单位不可比不算足够） |
-| `sufficientRatio` / `ownedRatio` | 精确分数 `种类数/stapleTotal`；**只基于主食材**，不得表述为营养适配或算法准确率 |
-| `staples[]` | 每种主食材明细：`ingredientId`、`required[{unit,quantity}]`（同 ID 按单位合并后）、`pantryQuantity`/`pantryUnit`（无库存为 null）、`state`（`sufficient`/`insufficient`/`missing`/`unitCheck`） |
-| `missingSeasonings[]` | 缺少的必需调料 `{ingredientId,quantity,unit}`；同单位按库存扣减出缺口，单位不可比或缺货时报全量。**`group=staplesReady` 且该数组非空时必须提示「主食材齐全，仍缺调料」，不得标为「全部用料足够」** |
+| `recipeId` / `title` / `titleZh` | Recipe identity and display names |
+| `group` | `staplesReady` (all staples ready) · `partialMatch` (partial match) · `checkUnits` (contains unit-check items) |
+| `stapleTotal` | Total required main-food kinds (role=food, after deduplication) |
+| `sufficientKinds` / `insufficientKinds` / `missingKinds` / `unitCheckKinds` | Kinds with sufficient quantity / insufficient quantity / completely missing / unit uncomparable |
+| `ownedKinds` | Owned kinds = sufficient + insufficient + unitCheck (stock > 0 counts as owned, but an uncomparable unit never counts as sufficient) |
+| `sufficientRatio` / `ownedRatio` | Exact count/total fractions over main foods only; **never** to be presented as a nutrition fit or an algorithm-accuracy claim |
+| `staples[]` | Per-staple detail: `ingredientId`, `required[{unit,quantity}]` (after per-unit merging of duplicate IDs), `pantryQuantity`/`pantryUnit` (null when absent), `state` (`sufficient`/`insufficient`/`missing`/`unitCheck`) |
+| `missingSeasonings[]` | Missing required seasonings `{ingredientId,quantity,unit}`; same-unit stock is deducted to an exact shortfall, an uncomparable unit or absence reports the full amount. **When `group=staplesReady` and this array is non-empty the page must prompt "main foods ready, seasonings still missing" and must not claim "everything is in stock"** |
 
-## 3. 候选与排序规则 / Candidate and ordering rules
+## 3. Candidate and ordering rules
 
-1. **候选生成**：仅当菜谱至少一种必需主食材（`role='food'`）在库存中数量 > 0 才成为候选；调料不参与候选生成、覆盖率和排序；数量为 0 的库存行不算命中。
-2. **合并需求**：同 ID 用料先按单位合并（分单位整数运算），不重复计分。
-3. **逐 ID 状态**：单位相同且库存量 ≥ 需求量 → `sufficient`；单位相同但不足 → `insufficient`；无库存 → `missing`；有同名食材但单位不可比 → `unitCheck`（永不视为足够）。不混加 g/ml/piece。
-4. **分组**：任一 `unitCheck` 即入 `checkUnits`（待核对标志优先决定分组）；否则全部 `sufficient` → `staplesReady`；否则 `partialMatch`。
-5. **排序**：`staplesReady` → `partialMatch` → `checkUnits`；组内依次按 `sufficientRatio` 降序、`ownedRatio` 降序、`missingKinds` 升序，最后以稳定 `recipeId` 升序收尾。输入顺序不影响输出（确定性）。
-6. 独立的「全部用料足够/缺料/单位待核对」状态仍用**全部必需用料**计算（既有 V1 规则）；推荐评分不改采购算法、缺口计算与多菜合并。
+1. **Candidate generation**: a recipe becomes a candidate only when at least one required main-food ingredient (`role='food'`) is stocked with a positive quantity; seasonings never take part in candidate generation, coverage or ordering; a zero-quantity pantry row is not a hit.
+2. **Merging**: duplicate requirement IDs merge per unit first (minor-unit arithmetic) and never score twice.
+3. **Per-ID state**: same unit and stock ≥ requirement → `sufficient`; same unit but short → `insufficient`; no stock → `missing`; same ingredient present but the unit cannot be compared → `unitCheck` (never treated as sufficient). g/ml/piece are never mixed.
+4. **Grouping**: any `unitCheck` puts the candidate into `checkUnits` (the unit-check flag decides the group first); otherwise all staples `sufficient` → `staplesReady`; otherwise `partialMatch`.
+5. **Ordering**: `staplesReady` → `partialMatch` → `checkUnits`; within a group by `sufficientRatio` desc, `ownedRatio` desc, `missingKinds` asc, then stable ascending `recipeId`. Input order never changes the output (deterministic).
+6. The independent "all ingredients ready / needs shopping / check units" status still uses **all required ingredients** (the existing V1 rules); recommendation scoring never changes the purchasing algorithm, gap calculation or multi-recipe merging.
 
-## 4. 页面消费约定（P02 / Peng） / Page consumption notes
+## 4. Page consumption notes (P02 / Peng)
 
-- 空态：`hasStapleMatch=false` 显示「暂无主食材匹配」，提供录入库存、浏览全部、每日灵感入口。
-- 分组标签与排序即接口顺序，前端不得二次排序或本地重算缺口/比例。
-- 「已有 X/Y 种主食材」用 `ownedKinds/stapleTotal`；数量缺口逐条读 `staples[].state` 与 `required` vs `pantryQuantity`。
-- `checkUnits` 组候选可展示候选与待核对原因（`staples[].state='unitCheck'`），不能当作数量足够。
-- 筛选变化通过 `appliedFilters` 回填 URL，返回/刷新保留条件。
+- Empty state: `hasStapleMatch=false` shows "no staple match", with pantry-entry, browse-all and daily-inspiration entry points.
+- Group labels and ordering follow the API order exactly; the front end must not re-sort or recompute gaps/ratios locally.
+- "Owns X of Y staples" uses `ownedKinds/stapleTotal`; per-staple gaps come from `staples[].state` and `required` vs `pantryQuantity`.
+- `checkUnits` candidates may show the candidate and the unit-check reason (`staples[].state='unitCheck'`), never as sufficient quantity.
+- Filter changes write back through `appliedFilters` so navigating away and back preserves conditions.
 
-## 5. 实现与交接边界 / Implementation and handover
+## 5. Implementation and handover boundaries
 
-- 纯计算模块：`src/recommend-by-staples.js`（`recommendByStaples` / `classifyStaples` / `collectRequirementNeeds`），无 IO、无状态。
-- 共享筛选：`src/discover-recipes.js` 新增导出 `filterRecipes`（从 `discoverRecipes` 提取的纯重构，行为不变），推荐与发现共用同一谓词，避免两套筛选实现漂移。
-- 服务入口：`server/services/store.js` 只读方法 `recommendations(query)`；路由 `GET /api/recommendations/staples`（Hao 复核此集成：无事务入口、不触发表写入，`INVALID_FILTER` → 400 映射与 `/api/recipes` 相同）。
-- **无 schema 变更**：不新增迁移，`schemaVersion` 仍为 4；与 H02 的持久化/恢复工作无交集。
-- 如 Hao 后续为每日灵感接路由（E1），建议复用同一 `parseRecipeFilters`/`filterRecipes` 入口。
+- Pure rules module: `src/recommend-by-staples.js` (`recommendByStaples` / `classifyStaples` / `collectRequirementNeeds`), no IO, no state.
+- Shared filters: `src/discover-recipes.js` now exports `filterRecipes` (a pure extraction from `discoverRecipes`, no behavior change) so recommendation and discovery share one predicate and cannot drift apart.
+- Service entry: read-only `Store.recommendations(query)` in `server/services/store.js`; route `GET /api/recommendations/staples` (Hao reviews this integration: no transaction entry, no table writes, `INVALID_FILTER` → 400 mapping identical to `/api/recipes`).
+- **No schema change**: no new migration, `schemaVersion` stays 4; no overlap with H02's persistence/restore work.
+- When Hao wires the daily-inspiration routes (E1), reuse the same `parseRecipeFilters`/`filterRecipes` entry.
 
-## 6. 测试矩阵 / Test matrix
+## 6. Test matrix
 
-| 场景 | 断言 | 文件 |
+| Scenario | Assertion | File |
 | --- | --- | --- |
-| 重复 ID 按单位合并、不重复计分 | `staples.size=2`，合并量 2 piece；库存 1 < 合并 2 → insufficient | `tests/recommend-by-staples.test.js` |
-| 只有调料/空库存/数量 0 → 非候选 | `total=0`、`hasStapleMatch=false` | 同上 |
-| 逐 ID 状态与精确比例（手算 1/3、2/3） | `sufficientRatio`、`ownedRatio`、`staples[]` 明细 | 同上 |
-| 主食材齐全仍缺调料 | `staplesReady` + `missingSeasonings` 缺口（含部分缺口 1/2 g、单位不可比报全量） | 同上 |
-| 单位待核对优先分组、不算足够 | `checkUnits`、`unitCheckKinds=1`、`sufficientKinds` 不含待核对项 | 同上 |
-| 组序、组内比例序、缺失数序、稳定 ID | `ready-gap > same-1 > same-2 > mostly-missing > dup-merge > unit-issue` | 同上 |
-| 小数聚合 0.1+0.2=0.3（分单位运算） | 合并量精确 0.3；0.29 → insufficient | 同上 |
-| 输入顺序不影响输出 | 反转输入 `deepEqual` | 同上 |
-| 真实目录端到端（sample pantry：egg 2、tomato 1） | `total=43`；前二 `scrambled-eggs`/`steamed-eggs`；tomato-eggs 明细；调料不进 staples | `tests/api/recommendations.test.js` |
-| 共享筛选与 400 校验 | `countries=cn` 8 条、`q=steamed` 1 条、三种非法参数 400 `INVALID_FILTER` | 同上 |
-| 单位待核对 HTTP 路径 | tomato 500 g → `checkUnits` | 同上 |
-| 只读、确定性、revision 稳定 | 两次 GET `deepEqual`；快照前后 `deepEqual` | 同上 |
+| Duplicate requirement IDs merge per unit, never double-scored | `staples.size=2`, merged need 2 pieces; stock 1 < 2 → insufficient | `tests/recommend-by-staples.test.js` |
+| Seasonings-only / empty pantry / zero quantity → no candidate | `total=0`, `hasStapleMatch=false` | same file |
+| Per-kind states and exact ratios (hand-computed 1/3, 2/3) | `sufficientRatio`, `ownedRatio`, `staples[]` detail | same file |
+| Staples ready with missing seasonings | `staplesReady` + `missingSeasonings` shortfalls (partial 1/2 g shortfall, full amount on uncomparable units) | same file |
+| Unit-check flag forces the group, never sufficient | `checkUnits`, `unitCheckKinds=1`, `sufficientKinds` excludes the checked item | same file |
+| Group order, in-group ratios, missing count, stable ID | `ready-gap > same-1 > same-2 > mostly-missing > dup-merge > unit-issue` | same file |
+| Decimal aggregation 0.1+0.2=0.3 (minor-unit arithmetic) | merged need exactly 0.3; 0.29 → insufficient | same file |
+| Input order never affects output | reversed input `deepEqual` | same file |
+| Real-catalog end to end (sample pantry: egg 2, tomato 1) | `total=43`; first two `scrambled-eggs`/`steamed-eggs`; tomato-eggs detail; seasonings never in staples | `tests/api/recommendations.test.js` |
+| Shared filters and 400 validation parity | `countries=cn` 8 results, `q=steamed` 1, three invalid parameters 400 `INVALID_FILTER` | same file |
+| Unit-check HTTP path | tomato 500 g → `checkUnits` | same file |
+| Read-only, deterministic, revision-stable | two GETs `deepEqual`; snapshot before/after `deepEqual` | same file |

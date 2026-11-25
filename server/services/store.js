@@ -20,8 +20,8 @@ export class Store {
   }
   pantry() { return this.db.prepare('SELECT ingredient_id AS ingredientId, quantity_minor/100.0 AS quantity,unit FROM pantry_items WHERE workspace_id=? ORDER BY rowid').all(this.workspace); }
   // C01: read-only staple recommendation service. Shares the discovery filter parser
-  // and matcher so 全部菜谱/用现有食材/每日灵感 stay on one filter contract; performs
-  // no writes and never advances the revision.
+  // and matcher so All recipes / Use what I have / Daily inspiration stay on one
+  // filter contract; performs no writes and never advances the revision.
   recommendations(query) {
     const { ingredients, recipes, catalogVersion } = this.catalog();
     const pantry = this.pantry();
