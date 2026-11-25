@@ -1,5 +1,6 @@
 import { DomainError, validateItem, evaluateRecipe } from '../../src/evaluate-recipe.js';
 import { evaluateShopping } from '../../src/evaluate-shopping.js';
+import { reconcilePurchasedMarks } from '../../src/purchased-marks.js';
 export class ServiceError extends Error {
   constructor(status, code, message, field = '') { super(message); Object.assign(this, { status, code, field }); }
 }
@@ -31,6 +32,9 @@ export class Store {
     if (selected.some(recipe => !recipe)) throw new ServiceError(503, 'LIST_OUT_OF_DATE', 'The saved list needs repair.');
     return selected.length ? evaluateShopping(selected, pantry, ingredients) : null;
   }
+  purchasedMarks() {
+    return this.db.prepare('SELECT ingredient_id AS ingredientId, expected_quantity_minor/100.0 AS expectedQuantity, unit, marked_at AS markedAt FROM purchased_marks WHERE workspace_id=? ORDER BY ingredient_id,unit').all(this.workspace);
+  }
   snapshotUnsafe() {
     const state = this.state();
     const { ingredients, recipes, catalogVersion } = this.catalog();
@@ -46,20 +50,60 @@ export class Store {
       if (JSON.stringify(saved) !== JSON.stringify(result.combined.shortages)) stale();
     }
     return {
-      schemaVersion: 3, catalogVersion, revision: state.revision, pantryVersion: state.pantry_version,
+      schemaVersion: 4, catalogVersion, revision: state.revision, pantryVersion: state.pantry_version,
       initialized: Boolean(state.initialized), started: Boolean(state.initialized), pantry, ingredients, recipes, evaluations,
       shoppingRecipeIds: result?.combined.recipeIds ?? [], shoppingRecipes: result?.perRecipe ?? [], shopping: result?.combined ?? null,
+      purchasedMarks: this.purchasedMarks(),
     };
   }
   getSnapshot() { return this.db.transaction(() => this.snapshotUnsafe())(); }
   rebuildShopping() {
     const { ingredients, recipes, catalogVersion } = this.catalog();
     const result = this.shoppingState(recipes, this.pantry(), ingredients);
+    // Requirement changes coordinate the marks in the same transaction: marks
+    // bound to a changed/removed requirement are cancelled here (C02 rules).
+    this.reconcilePurchasedMarks(result ? result.combined.requirements : []);
     if (!result) { this.db.prepare('DELETE FROM shopping_lists WHERE workspace_id=?').run(this.workspace); return; }
     const { combined } = result;
     this.db.prepare('INSERT INTO shopping_lists VALUES (?,?,?,?) ON CONFLICT(workspace_id) DO UPDATE SET status=excluded.status,pantry_version=excluded.pantry_version,catalog_version=excluded.catalog_version').run(this.workspace, combined.status, this.state().pantry_version, catalogVersion);
     this.db.prepare('DELETE FROM shopping_list_items WHERE workspace_id=?').run(this.workspace);
     combined.shortages.forEach((item, position) => this.db.prepare('INSERT INTO shopping_list_items VALUES (?,?,?,?,?)').run(this.workspace, item.ingredientId, Math.round(item.quantity * 100), item.unit, position));
+  }
+  reconcilePurchasedMarks(requirements) {
+    const { kept } = reconcilePurchasedMarks(this.purchasedMarks(), requirements);
+    const surviving = new Set(kept.map(mark => `${mark.ingredientId}|${mark.unit}`));
+    for (const mark of this.purchasedMarks()) {
+      if (!surviving.has(`${mark.ingredientId}|${mark.unit}`)) {
+        this.db.prepare('DELETE FROM purchased_marks WHERE workspace_id=? AND ingredient_id=? AND unit=?').run(this.workspace, mark.ingredientId, mark.unit);
+      }
+    }
+  }
+  markPurchased(id, body) {
+    const { ingredients } = this.catalog();
+    if (!ingredients.some(entry => entry.id === id)) throw new ServiceError(404, 'NOT_FOUND', 'Ingredient not found.', 'ingredientId');
+    // A purchased mark must bind a positive quantity; the shared validator alone would accept 0 (valid for pantry amounts).
+    if (!(Number(body.expectedQuantity) > 0)) throw new ServiceError(422, 'VALIDATION_ERROR', 'Enter a purchased quantity greater than 0.', 'expectedQuantity');
+    // validateItem enforces catalog units, positive quantity bounds and minor-unit exactness.
+    const item = validateItem({ ingredientId: id, quantity: body.expectedQuantity, unit: body.unit }, ingredients);
+    return this.write(body.expectedRevision, () => {
+      const { recipes } = this.catalog();
+      const result = this.shoppingState(recipes, this.pantry(), ingredients);
+      if (!result) throw new ServiceError(422, 'NO_ACTIVE_LIST', 'Select a recipe before marking purchased items.');
+      const required = result.combined.requirements.find(entry => entry.ingredientId === id && entry.unit === item.unit);
+      if (!required) throw new ServiceError(422, 'PURCHASED_MARK_NOT_REQUIRED', 'This ingredient is not part of the current shopping list.');
+      if (Math.round(required.quantity * 100) !== Math.round(item.quantity * 100)) throw new ServiceError(422, 'PURCHASED_MARK_STALE', 'The shopping list changed. Reload the latest quantities and mark again.');
+      this.db.prepare('INSERT INTO purchased_marks(workspace_id,ingredient_id,unit,expected_quantity_minor,marked_at) VALUES (?,?,?,?,?) ON CONFLICT(workspace_id,ingredient_id,unit) DO UPDATE SET expected_quantity_minor=excluded.expected_quantity_minor,marked_at=excluded.marked_at')
+        .run(this.workspace, id, item.unit, Math.round(item.quantity * 100), new Date().toISOString());
+    });
+  }
+  unmarkPurchased(id, body) {
+    const { ingredients } = this.catalog();
+    if (!ingredients.some(entry => entry.id === id)) throw new ServiceError(404, 'NOT_FOUND', 'Ingredient not found.', 'ingredientId');
+    if (!ingredients.find(entry => entry.id === id).allowedUnits.includes(body.unit)) throw new ServiceError(422, 'VALIDATION_ERROR', 'Choose a supported unit for this ingredient.', 'unit');
+    return this.write(body.expectedRevision, () => {
+      // Idempotent unmark: removing an absent mark leaves the snapshot unchanged.
+      this.db.prepare('DELETE FROM purchased_marks WHERE workspace_id=? AND ingredient_id=? AND unit=?').run(this.workspace, id, body.unit);
+    });
   }
   write(revision, action, { pantry = false } = {}) {
     if (!Number.isSafeInteger(revision) || revision < 0) throw new ServiceError(400, 'INVALID_REQUEST', 'A valid expectedRevision is required.', 'expectedRevision');

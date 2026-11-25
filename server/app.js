@@ -33,6 +33,8 @@ export function createApp(db, { serveStatic = false, fault } = {}) {
   app.put('/api/shopping-selection', shape(['recipeId', 'expectedRevision']), (req, res) => res.json(store.selectRecipe(req.body)));
   app.delete('/api/shopping-selection/:id', shape(['expectedRevision']), (req, res) => res.json(store.removeRecipe(req.params.id, req.body)));
   app.delete('/api/shopping-selection', shape(['expectedRevision']), (req, res) => res.json(store.clearSelection(req.body)));
+  app.put('/api/purchased-marks/:id', shape(['unit', 'expectedQuantity', 'expectedRevision']), (req, res) => res.json(store.markPurchased(req.params.id, req.body)));
+  app.delete('/api/purchased-marks/:id', shape(['unit', 'expectedRevision']), (req, res) => res.json(store.unmarkPurchased(req.params.id, req.body)));
   app.use('/api', (req, res, next) => next(new ServiceError(404, 'NOT_FOUND', 'API route not found.')));
   if (serveStatic) { app.use(express.static(join(root, 'dist'))); app.get('/', (req, res) => res.sendFile(join(root, 'dist/index.html'))); }
   app.use((error, req, res, next) => {
