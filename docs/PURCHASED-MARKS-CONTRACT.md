@@ -3,6 +3,7 @@
 > Work package: **C02 Purchased-state business service** (§10.2, ChangPeng → ChangPeng, links H02, mentions @kekepepe and @fhhhz-todd).
 > This contract ships with the C02 PR: the front end (P03, @kekepepe) approves "the interfaces and behavior the page consumes"; H02 (@fhhhz-todd) leads the review of "persistence and conflicts" and either takes over or signs off the persistence hardening items in §5.
 > **Review update (Peng, P1/P2)**: a mark now binds the **current purchase gap**, not the raw aggregated requirement, and marking is refused while the list is in `checkUnits`. See §2/§3.
+> **Review update (Peng, round 2 P2)**: unit-conflict detection now also covers **recipe-to-recipe conflicts** — two selected recipes demanding different units of the same ingredient put it into unit-check state even with no pantry row; the affected marks are cleared and never revive. See §3/§6.
 
 ## 1. Data model (schema 004)
 
@@ -41,13 +42,13 @@ Deterministic ordering: lexicographic by `(ingredientId, unit)` — consistent w
 | 409 | `REVISION_CONFLICT` | Stale `expectedRevision` (the global revision mechanism, no second conflict scheme) |
 | 422 | `VALIDATION_ERROR` | Unit not in `allowedUnits`; invalid quantity (0, negative, out of range, more than two decimals) |
 | 422 | `NO_ACTIVE_LIST` | Marking while no shopping list is selected |
-| 422 | `UNIT_CHECK_REQUIRED` | The list is in `checkUnits` (a pantry unit cannot be compared to a required unit). **P03 prompt: fix the flagged pantry units first** — no trustworthy purchase gap exists while the conflict blocks the list |
+| 422 | `UNIT_CHECK_REQUIRED` | The list is in `checkUnits`: a pantry unit cannot be compared to a required unit, **or two selected recipes demand different units of the same ingredient (recipe-to-recipe conflict, even with no pantry row)**. **P03 prompt: fix the flagged unit conflicts first** — no trustworthy purchase gap exists while the conflict blocks the list |
 | 422 | `PURCHASED_MARK_NOT_REQUIRED` | Nothing is left to buy for the `(ingredient, unit)` pair: it is not required, or the pantry already covers the requirement (gap = 0) |
 | 422 | `PURCHASED_MARK_STALE` | `expectedQuantity` does not equal the current purchase gap (the shopping rows changed) |
 
 ## 3. Mark coordination rules (requirement changes and conflicts)
 
-A mark binds the triple `(ingredientId, unit, expectedQuantity)` where `expectedQuantity` is the **purchase gap** at mark time. **Every shopping-list rebuild** (select/remove/clear recipes, pantry writes — all inside the `write()` transaction) recomputes the server-side gap map — `max(required − pantry stock, 0)` per `(ingredient, unit)`, in minor units, plus the set of unit-conflicted ingredients — and reconciles marks as follows:
+A mark binds the triple `(ingredientId, unit, expectedQuantity)` where `expectedQuantity` is the **purchase gap** at mark time. **Every shopping-list rebuild** (select/remove/clear recipes, pantry writes — all inside the `write()` transaction) recomputes the server-side gap map — `max(required − pantry stock, 0)` per `(ingredient, unit)`, in minor units, plus the set of unit-conflicted ingredients — and reconciles marks as follows. Unit conflicts are detected exactly like the combined list's `unitIssues` rule: an ingredient is conflicted when **more than one unit is demanded for it across the selected recipes** (recipe-to-recipe conflict, even with no pantry row) **or its pantry unit is outside the demanded units**.
 
 | Current state of the bound (ingredient, unit) | Result |
 | --- | --- |
@@ -55,7 +56,7 @@ A mark binds the triple `(ingredientId, unit, expectedQuantity)` where `expected
 | Gap changed in either direction (recipe added/removed, pantry topped up or consumed) | **Cancelled** |
 | The unit is no longer demanded (same ingredient, different unit) | **Cancelled** |
 | Gap reached zero (the pantry covers the requirement) | **Cancelled**; cancelled marks are **physically deleted and never revive automatically** — when the gap later returns, the user must mark again |
-| The ingredient is unit-conflicted (`checkUnits`) | **Cancelled** even though the public `shortages` array is empty — the per-ingredient gap data is used for this cleanup |
+| The ingredient is unit-conflicted (`checkUnits`) — pantry-unit mismatch **or** recipe-to-recipe unit clash (e.g. Warm tomato skillet in pieces + Ratatouille in grams on an empty pantry) | **Cancelled** even though the public `shortages` array is empty — the per-ingredient comparison and gap data is used for this cleanup; unaffected ingredients keep their valid marks, and removing the conflicting recipe never revives the cancelled mark |
 
 Unrelated changes that leave a mark's gap untouched leave the mark alone. Coordination runs inside `rebuildShopping()`, in the same transaction as the list cache and the revision increment, and **any transaction failure rolls everything back** (including the fault-injection path). Marking itself is coordination-safe: a rebuild runs immediately after the mark in the same transaction, so a persisted state that contradicts the list cannot exist.
 
@@ -83,11 +84,13 @@ This PR ships the **minimal contract-conformant schema 004** (additive, independ
 | --- | --- |
 | Gap = max(required − stock, 0); stock covering the need yields no gap row | pure: gaps × 2 |
 | Uncomparable pantry unit → no gap, ingredient flagged | pure: gaps (unit conflict) |
+| Recipe-to-recipe unit conflict (no pantry row) → no gap, ingredient flagged; compatible pantry stock does not cure it | pure: gaps (recipe-to-recipe conflict) |
 | Exact gap match kept; raw-requirement mark rejected | pure: reconcile + store: mark binds the to-buy gap |
 | Gap change in either direction cancels | pure: reconcile + store/API: requirement change |
 | Filling the gap deletes the mark; gap returning never revives | store + API: filling the gap |
 | Unrelated pantry update preserves a valid mark | store + API: unrelated update |
 | `checkUnits` transition clears conflicted marks, preserves unaffected ones; new marks rejected; restore keeps the mark cleared | store + API: checkUnits |
+| Real-catalog recipe-to-recipe conflict (Warm tomato skillet + Ratatouille, empty pantry): mark cleared on conflict, new mark rejected, stays absent after removing Ratatouille | store + API: recipe-to-recipe unit conflict |
 | Minor-unit exactness (0.1+0.2 aggregation vs 0.3 mark) | pure: reconcile minor-unit exactness |
 | Mark/unmark/idempotency/revision discipline | API: mark, snapshot echo, unmark and revision discipline |
 | Clearing the list drops every mark, never revives | API: clearing the list drops every mark |

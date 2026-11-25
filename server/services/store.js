@@ -62,6 +62,7 @@ export class Store {
     const result = this.shoppingState(recipes, this.pantry(), ingredients);
     // Purchase-gap changes coordinate the marks in the same transaction: marks
     // bound to a changed/zeroed gap, a dropped unit or a unit-conflicted ingredient
+    // (pantry mismatch OR recipe-to-recipe unit clash, even with no pantry row)
     // are cancelled here (C02 rules).
     this.reconcilePurchasedMarks(result ? result.combined.requirements : [], this.pantry());
     if (!result) { this.db.prepare('DELETE FROM shopping_lists WHERE workspace_id=?').run(this.workspace); return; }
@@ -93,7 +94,7 @@ export class Store {
       if (!result) throw new ServiceError(422, 'NO_ACTIVE_LIST', 'Select a recipe before marking purchased items.');
       // While a unit conflict blocks the list there is no trustworthy gap for anyone:
       // the public shortages array is empty, so reject marking instead of guessing.
-      if (result.combined.status === 'checkUnits') throw new ServiceError(422, 'UNIT_CHECK_REQUIRED', 'Fix the flagged pantry units first; the list cannot compute purchase gaps while units conflict.');
+      if (result.combined.status === 'checkUnits') throw new ServiceError(422, 'UNIT_CHECK_REQUIRED', 'Fix the flagged unit conflicts first (pantry units or recipes demanding different units of the same ingredient); the list cannot compute purchase gaps while units conflict.');
       // The authoritative amount is the current positive purchase gap, not the raw requirement.
       const { gaps } = computePurchaseGaps(result.combined.requirements, this.pantry());
       const gap = gaps.get(`${id}|${item.unit}`);

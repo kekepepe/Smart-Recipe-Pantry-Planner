@@ -30,6 +30,24 @@ test('gaps: an uncomparable pantry unit produces no gap and flags the ingredient
   assert.deepEqual([...conflicted], ['tomato']);
 });
 
+test('gaps: recipe-to-recipe unit conflict flags the ingredient even with no pantry row', () => {
+  // Two selected recipes demand tomato in different units (Warm tomato skillet:
+  // 2 pieces; Ratatouille: 600 g). No pantry row exists, yet no comparable gap can
+  // be computed - the same rule as evaluateShopping's combined unitIssues.
+  const { gaps, conflicted } = computePurchaseGaps([req('tomato', 2, 'piece'), req('tomato', 600, 'g'), req('salt', 3, 'g')], []);
+  assert.deepEqual([...conflicted], ['tomato']);
+  assert.deepEqual([...gaps.entries()], [['salt|g', 300]]); // unrelated ingredient keeps its gap
+  // The cancelled tomato mark never matches; the unaffected salt mark survives.
+  const marks = [mark('tomato', 2, 'piece'), mark('salt', 3, 'g')];
+  const { kept, cancelled } = reconcilePurchasedMarks(marks, gaps);
+  assert.deepEqual(cancelled, [mark('tomato', 2, 'piece')]);
+  assert.deepEqual(kept, [mark('salt', 3, 'g')]);
+  // A compatible pantry unit does not cure a recipe-to-recipe conflict.
+  const withStock = computePurchaseGaps([req('tomato', 2, 'piece'), req('tomato', 600, 'g')], [{ ingredientId: 'tomato', quantity: 500, unit: 'g' }]);
+  assert.deepEqual([...withStock.conflicted], ['tomato']);
+  assert.equal(withStock.gaps.size, 0);
+});
+
 test('reconcile: a mark survives only while the current positive gap equals its bound amount', () => {
   const marks = [mark('egg', 1, 'piece'), mark('salt', 3, 'g')];
   const gaps = new Map([['egg|piece', 100], ['salt|g', 300]]);
@@ -110,6 +128,29 @@ test('store: checkUnits rejects new marks, clears conflicted marks, preserves va
   s = store.saveItem('tomato', { quantity: 1, unit: 'piece', expectedRevision: s.revision });
   assert.equal(s.shopping.status, 'needsShopping');
   assert.deepEqual(s.purchasedMarks.map(m => m.ingredientId), ['egg']);
+});
+
+test('store: recipe-to-recipe unit conflict clears the mark even with no pantry row; removing the recipe never revives it', t => {
+  const f = fixture(); t.after(f.close); const store = new Store(f.db);
+  // Empty pantry: Warm tomato skillet needs 2 tomato pieces -> a 2-piece gap.
+  let s = store.onboard({ mode: 'empty', expectedRevision: 0 });
+  s = store.selectRecipe({ recipeId: 'tomato-skillet', expectedRevision: s.revision });
+  assert.deepEqual(s.shopping.shortages, [{ ingredientId: 'tomato', quantity: 2, unit: 'piece' }]);
+  s = store.markPurchased('tomato', { unit: 'piece', expectedQuantity: 2, expectedRevision: s.revision });
+  assert.deepEqual(s.purchasedMarks.map(m => m.ingredientId), ['tomato']);
+  // Ratatouille demands tomatoes in grams: a recipe-to-recipe conflict with NO
+  // pantry row. The combined list flips to checkUnits and the tomato mark clears.
+  s = store.selectRecipe({ recipeId: 'ratatouille', expectedRevision: s.revision });
+  assert.equal(s.shopping.status, 'checkUnits');
+  assert.deepEqual(s.shopping.unitIssues.find(i => i.ingredientId === 'tomato'), { ingredientId: 'tomato', requiredUnits: ['piece', 'g'], availableUnit: null });
+  assert.deepEqual(s.purchasedMarks, []);
+  // New marks are refused while the conflict blocks the list.
+  assert.throws(() => store.markPurchased('tomato', { unit: 'piece', expectedQuantity: 2, expectedRevision: s.revision }), error => error.status === 422 && error.code === 'UNIT_CHECK_REQUIRED');
+  // Removing Ratatouille restores the original row, but the cancelled mark stays absent.
+  s = store.removeRecipe('ratatouille', { expectedRevision: s.revision });
+  assert.equal(s.shopping.status, 'needsShopping');
+  assert.deepEqual(s.shopping.shortages, [{ ingredientId: 'tomato', quantity: 2, unit: 'piece' }]);
+  assert.deepEqual(s.purchasedMarks, []);
 });
 
 test('store: requirement change cancels the stale mark and keeps the exact one (C02 coordination)', t => {
