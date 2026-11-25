@@ -8,6 +8,8 @@
 
 证据截点  2026-11-24 00:27 北京时间  ·  应用基线  14e64b3
 
+> **截点后更新说明（2026-11-24）**：本文件完整保留 `2026-11-24 00:27` 历史快照（含当时 `#17` 尚待作者合并的记录）。截点后的第一轮收尾进展（`#17` 已合入 `a188c39` 并关闭 `#16`、`#18`/`#19` 已合入、`#20`/`#21` 缺陷建单、`#12` 外部样本 0 人缺口如实登记，以及 `#13` 最终流程度量基线与复盘）统一记录在 [第一轮成果评审、复盘、流程度量基线与证据索引](iteration-1-evidence-and-retrospective.md)。
+
 [GitHub 项目](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)  ·  [第一轮总单 \#9](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/issues/9)  ·  [应用基线](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/commit/14e64b361ac95dc1772b9b25a34cffae49d140cd)
 
 <a name="toc"></a>
