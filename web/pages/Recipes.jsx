@@ -227,7 +227,7 @@ export default function Recipes() {
       <button className="text-button" onClick={clear}>{t.clearFilters}</button>
       {hint ? <p className="helper" role="status">{t[hint]}</p> : null}
     </details>
-    {nutritionIndex.status === 'error' && !nutritionIndex.data ? (
+    {nutritionIndex.status === 'error' ? (
       <p className="helper nutrition-index-error" role="status">
         {t.nutritionIndexLoadError}{' '}
         <button type="button" className="text-button" onClick={reloadNutrition}>{t.tryAgain}</button>

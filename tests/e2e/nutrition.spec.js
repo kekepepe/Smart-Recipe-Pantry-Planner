@@ -211,3 +211,74 @@ test('P04 nutrition: API failures do not block recipes or detail and recover via
   const unexpected = errors.filter(msg => !msg.includes('503 (Service Unavailable)'));
   expect(unexpected).toEqual([]);
 });
+
+test('P04 nutrition: catalog changes hide stale estimates and retry only accepts current data', async ({ page, mappedService }) => {
+  const { data: snapshot } = await mappedService.request('/snapshot');
+  const { data: nutrition } = await mappedService.request('/nutrition');
+  const pendingRequest = Promise.withResolvers();
+  const releasePending = Promise.withResolvers();
+  const middleVersion = 'catalog-under-test-2';
+  const finalVersion = 'catalog-under-test-3';
+  let catalogVersion = snapshot.catalogVersion;
+  let failCurrentRequest = true;
+  let replyVersion = finalVersion;
+
+  await page.route('**/api/snapshot', route => route.fulfill({ json: { ...snapshot, catalogVersion } }));
+  await page.route('**/api/nutrition', async route => {
+    const requestedVersion = catalogVersion;
+    if (requestedVersion === middleVersion) {
+      pendingRequest.resolve();
+      await releasePending.promise;
+      return route.fulfill({ json: { ...nutrition, catalogVersion: middleVersion } });
+    }
+    if (requestedVersion === finalVersion && failCurrentRequest) {
+      failCurrentRequest = false;
+      return route.fulfill({
+        status: 503,
+        json: { error: { code: 'STORAGE_UNAVAILABLE', message: 'Nutrition temporarily unavailable.' } },
+      });
+    }
+    return route.fulfill({ json: {
+      ...nutrition,
+      catalogVersion: requestedVersion === finalVersion ? replyVersion : requestedVersion,
+    } });
+  });
+
+  try {
+    await page.goto(mappedService.url + '/#/recipes');
+    const card = page.getByRole('article').filter({ hasText: 'Simple scrambled eggs' });
+    const estimate = 'Est. 157 kcal / serving';
+    await expect(card).toContainText(estimate);
+
+    catalogVersion = middleVersion;
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await pendingRequest.promise;
+    await expect(card).not.toContainText(estimate);
+
+    catalogVersion = finalVersion;
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    const retry = page.locator('.nutrition-index-error').getByRole('button', { name: 'Try again', exact: true });
+    await expect(retry).toBeVisible();
+    await expect(card).not.toContainText(estimate);
+
+    const lateResponse = page.waitForResponse(response => response.url().endsWith('/api/nutrition') && response.ok());
+    releasePending.resolve();
+    await lateResponse;
+    await expect(retry).toBeVisible();
+    await expect(card).not.toContainText(estimate);
+
+    replyVersion = middleVersion;
+    const mismatchedResponse = page.waitForResponse(response => response.url().endsWith('/api/nutrition') && response.ok());
+    await retry.click();
+    await mismatchedResponse;
+    await expect(retry).toBeVisible();
+    await expect(card).not.toContainText(estimate);
+
+    replyVersion = finalVersion;
+    await retry.click();
+    await expect(card).toContainText(estimate);
+    await expect(retry).toHaveCount(0);
+  } finally {
+    releasePending.resolve();
+  }
+});
