@@ -1,5 +1,6 @@
-import { app, BrowserWindow, dialog, session, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, session, shell } from 'electron';
 import { randomUUID } from 'node:crypto';
+import { readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,10 +10,46 @@ import { initializeDatabase } from '../server/db/initialize.js';
 const host = '127.0.0.1';
 const accessToken = randomUUID();
 const windowIconPath = fileURLToPath(new URL('./icons/icon-256.png', import.meta.url));
+const preloadPath = fileURLToPath(new URL('./preload.cjs', import.meta.url));
+const supportedLanguages = new Set(['en', 'zh-CN']);
 let database;
 let server;
 let origin;
 let window;
+
+function registerLanguagePreference() {
+  const path = join(app.getPath('userData'), 'interface-language');
+  let language = 'en';
+  try {
+    const saved = readFileSync(path, 'utf8');
+    if (supportedLanguages.has(saved)) language = saved;
+  } catch (error) {
+    if (error.code !== 'ENOENT') console.error('Could not read interface language:', error);
+  }
+
+  const fromAppWindow = event => window && event.sender === window.webContents
+    && event.senderFrame?.parent === null
+    && event.senderFrame.url.startsWith(`${origin}/`);
+
+  ipcMain.on('pantry:language:read', event => {
+    event.returnValue = fromAppWindow(event) ? language : null;
+  });
+  ipcMain.on('pantry:language:save', (event, next) => {
+    event.returnValue = false;
+    if (!fromAppWindow(event) || !supportedLanguages.has(next)) return;
+    try {
+      if (language !== next) {
+        const temporaryPath = `${path}.tmp`;
+        writeFileSync(temporaryPath, next, 'utf8');
+        renameSync(temporaryPath, path);
+        language = next;
+      }
+      event.returnValue = true;
+    } catch (error) {
+      console.error('Could not save interface language:', error);
+    }
+  });
+}
 
 async function start() {
   const dbPath = join(app.getPath('userData'), 'pantry.sqlite');
@@ -48,7 +85,7 @@ function showWindow() {
     width: 1280,
     height: 900,
     icon: windowIconPath,
-    webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true },
+    webPreferences: { preload: preloadPath, nodeIntegration: false, contextIsolation: true, sandbox: true },
   });
   window.webContents.on('will-navigate', (event, url) => {
     if (new URL(url).origin !== origin) event.preventDefault();
@@ -76,6 +113,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('window-all-closed', () => app.quit());
   app.whenReady().then(async () => {
     await start();
+    registerLanguagePreference();
     await showWindow();
   }).catch(error => {
     console.error(error);
