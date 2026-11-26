@@ -1,0 +1,22 @@
+appId: nz.ac.aut.smart-recipe-pantry-planner
+directories:
+  output: desktop-dist
+artifactName: Pantry-and-Plate-${version}-${os}-${arch}.${ext}
+files:
+  - desktop/main.js
+  - dist/**/*
+  - server/**/*
+  - src/**/*
+  - web/data/fixtures.js
+  - data/catalog.js
+  - data/world-recipes.json
+mac:
+  identity: "-"
+  notarize: false
+  target: dmg
+win:
+  target: nsis
+nsis:
+  oneClick: false
+  perMachine: false
+  deleteAppDataOnUninstall: false
