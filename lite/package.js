@@ -33,6 +33,7 @@ try {
   cpSync(join('lite', launcher), join(root, launcher));
   if (process.platform === 'darwin') chmodSync(join(root, launcher), 0o755);
   cpSync('lite/README.md', join(root, 'README.md'));
+  cpSync('LICENSE', join(root, 'LICENSE'));
   mkdirSync('lite-dist', { recursive: true });
   execFileSync('tar', ['-a', '-cf', output, '-C', staging, name], { stdio: 'inherit' });
   console.log(output);

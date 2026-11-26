@@ -62,6 +62,7 @@ const data = snapshot => ({
 });
 try {
   execFileSync('tar', ['-xf', zip, '-C', scratch]);
+  assert(existsSync(join(packageRoot, 'LICENSE')));
   assert(existsSync(join(packageRoot, process.platform === 'darwin' ? 'Start Lite.command' : 'Start Lite.cmd')));
   const modules = join(packageRoot, 'node_modules');
   for (const excluded of ['electron', 'electron-builder', 'vite', 'playwright']) {
