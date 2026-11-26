@@ -12,7 +12,7 @@ export function fixture() {
 export async function listen(app) {
   const server = await new Promise((resolve, reject) => { const s = app.listen(0, '127.0.0.1', () => resolve(s)); s.once('error', reject); });
   const url = `http://127.0.0.1:${server.address().port}`;
-  return { url, close: () => new Promise(resolve => server.close(resolve)), async request(path, method = 'GET', body, headers = {}) {
+  return { url, close: () => new Promise(resolve => { server.close(resolve); server.closeAllConnections?.(); }), async request(path, method = 'GET', body, headers = {}) {
     const res = await fetch(url + '/api' + path, { method, ...(body === undefined ? {} : { body: JSON.stringify(body), headers: { 'Content-Type': 'application/json', ...headers } }), ...(body === undefined ? { headers } : {}) });
     return { status: res.status, data: await res.json(), headers: res.headers };
   } };
