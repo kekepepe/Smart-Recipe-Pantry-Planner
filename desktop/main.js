@@ -1,45 +1,61 @@
-import { app, BrowserWindow, dialog, safeStorage, session, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, safeStorage, session, shell } from 'electron';
 import { randomUUID } from 'node:crypto';
+import { readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createApp } from '../server/app.js';
-import { openDatabase } from '../server/db/connection.js';
-import { migrate, migration } from '../server/db/migrate.js';
-import { catalogVersion, seed } from '../server/db/seed.js';
-import { Store } from '../server/services/store.js';
+import { initializeDatabase } from '../server/db/initialize.js';
 import { createDesktopRememberStore } from './remember-store.js';
 
 const host = '127.0.0.1';
 const accessToken = randomUUID();
+const windowIconPath = fileURLToPath(new URL('./icons/icon-256.png', import.meta.url));
+const preloadPath = fileURLToPath(new URL('./preload.cjs', import.meta.url));
+const supportedLanguages = new Set(['en', 'zh-CN']);
 let database;
 let server;
 let origin;
 let window;
 
+function registerLanguagePreference() {
+  const path = join(app.getPath('userData'), 'interface-language');
+  let language = 'en';
+  try {
+    const saved = readFileSync(path, 'utf8');
+    if (supportedLanguages.has(saved)) language = saved;
+  } catch (error) {
+    if (error.code !== 'ENOENT') console.error('Could not read interface language:', error);
+  }
+
+  const fromAppWindow = event => window && event.sender === window.webContents
+    && event.senderFrame?.parent === null
+    && event.senderFrame.url.startsWith(`${origin}/`);
+
+  ipcMain.on('pantry:language:read', event => {
+    event.returnValue = fromAppWindow(event) ? language : null;
+  });
+  ipcMain.on('pantry:language:save', (event, next) => {
+    event.returnValue = false;
+    if (!fromAppWindow(event) || !supportedLanguages.has(next)) return;
+    try {
+      if (language !== next) {
+        const temporaryPath = `${path}.tmp`;
+        writeFileSync(temporaryPath, next, 'utf8');
+        renameSync(temporaryPath, path);
+        language = next;
+      }
+      event.returnValue = true;
+    } catch (error) {
+      console.error('Could not save interface language:', error);
+    }
+  });
+}
+
 async function start() {
   const userDataDir = app.getPath('userData');
   const dbPath = join(userDataDir, 'pantry.sqlite');
-  database = openDatabase(dbPath, { create: true });
-
-  const hasMigrationHistory = database.prepare(
-    "SELECT 1 FROM sqlite_schema WHERE type = 'table' AND name = 'schema_migrations'",
-  ).get();
-  if (hasMigrationHistory) {
-    const schemaVersion = database.prepare('SELECT max(version) AS version FROM schema_migrations').get().version;
-    const installedCatalog = schemaVersion === migration.version
-      ? database.prepare('SELECT version FROM catalog_metadata WHERE id=1').get()?.version
-      : undefined;
-    if (schemaVersion < migration.version || installedCatalog !== catalogVersion) {
-      const stamp = new Date().toISOString().replaceAll(':', '-');
-      await database.backup(join(userDataDir, `pantry-before-upgrade-${stamp}.sqlite`));
-    }
-  }
-
-  database.transaction(() => {
-    migrate(database);
-    seed(database, { upgrade: true });
-    new Store(database).getSnapshot();
-  }).immediate();
+  database = await initializeDatabase(dbPath);
 
   const desktopRememberStore = createDesktopRememberStore(userDataDir, safeStorage);
   const expressApp = createApp(database, {
@@ -47,7 +63,6 @@ async function start() {
     desktopMode: true,
     desktopRememberStore,
   });
-
   let authority;
   server = createServer((request, response) => {
     if (request.headers.host !== authority || request.headers['x-pantry-desktop'] !== accessToken) {
@@ -76,7 +91,8 @@ function showWindow() {
   window = new BrowserWindow({
     width: 1280,
     height: 900,
-    webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true },
+    icon: windowIconPath,
+    webPreferences: { preload: preloadPath, nodeIntegration: false, contextIsolation: true, sandbox: true },
   });
   window.webContents.on('will-navigate', (event, url) => {
     if (new URL(url).origin !== origin) event.preventDefault();
@@ -104,6 +120,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('window-all-closed', () => app.quit());
   app.whenReady().then(async () => {
     await start();
+    registerLanguagePreference();
     await showWindow();
   }).catch(error => {
     console.error(error);

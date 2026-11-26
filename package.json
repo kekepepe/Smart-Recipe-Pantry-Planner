@@ -24,6 +24,7 @@
     "check:v1": "npm run test:final && npm run demo && npm run test:api && npm run test:integration && npm run build && npm run test:e2e",
     "check:v2-discovery": "npm run check:v1",
     "check:v2": "npm run check:v1",
+    "package:lite": "npm run build && node lite/package.js",
     "package:desktop": "npm run build && electron-builder --config desktop/electron-builder.yml --publish never"
   },
   "engines": {

@@ -37,15 +37,30 @@ function createJar() {
   };
 }
 
+async function fetchJson(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: { Connection: 'close', ...(options.headers || {}) },
+  });
+  const data = await res.json();
+  return { res, status: res.status, data };
+}
+
 test('Issue #55 migration: v1.0.1 (schema 004) database upgrades cleanly to 005, preserves all user data, and blocks pre-setup business APIs', async t => {
   const dir = mkdtempSync(join(tmpdir(), 'pantry-v101-upgrade-'));
   const dbPath = join(dir, 'v101.sqlite');
   const backupPath = join(dir, 'pantry-before-upgrade.sqlite');
-  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  let db;
+  let api;
+  t.after(async () => {
+    // Close HTTP server and SQLite handles before deleting temp dir (required on Windows to avoid EBUSY).
+    if (api) await api.close();
+    if (db?.open) db.close();
+    rmSync(dir, { recursive: true, force: true });
+  });
 
   // 1. Construct an authentic v1.0.1 (schema 004) database with pantry, multi-recipe order, and purchased mark.
-  const db = openDatabase(dbPath, { create: true });
-  t.after(() => { if (db.open) db.close(); });
+  db = openDatabase(dbPath, { create: true });
   db.exec('CREATE TABLE schema_migrations(version INTEGER PRIMARY KEY, checksum TEXT NOT NULL, applied_at TEXT NOT NULL)');
   for (const m of migrations.slice(0, 4)) {
     db.exec(m.sql);
@@ -69,8 +84,7 @@ test('Issue #55 migration: v1.0.1 (schema 004) database upgrades cleanly to 005,
   assert.deepEqual(db.pragma('foreign_key_check'), []);
 
   // 3. Before account setup, business APIs must return 401 and never leak v1.0.1 data.
-  const api = await listen(createApp(db), { authenticate: false });
-  t.after(async () => { await api.close(); });
+  api = await listen(createApp(db), { authenticate: false });
 
   const preStatus = await api.request('/auth/status');
   assert.equal(preStatus.status, 200);
@@ -101,7 +115,6 @@ test('Issue #55 migration: v1.0.1 (schema 004) database upgrades cleanly to 005,
 
 test('Issue #55 process restart: unchecked remember-me requires re-login; checked remember-me auto-restores; logout stops auto-restore', async t => {
   const f = fixture();
-  t.after(f.close);
   const port = await new Promise(resolve => {
     const srv = createServer();
     srv.listen(0, '127.0.0.1', () => { const p = srv.address().port; srv.close(() => resolve(p)); });
@@ -116,7 +129,11 @@ test('Issue #55 process restart: unchecked remember-me requires re-login; checke
       current.kill('SIGTERM');
     });
   };
-  t.after(stop);
+  // Stop child process BEFORE closing/deleting fixture dir (required on Windows).
+  t.after(async () => {
+    await stop();
+    f.close();
+  });
   const start = () => new Promise((resolve, reject) => {
     child = spawn(process.execPath, ['server/index.js'], {
       cwd: root,
@@ -133,51 +150,50 @@ test('Issue #55 process restart: unchecked remember-me requires re-login; checke
 
   // Case 1: Setup with rememberMe = false -> restart requires password again.
   await start();
-  let res = await fetch(`${url}/auth/setup`, {
+  let out = await fetchJson(`${url}/auth/setup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: 'procuser', password: 'password123', rememberMe: false }),
   });
-  assert.equal(res.status, 201);
-  jar.track(res);
-  assert.equal((await fetch(`${url}/snapshot`, { headers: { Cookie: jar.header() } })).status, 200);
+  assert.equal(out.status, 201);
+  jar.track(out.res);
+  assert.equal((await fetchJson(`${url}/snapshot`, { headers: { Cookie: jar.header() } })).status, 200);
 
   await stop();
   await start();
-  res = await fetch(`${url}/auth/status`, { headers: { Cookie: jar.header() } });
-  assert.equal((await res.json()).authenticated, false, 'non-remembered session must not survive server restart');
-  assert.equal((await fetch(`${url}/snapshot`, { headers: { Cookie: jar.header() } })).status, 401);
+  out = await fetchJson(`${url}/auth/status`, { headers: { Cookie: jar.header() } });
+  assert.equal(out.data.authenticated, false, 'non-remembered session must not survive server restart');
+  assert.equal((await fetchJson(`${url}/snapshot`, { headers: { Cookie: jar.header() } })).status, 401);
 
   // Case 2: Sign in with rememberMe = true -> restart auto-restores session!
-  res = await fetch(`${url}/auth/login`, {
+  out = await fetchJson(`${url}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username: 'procuser', password: 'password123', rememberMe: true }),
   });
-  assert.equal(res.status, 200);
-  jar.track(res);
+  assert.equal(out.status, 200);
+  jar.track(out.res);
   jar.clearSession(); // Also simulate browser closing (session cookie discarded)
   await stop();
   await start();
-  res = await fetch(`${url}/auth/status`, { headers: { Cookie: jar.header() } });
-  jar.track(res);
-  const restored = await res.json();
-  assert.equal(restored.authenticated, true);
-  assert.equal(restored.restoredFromRemember, true);
-  assert.equal((await fetch(`${url}/snapshot`, { headers: { Cookie: jar.header() } })).status, 200);
+  out = await fetchJson(`${url}/auth/status`, { headers: { Cookie: jar.header() } });
+  jar.track(out.res);
+  assert.equal(out.data.authenticated, true);
+  assert.equal(out.data.restoredFromRemember, true);
+  assert.equal((await fetchJson(`${url}/snapshot`, { headers: { Cookie: jar.header() } })).status, 200);
 
   // Case 3: Explicit logout -> restart stays logged out.
-  res = await fetch(`${url}/auth/logout`, {
+  out = await fetchJson(`${url}/auth/logout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Cookie: jar.header() },
     body: '{}',
   });
-  assert.equal(res.status, 200);
-  jar.track(res);
+  assert.equal(out.status, 200);
+  jar.track(out.res);
   await stop();
   await start();
-  res = await fetch(`${url}/auth/status`, { headers: { Cookie: jar.header() } });
-  assert.equal((await res.json()).authenticated, false);
+  out = await fetchJson(`${url}/auth/status`, { headers: { Cookie: jar.header() } });
+  assert.equal(out.data.authenticated, false);
   await stop();
 });
 

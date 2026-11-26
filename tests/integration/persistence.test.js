@@ -89,7 +89,7 @@ test('startup refuses missing databases and externally bound configuration', t =
 });
 
 test('A09: saved data survives actual service process termination and restart', async t => {
-  const f = fixture(); t.after(f.close);
+  const f = fixture();
   const port = await new Promise(resolve => { const server = createServer(); server.listen(0, '127.0.0.1', () => { const p = server.address().port; server.close(() => resolve(p)); }); });
   let child;
   const stop = async () => {
@@ -101,7 +101,7 @@ test('A09: saved data survives actual service process termination and restart', 
       if (!current.kill('SIGTERM')) { clearTimeout(timer); reject(new Error('Service could not be terminated')); }
     });
   };
-  t.after(stop);
+  t.after(async () => { await stop(); f.close(); });
   const start = () => new Promise((resolve, reject) => {
     child = spawn(process.execPath, ['server/index.js'], { cwd: root, env: { ...process.env, DB_PATH: f.path, PORT: String(port), HOST: '127.0.0.1' }, stdio: ['ignore', 'pipe', 'pipe'] });
     const timer = setTimeout(() => { child.kill(); reject(new Error('Service startup timeout')); }, 5000);
@@ -109,8 +109,9 @@ test('A09: saved data survives actual service process termination and restart', 
     child.once('exit', code => { clearTimeout(timer); if (code) reject(new Error('Startup exited ' + code)); });
   });
   await start(); const url = `http://127.0.0.1:${port}/api`;
-  const setupRes = await fetch(url + '/auth/setup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: 'restartuser', password: 'password123', rememberMe: true }) });
+  const setupRes = await fetch(url + '/auth/setup', { method: 'POST', headers: { 'Content-Type': 'application/json', Connection: 'close' }, body: JSON.stringify({ username: 'restartuser', password: 'password123', rememberMe: true }) });
   assert.equal(setupRes.status, 201);
+  await setupRes.json();
   const jar = new Map();
   const track = res => {
     for (const raw of (res.headers.getSetCookie?.() || [])) {
@@ -121,15 +122,15 @@ test('A09: saved data survives actual service process termination and restart', 
   };
   const cookieHeader = () => [...jar.entries()].map(([k, v]) => `${k}=${v}`).join('; ');
   track(setupRes);
-  let response = await fetch(url + '/onboarding', { method: 'POST', headers: { 'Content-Type': 'application/json', Cookie: cookieHeader() }, body: JSON.stringify({ mode: 'sample', expectedRevision: 0 }) });
+  let response = await fetch(url + '/onboarding', { method: 'POST', headers: { 'Content-Type': 'application/json', Connection: 'close', Cookie: cookieHeader() }, body: JSON.stringify({ mode: 'sample', expectedRevision: 0 }) });
   let s = await response.json();
-  response = await fetch(url + '/shopping-selection', { method: 'PUT', headers: { 'Content-Type': 'application/json', Cookie: cookieHeader() }, body: JSON.stringify({ recipeId: 'tomato-skillet', expectedRevision: s.revision }) });
+  response = await fetch(url + '/shopping-selection', { method: 'PUT', headers: { 'Content-Type': 'application/json', Connection: 'close', Cookie: cookieHeader() }, body: JSON.stringify({ recipeId: 'tomato-skillet', expectedRevision: s.revision }) });
   assert.equal(response.status, 200); s = await response.json();
-  response = await fetch(url + '/shopping-selection', { method: 'PUT', headers: { 'Content-Type': 'application/json', Cookie: cookieHeader() }, body: JSON.stringify({ recipeId: 'tomato-eggs', expectedRevision: s.revision }) });
+  response = await fetch(url + '/shopping-selection', { method: 'PUT', headers: { 'Content-Type': 'application/json', Connection: 'close', Cookie: cookieHeader() }, body: JSON.stringify({ recipeId: 'tomato-eggs', expectedRevision: s.revision }) });
   assert.equal(response.status, 200); s = await response.json(); assert.equal(s.shoppingRecipeIds.length, 2); await stop(); await start();
-  const restoreRes = await fetch(url + '/auth/status', { headers: { Cookie: cookieHeader() } });
+  const restoreRes = await fetch(url + '/auth/status', { headers: { Connection: 'close', Cookie: cookieHeader() } });
   assert.equal(restoreRes.status, 200); track(restoreRes);
   const restoredStatus = await restoreRes.json();
   assert.equal(restoredStatus.authenticated, true); assert.equal(restoredStatus.restoredFromRemember, true);
-  assert.deepEqual(await (await fetch(url + '/snapshot', { headers: { Cookie: cookieHeader() } })).json(), s); await stop();
+  assert.deepEqual(await (await fetch(url + '/snapshot', { headers: { Connection: 'close', Cookie: cookieHeader() } })).json(), s); await stop();
 });

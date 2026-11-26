@@ -219,6 +219,9 @@ const MESSAGES = {
     editIngredientHeading: 'Edit ingredient',
     addIngredientHeading: 'Add an ingredient',
     addIngredientAria: 'Add ingredient',
+    ingredientSearchLabel: 'Search ingredients',
+    ingredientSearchClear: 'Clear search',
+    ingredientSearchEmpty: 'No ingredients match. Try a shorter name or clear the search.',
     ingredientLabel: 'Ingredient',
     selectIngredient: 'Select ingredient',
     quantityLabel: 'Quantity',
@@ -560,6 +563,9 @@ const MESSAGES = {
     editIngredientHeading: '编辑食材',
     addIngredientHeading: '添加食材',
     addIngredientAria: '添加食材',
+    ingredientSearchLabel: '搜索食材',
+    ingredientSearchClear: '清除搜索',
+    ingredientSearchEmpty: '没有匹配的食材。请尝试缩短关键词或清除搜索。',
     ingredientLabel: '食材',
     selectIngredient: '请选择食材',
     quantityLabel: '数量',
@@ -790,7 +796,7 @@ const MESSAGES = {
 
 export function readStoredLang() {
   try {
-    const saved = window.localStorage.getItem(LANG_STORAGE_KEY);
+    const saved = window.pantryDesktopLanguage?.initial ?? window.localStorage.getItem(LANG_STORAGE_KEY);
     return SUPPORTED_LANGS.includes(saved) ? saved : 'en';
   } catch {
     return 'en';
@@ -913,9 +919,11 @@ export function I18nProvider({ children }) {
   }, [lang]);
 
   const setLang = next => {
-    if (SUPPORTED_LANGS.includes(next)) setLangState(next);
+    if (!SUPPORTED_LANGS.includes(next)) return;
+    window.pantryDesktopLanguage?.save(next);
+    setLangState(next);
   };
-  const toggleLang = () => setLangState(prev => (prev === 'en' ? 'zh-CN' : 'en'));
+  const toggleLang = () => setLang(lang === 'en' ? 'zh-CN' : 'en');
   const t = MESSAGES[lang];
 
   return <I18nContext.Provider value={{ lang, setLang, toggleLang, t }}>{children}</I18nContext.Provider>;

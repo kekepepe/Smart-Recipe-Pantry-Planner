@@ -79,6 +79,9 @@ img { display: block; max-width: 100%; }
 .stock-amount { color: #4e5b50; }
 .pantry-form { border-left: 1px solid var(--border); padding-left: 32px; }
 .pantry-form h2 { font-size: 24px; margin-bottom: 24px; }
+.ingredient-search { display: flex; gap: 12px; margin-bottom: 16px; }
+.ingredient-search input { min-width: 0; }
+.ingredient-search button { flex-shrink: 0; }
 label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 7px; }
 input, select { min-height: 46px; width: 100%; border: 1px solid #bdc9bf; color: #263d2d; background: #fff; border-radius: 6px; padding: 10px 12px; font-size: 15px; }
 input[aria-invalid=true], select[aria-invalid=true] { border-color: #a94331; }
