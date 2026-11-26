@@ -10,6 +10,7 @@ files:
   - web/data/fixtures.js
   - data/catalog.js
   - data/world-recipes.json
+  - data/nutrition-mappings.json
 mac:
   identity: "-"
   notarize: false
