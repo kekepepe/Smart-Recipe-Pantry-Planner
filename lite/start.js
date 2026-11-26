@@ -51,8 +51,8 @@ async function loadBundleApp(rootDir, dbPath) {
   }
 }
 
-async function importBackup(sourcePath, dbPath) {
-  const active = resolveActiveBundle(packageRoot);
+async function importBackup(sourcePath, dbPath, updatesDir) {
+  const active = resolveActiveBundle(packageRoot, { updatesDir });
   const { openDatabase } = await import(pathToFileURL(join(active.rootDir, 'server/db/connection.js')).href);
   const { assertSchema } = await import(pathToFileURL(join(active.rootDir, 'server/db/migrate.js')).href);
   const { Store } = await import(pathToFileURL(join(active.rootDir, 'server/services/store.js')).href);
@@ -81,10 +81,11 @@ async function importBackup(sourcePath, dbPath) {
   }
 }
 
-async function runService(dbPath, port, showBrowser) {
+async function runService(dbPath, updatesDir, port, showBrowser) {
   const origin = `http://${host}:${port}`;
   const runtime = readRuntimeInfo(packageRoot);
-  let active = resolveActiveBundle(packageRoot);
+  const controlToken = process.env.PANTRY_LITE_CONTROL_TOKEN || '';
+  let active = resolveActiveBundle(packageRoot, { updatesDir });
   let handler;
   let db;
   let updating = false;
@@ -103,6 +104,18 @@ async function runService(dbPath, port, showBrowser) {
         isUpdated: active.isUpdated,
         updater: { enabled: true },
       });
+    }
+
+    if (req.method === 'POST' && urlPath === '/api/lite-shutdown') {
+      if (!controlToken || req.headers['x-lite-control-token'] !== controlToken) {
+        return sendJson(res, 403, { error: 'Forbidden.' });
+      }
+      shuttingDown = true;
+      res.once('finish', () => {
+        close();
+        process.exit(0);
+      });
+      return sendJson(res, 200, { status: 'stopping' });
     }
 
     if (urlPath === '/api/lite-update/check' || urlPath === '/api/lite-update/apply') {
@@ -125,7 +138,7 @@ async function runService(dbPath, port, showBrowser) {
       updating = true;
       const manifestUrl = process.env.PANTRY_LITE_UPDATE_URL || undefined;
       if (urlPath === '/api/lite-update/check') {
-        checkForUpdate(packageRoot, { manifestUrl })
+        checkForUpdate(packageRoot, { manifestUrl, updatesDir })
           .then(result => {
             const { manifest: _omitted, ...publicResult } = result;
             sendJson(res, 200, publicResult);
@@ -135,7 +148,7 @@ async function runService(dbPath, port, showBrowser) {
         return;
       }
 
-      applyUpdate(packageRoot, { manifestUrl })
+      applyUpdate(packageRoot, { manifestUrl, updatesDir })
         .then(result => {
           if (result.status !== 'applied') {
             updating = false;
@@ -210,8 +223,8 @@ async function runService(dbPath, port, showBrowser) {
     } catch (bootError) {
       if (!active.isUpdated) throw bootError;
       console.error(`${appName}: updated bundle ${active.version} failed to start (${bootError.message}); rolling back to built-in ${runtime.version}.`);
-      clearActiveBundle(packageRoot);
-      active = resolveActiveBundle(packageRoot);
+      clearActiveBundle(packageRoot, { updatesDir });
+      active = resolveActiveBundle(packageRoot, { updatesDir });
       ({ db, handler } = await loadBundleApp(active.rootDir, dbPath));
     }
     process.once('SIGINT', close);
@@ -233,14 +246,16 @@ try {
   const base = platform === 'darwin'
     ? join(homedir(), 'Library', 'Application Support')
     : (process.env.LOCALAPPDATA || join(homedir(), 'AppData', 'Local'));
-  const dbPath = join(resolve(process.env.PANTRY_LITE_DATA_DIR || join(base, appName)), 'pantry.sqlite');
+  const dataDir = resolve(process.env.PANTRY_LITE_DATA_DIR || join(base, appName));
+  const dbPath = join(dataDir, 'pantry.sqlite');
+  const updatesDir = join(dataDir, 'updates');
   const [option, source, ...rest] = process.argv.slice(2);
   if (option === '--import' && source && rest.length === 0) {
-    await importBackup(source, dbPath);
+    await importBackup(source, dbPath, updatesDir);
   } else if (!option || (option === '--no-browser' && !source)) {
     const port = Number(process.env.PANTRY_LITE_PORT || 32101);
     if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('PANTRY_LITE_PORT must be an integer from 1024 to 65535.');
-    await runService(dbPath, port, !option);
+    await runService(dbPath, updatesDir, port, !option);
   } else {
     throw new Error('Usage: node lite/start.js [--no-browser | --import BACKUP.sqlite]');
   }

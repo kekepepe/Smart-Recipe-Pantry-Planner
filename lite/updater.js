@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 export const LITE_RUNTIME_VERSION = 1;
@@ -74,29 +74,48 @@ export function readRuntimeInfo(packageRoot) {
   };
 }
 
-function updatesRoot(packageRoot) {
-  return join(packageRoot, '.updates');
+function updatesRoot(packageRoot, updatesDir) {
+  return updatesDir ? resolve(updatesDir) : join(packageRoot, '.updates');
 }
 
-function activePointerPath(packageRoot) {
-  return join(updatesRoot(packageRoot), 'active.json');
+function activePointerPath(packageRoot, updatesDir) {
+  return join(updatesRoot(packageRoot, updatesDir), 'active.json');
 }
 
 function hasRequiredFiles(dir) {
   return REQUIRED_BUNDLE_FILES.every(rel => existsSync(join(dir, rel)));
 }
 
-export function resolveActiveBundle(packageRoot) {
+function wireExternalBundleRuntime(packageRoot, targetDir) {
+  const pkgSrc = join(packageRoot, 'package.json');
+  const pkgDest = join(targetDir, 'package.json');
+  if (!existsSync(pkgDest)) {
+    if (existsSync(pkgSrc)) {
+      copyFileSync(pkgSrc, pkgDest);
+    } else {
+      writeFileSync(pkgDest, '{"type":"module"}\n');
+    }
+  }
+  const modulesSrc = resolve(packageRoot, 'node_modules');
+  const modulesDest = join(targetDir, 'node_modules');
+  if (existsSync(modulesSrc) && !existsSync(modulesDest)) {
+    symlinkSync(modulesSrc, modulesDest, process.platform === 'win32' ? 'junction' : 'dir');
+  }
+}
+
+export function resolveActiveBundle(packageRoot, { updatesDir } = {}) {
   const runtime = readRuntimeInfo(packageRoot);
-  const pointerPath = activePointerPath(packageRoot);
+  const baseDir = updatesRoot(packageRoot, updatesDir);
+  const pointerPath = activePointerPath(packageRoot, updatesDir);
   if (existsSync(pointerPath)) {
     try {
       const active = JSON.parse(readFileSync(pointerPath, 'utf8'));
       const safeDir = typeof active?.dir === 'string' && /^[A-Za-z0-9._-]+$/.test(active.dir) ? active.dir : null;
-      if (safeDir && typeof active?.version === 'string') {
-        const candidateDir = resolve(updatesRoot(packageRoot), safeDir);
-        const expectedParent = resolve(updatesRoot(packageRoot));
+      if (safeDir && typeof active?.version === 'string' && compareSemver(active.version, runtime.version) > 0) {
+        const candidateDir = resolve(baseDir, safeDir);
+        const expectedParent = resolve(baseDir);
         if (candidateDir.startsWith(expectedParent) && hasRequiredFiles(candidateDir)) {
+          wireExternalBundleRuntime(packageRoot, candidateDir);
           return {
             version: active.version,
             builtInVersion: runtime.version,
@@ -117,8 +136,8 @@ export function resolveActiveBundle(packageRoot) {
   };
 }
 
-export function clearActiveBundle(packageRoot) {
-  rmSync(activePointerPath(packageRoot), { force: true });
+export function clearActiveBundle(packageRoot, { updatesDir } = {}) {
+  rmSync(activePointerPath(packageRoot, updatesDir), { force: true });
 }
 
 function isAllowedUrl(urlString, customManifestUrl) {
@@ -190,9 +209,9 @@ async function fetchChecked(url, { customManifestUrl, fetchImpl = fetch, maxByte
   return buffer;
 }
 
-export async function checkForUpdate(packageRoot, { manifestUrl, fetchImpl = fetch } = {}) {
+export async function checkForUpdate(packageRoot, { manifestUrl, updatesDir, fetchImpl = fetch } = {}) {
   const runtime = readRuntimeInfo(packageRoot);
-  const active = resolveActiveBundle(packageRoot);
+  const active = resolveActiveBundle(packageRoot, { updatesDir });
   const effectiveUrl = manifestUrl || DEFAULT_MANIFEST_URL;
   const rawBytes = await fetchChecked(effectiveUrl, {
     customManifestUrl: manifestUrl || null,
@@ -260,8 +279,8 @@ function cleanupOldVersions(baseDir, keepDirs) {
   }
 }
 
-export async function applyUpdate(packageRoot, { manifestUrl, fetchImpl = fetch } = {}) {
-  const check = await checkForUpdate(packageRoot, { manifestUrl, fetchImpl });
+export async function applyUpdate(packageRoot, { manifestUrl, updatesDir, fetchImpl = fetch } = {}) {
+  const check = await checkForUpdate(packageRoot, { manifestUrl, updatesDir, fetchImpl });
   if (check.status !== 'update-available') {
     return check;
   }
@@ -283,7 +302,7 @@ export async function applyUpdate(packageRoot, { manifestUrl, fetchImpl = fetch 
     throw new Error('Update integrity check failed (SHA-256 mismatch).');
   }
 
-  const baseDir = updatesRoot(packageRoot);
+  const baseDir = updatesRoot(packageRoot, updatesDir);
   mkdirSync(baseDir, { recursive: true });
   const staging = mkdtempSync(join(baseDir, '.staging-'));
   try {
@@ -301,6 +320,7 @@ export async function applyUpdate(packageRoot, { manifestUrl, fetchImpl = fetch 
     const targetDir = join(baseDir, versionDirName);
     rmSync(targetDir, { recursive: true, force: true });
     renameSync(extractDir, targetDir);
+    wireExternalBundleRuntime(packageRoot, targetDir);
 
     const pointerTemp = join(baseDir, `.active-${Date.now()}.tmp`);
     writeFileSync(pointerTemp, JSON.stringify({
@@ -309,7 +329,7 @@ export async function applyUpdate(packageRoot, { manifestUrl, fetchImpl = fetch 
       sha256: actualHash,
       appliedAt: new Date().toISOString(),
     }, null, 2));
-    renameSync(pointerTemp, activePointerPath(packageRoot));
+    renameSync(pointerTemp, activePointerPath(packageRoot, updatesDir));
 
     cleanupOldVersions(baseDir, [versionDirName]);
     return {

@@ -203,3 +203,63 @@ test('applyUpdate verifies SHA-256, activates bundle atomically, and supports ro
     rmSync(scratch, { recursive: true, force: true });
   }
 });
+
+test('applyUpdate supports external writable updatesDir and yields to newer built-in installs', async () => {
+  const scratch = mkdtempSync(join(tmpdir(), 'lite-updater-external-'));
+  try {
+    const depsHash = '0123456789abcdef';
+    const root = createFixtureLiteRoot(scratch, '1.0.2', depsHash);
+    const updatesDir = join(scratch, 'user-data', 'updates');
+    mkdirSync(join(root, 'node_modules/fake-pkg'), { recursive: true });
+    writeFileSync(join(root, 'package.json'), '{"type":"module"}\n');
+
+    const { bytes, sha256 } = createTarGz(scratch, {
+      'dist/index.html': '<html><body>updated-1.0.3</body></html>',
+      'server/app.js': 'export function createApp() { return "1.0.3"; }',
+      'server/db/initialize.js': 'export async function initializeDatabase() {}',
+      'data/catalog.js': 'export const catalog = ["updated"];',
+    }, 'Pantry-and-Plate-1.0.3-Lite-Bundle.tar.gz');
+
+    const manifest = {
+      schemaVersion: 1,
+      version: '1.0.3',
+      depsHash,
+      minLiteRuntimeVersion: LITE_RUNTIME_VERSION,
+      bundleFile: 'Pantry-and-Plate-1.0.3-Lite-Bundle.tar.gz',
+      bundleSha256: sha256,
+      bundleSize: bytes.length,
+    };
+
+    const applied = await applyUpdate(root, {
+      manifestUrl: 'http://127.0.0.1:9999/lite-update-manifest.json',
+      updatesDir,
+      fetchImpl: async url => ({
+        ok: true,
+        url,
+        arrayBuffer: async () => (url.endsWith('.json') ? Buffer.from(JSON.stringify(manifest)) : bytes),
+      }),
+    });
+    assert.equal(applied.status, 'applied');
+    assert.equal(existsSync(join(root, '.updates')), false);
+
+    const active = resolveActiveBundle(root, { updatesDir });
+    assert.equal(active.isUpdated, true);
+    assert.equal(active.version, '1.0.3');
+    assert.ok(active.rootDir.startsWith(updatesDir));
+    assert.ok(existsSync(join(active.rootDir, 'package.json')));
+    assert.ok(existsSync(join(active.rootDir, 'node_modules/fake-pkg')));
+
+    // When a newer native installer (1.0.3+) is installed, stale 1.0.3 hot-update is ignored
+    writeFileSync(join(root, 'lite-runtime.json'), JSON.stringify({
+      version: '1.0.3',
+      depsHash,
+      runtimeVersion: LITE_RUNTIME_VERSION,
+    }));
+    const afterUpgrade = resolveActiveBundle(root, { updatesDir });
+    assert.equal(afterUpgrade.isUpdated, false);
+    assert.equal(afterUpgrade.version, '1.0.3');
+    assert.equal(afterUpgrade.rootDir, root);
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
+});
