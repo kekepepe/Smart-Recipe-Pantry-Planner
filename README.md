@@ -1,138 +1,295 @@
-# Smart Recipe & Pantry Planner
+<div align="center">
 
-**First V2 increment implemented:** food/seasoning classification, 100 illustrated recipes and combined country/region, taste and meal filters. Locally verified; not yet merged/released. See [catalog and discovery guide](docs/V2-DISCOVERY.md).
+<img src="public/favicon.svg" alt="Pantry & Plate logo" width="68" height="68" />
 
-**V1 development build:** `feat/v1-core` implements local persistence and 20 illustrated recipes. [Run guide](docs/V1-RUNBOOK.md) · [Technical acceptance](docs/V1-ACCEPTANCE.md) · [Plan](docs/V1-DEVELOPMENT-PLAN.zh-CN.md) · [Recipe sources](docs/RECIPE-CATALOG.md) · [Release status](docs/V1-RELEASE.md). Peer review, independent member reproduction and real-user evaluation remain outstanding.
+# Pantry & Plate
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+### Smart Recipe & Pantry Planner
 
-A software project to help home cooks manage ingredients, discover recipes, identify missing ingredients, and prepare grocery lists.
+**An offline-first, bilingual desktop & local web app that turns what is already in your kitchen into illustrated recipes, verified nutrition estimates, and combined shopping lists.**
 
-**Status: supervised local development, first V2 increment.** React/Vite now reads and writes SQLite through Express. Pantry and multi-recipe lists survive refresh and service restart. Recommendations, purchased status, nutrition and a multi-user hosted pilot remain future work.
+[![V1 Checks](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/test.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/test.yml)
+[![Desktop Installers](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/desktop.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/desktop.yml)
+[![Latest Release](https://img.shields.io/github/v/release/kekepepe/Smart-Recipe-Pantry-Planner?label=Release&color=245a42)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest)
+[![Platforms](https://img.shields.io/badge/Platforms-macOS%20arm64%20%7C%20Windows%20x64%20%7C%20Web-245a42)](#download-desktop-app)
+[![Node.js](https://img.shields.io/badge/Node.js-22.23.1-339933?logo=node.js&logoColor=white)](.nvmrc)
+[![License: MIT](https://img.shields.io/badge/Code%20License-MIT-blue.svg)](LICENSE)
 
-**Repository:** [kekepepe/Smart-Recipe-Pantry-Planner](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)
+[**Download v1.0.0**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**Features**](#features) · [**Screenshots**](#interface-showcase) · [**Quick Start**](#run-from-source) · [**Architecture**](#architecture) · [**Documentation**](#documentation)
 
-## Interface preview
+**English** | [简体中文](README.zh-CN.md)
 
-Actual screenshots of the running V0 prototype, using the two-eggs/one-tomato demo. These are rendered application screens, not the design concept. The interface currently uses English.
+</div>
 
-### Desktop recipe matching
+---
 
-![V0 desktop recipe matching: scrambled eggs can be made now; the tomato skillet needs one more tomato](docs/screenshots/v0-desktop-recipes.png)
+## Why Pantry & Plate?
 
-### Mobile pantry and shopping list
+Home cooks frequently have ingredients on hand yet still spend time manually cross-checking recipes, guessing quantities, and scribbling shopping lists. **Pantry & Plate** connects your local kitchen inventory, a curated 100-recipe world catalog, sourced nutrition estimates, and a multi-recipe shopping list in one calm, private, offline-first workspace—no accounts, no cloud tracking, and no fabricated data.
 
-| My pantry | Shopping list |
+<p align="center">
+  <img src="docs/screenshots/v1-desktop-recipes.png" alt="Pantry & Plate desktop recipe discovery screen showing pantry bar, availability filters, verified calorie badges, and illustrated recipes" width="960" />
+</p>
+
+---
+
+## Features
+
+| Capability | What it does |
 | --- | --- |
-| <img src="docs/screenshots/v0-mobile-pantry.png" alt="V0 mobile pantry with two eggs, one tomato and the ingredient form" width="280"> | <img src="docs/screenshots/v0-mobile-shopping.png" alt="V0 mobile shopping list showing one tomato to buy" width="280"> |
+| **Local Pantry Management** | Track **286 canonical ingredients** split into **174 main foods** and **112 seasonings** with strict unit validation (`g`, `ml`, `piece`), instant search, edit/delete confirmation, and local SQLite persistence. |
+| **100-Recipe Multi-Dimensional Discovery** | Filter **100 illustrated world recipes** across **16 countries**, **15 regional cuisines**, **6 tastes**, **3 meals**, category, availability status (`Any status`, `Can make now`, `Need ingredients`, `Check units`), and bilingual keyword search. URL-persisted queries survive reload and back navigation. |
+| **Use What I Have (Staple Recommendations)** | Ranks matching dishes by **main food coverage** (`Main foods ready`, `Partial staple match`, `Check staple units`) with per-staple stock breakdowns, while surfacing missing seasonings separately so you never miss a dish for lack of one spice. |
+| **Daily Inspiration** | Serves **3 deterministic daily picks** per `Asia/Shanghai` calendar day, completely independent of pantry inventory while respecting active cuisine/taste/meal filters. |
+| **Verified USDA Nutrition Estimates** | Displays per-serving and whole-dish `kcal`, base servings, cooking-state assumptions, and expandable **USDA FoodData Central (SR Legacy)** source citations (**69 verified mappings** covering **21 complete recipes**). Unmapped dishes explicitly display `Unavailable`—never fabricated `0 kcal`. |
+| **Multi-Recipe Shopping List & Purchased Marks** | Save multiple recipes into one combined list, sum shared ingredients before subtracting pantry stock once, and check off **Purchased** items that persist across refreshes/restarts without mutating pantry stock. Automatically flags quantity changes and unit conflicts. |
+| **Full EN / 简体中文 Bilingual UI** | One-click language switcher persisted in `localStorage` with pre-paint `<html lang>` sync and 100% localized recipes, ingredients, taxonomy, nutrition labels, and status messages. |
+| **Offline Desktop App (macOS & Windows)** | Packaged Electron desktop app with bundled Node/Express local server, native SQLite (`better-sqlite3`), automatic schema migrations, and pre-upgrade database backups. |
 
-## Why this project
+---
 
-People often have ingredients at home but are unsure what to cook. Browsing recipe websites still requires them to compare ingredients manually and write down what is missing. This project aims to connect pantry management, recipe selection, and shopping preparation in one workflow, helping users save time, avoid unnecessary purchases, and reduce food waste.
+## Interface Showcase
 
-## Intended users and stakeholders
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Use What I Have (Staple Recommendations)</strong><br />
+      <em>Ranks dishes by main foods on hand with per-ingredient stock breakdowns.</em>
+      <img src="docs/screenshots/v1-desktop-staples.png" alt="Staple recommendations tab showing Main foods ready ranking and stock breakdown" />
+    </td>
+    <td width="50%" valign="top">
+      <strong>Daily Inspiration</strong><br />
+      <em>Deterministic daily 3-dish suggestions independent of pantry stock.</em>
+      <img src="docs/screenshots/v1-desktop-inspiration.png" alt="Daily inspiration tab showing 3 daily picks with honest nutrition unavailable badges and pantry shortage summaries" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Verified USDA Nutrition &amp; Energy Provenance</strong><br />
+      <em>Per-serving &amp; whole-dish kcal, assumptions, and expandable USDA FDC records.</em>
+      <img src="docs/screenshots/v1-desktop-detail-nutrition.png" alt="Recipe detail nutrition panel with per-serving kcal, whole-dish kcal, assumptions, and USDA SR Legacy FDC source records" />
+    </td>
+    <td width="50%" valign="top">
+      <strong>Multi-Recipe Shopping List &amp; Purchased Marks</strong><br />
+      <em>Combines shared shortages across recipes with persistent purchased checkboxes.</em>
+      <img src="docs/screenshots/v1-desktop-shopping.png" alt="Multi-recipe combined shopping list showing saved recipe count, remaining items, and interactive checkboxes" />
+    </td>
+  </tr>
+</table>
 
-| Stakeholder | Main need |
-| --- | --- |
-| Home cooks | Find recipes using ingredients already available at home. |
-| Students and busy workers | Spend less time deciding what to cook and preparing shopping lists. |
-| Health-conscious users | View estimated calories to support everyday food choices. |
-| Development team | Work with clear requirements, testable features, and maintainable code. |
-| System administrator | Maintain recipe records and basic system data, and monitor errors. |
+<details>
+<summary><strong>Preview Simplified Chinese (简体中文) Interface</strong></summary>
 
-## Historical V0 prototype
+<p align="center">
+  <img src="docs/screenshots/v1-desktop-zh-recipes.png" alt="Pantry & Plate Simplified Chinese interface showing localized recipes, taxonomy, pantry bar, and calorie badges" width="900" />
+</p>
 
-- Start with two eggs and one tomato, or enter your own pantry.
-- Add, edit and delete canonical ingredients and quantities.
-- Browse two sample recipes, compare required and available amounts, and distinguish ready recipes from shortages or incompatible units.
-- Generate an idempotent single-recipe shopping list that updates with pantry changes and never consumes stock.
-- Use responsive pages, keyboard-accessible controls and confirmation dialogs. Refresh resets the session.
+</details>
 
-[Implementation plan in Chinese](docs/V0-IMPLEMENTATION-PLAN.zh-CN.md) · [Design reference and assets](docs/design/V0-DESIGN.md)
+---
 
-## Version features
+## Download Desktop App
 
-### V1 — Local core MVP implemented on the development branch
+Pre-built offline installers for **macOS (Apple Silicon)** and **Windows (x64)** are published on [**GitHub Releases**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) along with `SHA256SUMS.txt` and `SOURCE_COMMIT.txt`.
 
-- **Pantry management:** add, edit, and remove ingredients, including their quantities.
-- **Recipe browsing:** view recipes, required ingredients, and basic cooking instructions.
-- **Pantry-based matching:** separate recipes into “can make now” and “can make after buying missing ingredients”.
-- **Shopping list:** persist several recipes, show individual gaps and combined buying totals, sum requirements before subtracting shared stock once, and remove individual recipes or clear the list. [Behavior and migration](docs/V1-MULTI-RECIPE.md).
+| Platform | Target OS / Arch | Installer Asset | Notes |
+| --- | --- | --- | --- |
+| **macOS** | macOS 15+ (`arm64` Apple Silicon) | `Pantry-and-Plate-1.0.0-dev-mac-arm64.dmg` | Drag **Pantry & Plate** to Applications. Uses ad-hoc signing (not notarized): on first launch, use **Right-click → Open** or allow in *System Settings → Privacy & Security*. |
+| **Windows** | Windows 11 (`x64`) | `Pantry-and-Plate-1.0.0-dev-win-x64.exe` | Run the NSIS installer (or silent per-user install: `/S /currentuser`). Unsigned build: verify `SHA256SUMS.txt`, then choose **More info → Run anyway** if SmartScreen prompts. |
 
-The core user journey is: **record pantry ingredients → browse matching recipes → inspect missing ingredients → generate a shopping list**.
+> [!NOTE]
+> **Local Data Storage & Automatic Upgrade Backups**
+> All pantry items, shopping selections, and purchased marks stay strictly on your machine:
+> - **macOS:** `~/Library/Application Support/Pantry & Plate/pantry.sqlite`
+> - **Windows:** `%APPDATA%\Pantry & Plate\pantry.sqlite`
+>
+> Before applying a schema or catalog upgrade, the app automatically writes a timestamped backup (`pantry-before-upgrade-*.sqlite`) in the same folder.
 
-### V2 — Enhanced application
+---
 
-[V2 development plan (Chinese)](docs/V2-DEVELOPMENT-PLAN.zh-CN.md): 100 illustrated recipes, food/seasoning classification, pantry-based recommendations, inventory-independent daily inspiration, combinable cuisine/taste/meal filters, purchased status, sourced calorie estimates and a verified feedback improvement. Recipe multipliers are optional; public hosting and app packaging remain later work.
+## Run from Source
 
-- **Two recommendation modes:** match owned food ingredients, including partial matches, or show inventory-independent daily inspiration; classify food and seasonings separately.
-- **100 recipes and combined search:** classify by country/region cuisine, taste and meal; each filter works alone or in combination.
-- **Calorie estimates:** show estimated total and per-serving calories based on recipe ingredients.
-- **Improved shopping lists:** combined multi-recipe totals have moved into V1; purchased status and further convenience improvements remain future work.
-- **Feedback-driven improvements:** refine matching, filters, and usability based on V1 evaluation.
-- **Optional, time permitting:** ingredient expiry reminders.
+### Prerequisites
 
-### Out of scope
+- **Node.js `22.23.1`** (pinned in [`.nvmrc`](.nvmrc); engine range `>=22.12.0 <23`)
+- **npm** (bundled with Node.js)
 
-- Training a custom AI model.
-- Online ordering, payment, or delivery management.
-- Professional medical nutrition advice.
-
-The application will prepare grocery lists; it will not process purchases. Calorie values are intended as estimates for everyday reference.
-
-## Development approach and roadmap
-
-The project follows **Iterative-Incremental Development**. V1 will provide a complete core workflow. User evaluation will then guide improvements and additional features in V2. Each release should be usable and demonstrable.
-
-| Stage | Planned work | Expected output |
-| --- | --- | --- |
-| V0 preparation and Day 1 review | Prepare the local prototype, then review reusable code, requirements and the candidate stack on formal Day 1. | Runnable prototype, technical checks and prioritized backlog. |
-| Iteration 1 — V1 | Build pantry management, recipe browsing and matching, and missing-ingredient lists. | Working MVP and core test cases. |
-| User evaluation | Ask sample users to complete common tasks and record defects and feedback. | Evaluation summary and revised V2 backlog. |
-| Iteration 2 — V2 | Improve V1 and add daily recommendations, calorie estimates, and shopping-list enhancements. | Enhanced application, regression tests, and demonstration. |
-
-V0 has been integrated into main. This branch extends it with the local V1 core. The original two five-working-day iterations are historical planning context. The expanded 100-recipe V2 proposes three five-working-day phases; see the revised plan. Implementation does not replace independent reproduction or user evaluation.
-
-## Release acceptance goals
-
-These are product acceptance goals. Completed technical checks are recorded in V1-ACCEPTANCE; user evaluation and release gates are listed separately.
-
-**V1**
-
-- Users can save pantry ingredients and quantities, then update or remove them.
-- Users can view recipe ingredients and cooking instructions.
-- Users can distinguish recipes they can make now from those requiring additional ingredients.
-- Users can obtain a shopping list of missing ingredients.
-
-**V2**
-
-- Users can receive daily recipe suggestions independently of their pantry inventory.
-- Users can view estimated total and per-serving calories.
-- Users can combine missing ingredients across selected recipes and mark grocery items as purchased.
-- Core V1 tasks continue to work after the enhancements.
-
-## Getting started
-
-Use Node.js 22.23.1 from `.nvmrc`:
+### Quick Start (Local Web App)
 
 ```bash
-git clone --branch feat/v1-core https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
+git clone https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
 cd Smart-Recipe-Pantry-Planner
 npm ci
 npm run db:init
 npm run dev
 ```
 
-Open [the development app](http://127.0.0.1:5173/). After `npm run build`, `npm start` serves the complete app at [127.0.0.1:3001](http://127.0.0.1:3001/). Vite `preview` is static-only and does not replace the V1 server.
+Open **[http://127.0.0.1:5173/](http://127.0.0.1:5173/)** in your browser.
+
+### Production Local Server
+
+```bash
+npm run build
+npm start
+```
+
+Serves the complete compiled app and SQLite API at **[http://127.0.0.1:3001/](http://127.0.0.1:3001/)**.
+
+### Package Desktop Installer Locally
+
+```bash
+npm run package:desktop
+```
+
+See [docs/desktop-packaging.md](docs/desktop-packaging.md) for platform flags (`--mac --arm64`, `--win --x64`) and smoke-test instructions (`node desktop/smoke.js`).
+
+### Database CLI Utilities
+
+```bash
+npm run db:init      # Initialize SQLite database, run migrations, and seed catalog
+npm run db:migrate   # Apply pending SQLite schema migrations
+npm run db:seed      # Re-sync recipe/ingredient catalog
+npm run db:backup    # Create a local SQLite backup
+npm run db:restore   # Restore from a backup snapshot
+npm run db:repair    # Rebuild derived shopping cache while preserving user marks
+```
+
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Client["Frontend (React 19 + Vite 8)"]
+        UI["Pages: Home · Pantry · Recipes · Detail · Shopping"]
+        I18N["Bilingual i18n Provider (EN / ZH-CN)"]
+    end
+
+    subgraph Domain["Pure Domain Engine (src/)"]
+        D1["discover-recipes · evaluate-recipe"]
+        D2["recommend-by-staples · daily-inspiration"]
+        D3["evaluate-shopping · purchased-marks · nutrition"]
+    end
+
+    subgraph Server["Local Backend (Express 5 · 127.0.0.1)"]
+        API["REST API (/api/snapshot, /api/recipes, /api/recommendations, /api/inspiration, /api/nutrition)"]
+        STORE["Transactional Store & Optimistic Revision Guard"]
+    end
+
+    subgraph Storage["Offline Local Persistence"]
+        DB[("SQLite (better-sqlite3)\npantry.sqlite + migrations")]
+        CAT["Bundled Catalog & Assets\n100 recipes · 286 ingredients · 69 USDA mappings"]
+    end
+
+    subgraph Desktop["Desktop Shell (Electron)"]
+        EL["desktop/main.js\nSpawns loopback Express + BrowserWindow"]
+    end
+
+    UI <--> I18N
+    UI <--> API
+    UI -.shared pure logic.-> D1
+    API --> STORE
+    STORE --> D1
+    STORE --> D2
+    STORE --> D3
+    STORE <--> DB
+    CAT --> DB
+    EL --> Server
+    EL --> Client
+```
+
+### Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| **Frontend** | React 19, Vite 8, custom accessible CSS, hash routing, zero runtime external API dependencies |
+| **Backend** | Node.js 22 (ESM), Express 5 (loopback-only with same-origin CSRF protection), transactional `Store` with optimistic concurrency (`expectedRevision`) |
+| **Database** | SQLite via `better-sqlite3` with versioned SQL migrations (`001`–`004`), foreign-key/check constraints, and backup/repair CLI |
+| **Desktop** | Electron 45 + `electron-builder` 26 (`macOS arm64 DMG`, `Windows x64 NSIS`) |
+| **Testing & CI** | Node built-in test runner (`node --test`), Playwright Chromium E2E, GitHub Actions 3-OS matrix (`Ubuntu`, `macOS`, `Windows`) |
+
+### Project Layout
+
+```text
+Smart-Recipe-Pantry-Planner/
+├── data/                  # 100-recipe catalog, 286 ingredients, USDA nutrition mappings & source snapshots
+├── desktop/               # Electron main process, electron-builder config, packaged smoke test
+├── docs/                  # Contracts, runbooks, PRD, nutrition audit, packaging guide & screenshots
+├── public/                # App favicon and 100 bundled recipe illustrations
+├── scripts/               # Dev runner, DB CLI (init/migrate/seed/backup/restore/repair), verifiers
+├── server/                # Express loopback API, SQLite schema/migrations, transactional Store service
+├── src/                   # Pure deterministic domain modules (matching, discovery, shopping, nutrition)
+├── tests/                 # Unit/rules, API, DB integration, and Playwright E2E suites
+└── web/                   # React UI pages, components, styles, and EN/ZH-CN i18n dictionary
+```
+
+---
+
+## Testing & Quality Assurance
+
+Run the full verification suite locally (install Playwright Chromium once if running E2E for the first time):
 
 ```bash
 npx playwright install chromium
-npm run check:v1
+npm run check:v1   # Alias: npm run check:v2
 ```
 
-See the [run guide](docs/V1-RUNBOOK.md) for configuration, migrations, failure recovery and backups. Database files stay local. These commands select the development branch; see [release status](docs/V1-RELEASE.md) for review and main integration.
+`npm run check:v1` runs six sequential quality gates:
 
-## Project documentation
+1. **`npm run test:final`** — Completion precheck + pure domain/rules unit tests (shortage math, multi-recipe aggregation, discovery filters, staple recommendations, daily inspiration, purchased marks, USDA nutrition math, and 286-ingredient / 100-recipe pure-Chinese i18n checks).
+2. **`npm run demo`** — End-to-end deterministic shortage demonstration.
+3. **`npm run test:api`** — Express REST API contract, validation, optimistic concurrency (`409`), and error-handling tests.
+4. **`npm run test:integration`** — Real SQLite process-restart durability, migration (`003`→`004`), backup/restore, repair, and atomic rollback tests.
+5. **`npm run build`** — Production Vite client bundle verification.
+6. **`npm run test:e2e`** — Playwright Chromium browser tests across desktop & mobile viewports (onboarding, pantry CRUD, discovery, staple recommendations, daily inspiration, purchased marks, USDA nutrition UI, and strict EN/ZH-CN language isolation).
 
-- [Product requirements](docs/PRD.md) cover stakeholders, scope, and acceptance criteria.
-- [Iteration 1 project summary](docs/iteration-1-report.zh-CN.md) brings together the planning decisions, implemented features, and GitHub evidence for the first iteration.
+Continuous Integration runs automatically on GitHub Actions:
+- [**V1 checks**](.github/workflows/test.yml): Ubuntu (full suite + Playwright Chromium), macOS, and Windows.
+- [**Desktop installer candidates**](.github/workflows/desktop.yml): Builds and smoke-tests `macos-arm64` DMG and `windows-x64` NSIS installers.
+
+---
+
+## Honest Scope & Data Provenance
+
+Pantry & Plate prioritizes **correctness and transparency** over inflated claims:
+
+- **Strict Unit Integrity:** Pantry matching and shopping totals never silently guess conversions between `g`, `ml`, and `piece`. Incompatible units are explicitly flagged as **Check units** rather than producing misleading numbers.
+- **Fail-Closed Nutrition Estimates:** Calorie estimates are computed strictly from verified **USDA FoodData Central (SR Legacy)** entries ([`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)). Currently **21 of 100 recipes** have complete verified coverage (**69 ingredient mappings**); the remaining **79 recipes** explicitly display `Unavailable` with unmapped required ingredients listed—never partial totals or fabricated `0 kcal`.
+- **No Silent Pantry Mutation:** Checking off an item as **Purchased** in the shopping list records your shopping progress without silently modifying pantry quantities.
+- **No Cloud Dependency:** All data, catalog entries, nutrition tables, and 100 illustrations are bundled locally.
+
+---
+
+## Documentation
+
+| Category | Document |
+| --- | --- |
+| **Operations & Packaging** | [V2 Source Runbook](docs/V2-RUNBOOK.md) · [Desktop Packaging Guide](docs/desktop-packaging.md) · [V1 Runbook](docs/V1-RUNBOOK.md) |
+| **Feature Contracts** | [Staple Recommendations](docs/STAPLE-RECOMMENDATIONS-CONTRACT.md) · [Daily Inspiration](docs/DAILY-INSPIRATION-CONTRACT.md) · [Purchased Marks](docs/PURCHASED-MARKS-CONTRACT.md) · [Nutrition Contract](docs/NUTRITION-CONTRACT.md) · [Multi-Recipe Shopping](docs/V1-MULTI-RECIPE.md) |
+| **Data & Provenance** | [USDA Nutrition Sources Audit](docs/NUTRITION-SOURCES.md) · [Recipe Catalog & Sources](docs/RECIPE-CATALOG.md) · [V2 Discovery Guide](docs/V2-DISCOVERY.md) |
+| **Product & Planning** | [PRD (EN)](docs/PRD.md) · [PRD (ZH-CN)](docs/PRD.zh-CN.md) · [V2 Development Plan (ZH-CN)](docs/V2-DEVELOPMENT-PLAN.zh-CN.md) · [Iteration 1 Summary (ZH-CN)](docs/iteration-1-report.zh-CN.md) |
+
+---
+
+## Contributing
+
+Contributions, bug reports, and verified USDA nutrition mappings are welcome! Please read **[CONTRIBUTING.md](CONTRIBUTING.md)** for setup instructions, branch/PR conventions, and verification requirements before opening a pull request.
+
+### Project Team
+
+Built collaboratively by:
+- **Peng Ke** ([@kekepepe](https://github.com/kekepepe))
+- **ChangPeng Shi** ([@Lsiav](https://github.com/Lsiav))
+- **HaoZhe Feng** ([@fhhhz-todd](https://github.com/fhhhz-todd))
+- **ZheKai Mao** ([@Justmao1](https://github.com/Justmao1))
+
+---
+
+## License & Acknowledgments
+
+- **Source Code:** Licensed under the **[MIT License](LICENSE)**.
+- **Third-Party Recipe & Nutrition Data (Separate Licenses & Provenance):**
+  - 18 home-style recipes adapted from [Anduin2017/HowToCook](https://github.com/Anduin2017/HowToCook) (**Unlicense**, snapshots in `data/sources/howtocook/`).
+  - 80 world recipes adapted from [UniTools Recipes](https://github.com/farcrak/unitools-recipes) (**CC BY-SA 4.0**, attribution: *UniTools — theunitools.com*; `data/world-recipes.json` remains under **CC BY-SA 4.0** and is not relicensed under MIT).
+  - 69 nutrition mappings sourced from **USDA FoodData Central — SR Legacy** (Public Domain / CC0 1.0; full audit in [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)).
+  - 100 bundled recipe illustrations generated for this project with provenance recorded in `data/world-image-manifest.json`.

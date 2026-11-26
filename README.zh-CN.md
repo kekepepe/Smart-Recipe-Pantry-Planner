@@ -1,138 +1,279 @@
-# Smart Recipe & Pantry Planner
+<div align="center">
 
-**V2 首批功能已实现：** 食材/调料分类、100 道带图菜谱与国家/地区、口味、餐次组合检索；已完成本地验证，尚未合并发布。运行与升级见 [V2 目录与检索说明](docs/V2-DISCOVERY.md)。
+<img src="public/favicon.svg" alt="食库与餐盘图标" width="68" height="68" />
 
-**V1 开发版：** `feat/v1-core` 已实现本地持久化核心与 20 道带图菜谱。[运行手册](docs/V1-RUNBOOK.md) · [技术验收](docs/V1-ACCEPTANCE.md) · [开发计划](docs/V1-DEVELOPMENT-PLAN.zh-CN.md) · [菜谱来源](docs/RECIPE-CATALOG.md) · [发布状态](docs/V1-RELEASE.md)。尚待团队评审、独立成员复现和真实用户试用。
+# 食库与餐盘 · Pantry & Plate
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+### Smart Recipe & Pantry Planner（智能菜谱与库存规划工具）
 
-一个帮助家庭烹饪者管理现有食材、发现菜谱、识别缺失食材并生成购物清单的软件项目。
+**一款离线优先、完整中英双语的桌面与本地 Web 应用：将家中现有食材转化为 100 道带图菜谱、有据可查的热量估算与多菜合并购物清单。**
 
-**当前状态：本机受控开发，已完成 V2 首批功能。** React/Vite 界面经 Express 读写 SQLite，刷新及重启保留库存和多菜清单。两类推荐、已购与热量仍待开发；多人共享运行另行验收。
+[![V1 Checks](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/test.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/test.yml)
+[![Desktop Installers](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/desktop.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/desktop.yml)
+[![Latest Release](https://img.shields.io/github/v/release/kekepepe/Smart-Recipe-Pantry-Planner?label=Release&color=245a42)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest)
+[![Platforms](https://img.shields.io/badge/Platforms-macOS%20arm64%20%7C%20Windows%20x64%20%7C%20Web-245a42)](#下载桌面客户端)
+[![Node.js](https://img.shields.io/badge/Node.js-22.23.1-339933?logo=node.js&logoColor=white)](.nvmrc)
+[![License: MIT](https://img.shields.io/badge/Code%20License-MIT-blue.svg)](LICENSE)
 
-**项目仓库：** [kekepepe/Smart-Recipe-Pantry-Planner](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner)
+[**下载 v1.0.0**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**核心特性**](#核心特性) · [**界面展示**](#界面展示) · [**源码运行**](#源码运行) · [**系统架构**](#系统架构) · [**文档索引**](#文档索引)
 
-## 界面预览
+[English](README.md) | **简体中文**
 
-以下为实际运行的 V0 截图，使用“两蛋一番茄”示例，并非设计概念图。当前界面语言为英文。
+</div>
 
-### 桌面菜谱匹配
+---
 
-![V0 桌面菜谱页：鸡蛋菜谱现在可做，番茄菜谱还缺一个番茄](docs/screenshots/v0-desktop-recipes.png)
+## 为什么做这个项目？
 
-### 手机库存与购物清单
+许多人家中已有不少食材，却总在纠结“今天做什么”，浏览普通菜谱网站时仍要逐项核对库存、手写缺料清单。**食库与餐盘（Pantry & Plate）** 将本地食材库存、100 道世界家常菜谱库、经核验的 USDA 热量估算和多菜合并购物清单整合进一个清爽、私密、完全离线可用的工作台——无需注册账号、无云端追踪、绝不编造营养或库存数据。
 
-| 我的食材 | 购物清单 |
+<p align="center">
+  <img src="docs/screenshots/v1-desktop-zh-recipes.png" alt="食库与餐盘中文桌面端主界面，展示当前库存、多维筛选、热量估算徽章与带图菜谱列表" width="960" />
+</p>
+
+---
+
+## 核心特性
+
+| 模块 | 功能说明 |
 | --- | --- |
-| <img src="docs/screenshots/v0-mobile-pantry.png" alt="V0 手机库存页，展示两个鸡蛋、一个番茄和食材录入表单" width="280"> | <img src="docs/screenshots/v0-mobile-shopping.png" alt="V0 手机购物清单，展示需要购买一个番茄" width="280"> |
+| **本地库存管理** | 内置 **286 种规范原料**，清晰区分为 **174 种主食材** 与 **112 种调料**；严格校验数量与单位（`克` / `毫升` / `个`），支持即时搜索、编辑、删除确认，并持久化保存至本机 SQLite。 |
+| **100 道带图菜谱与多维检索** | 覆盖 **16 个国家**、**15 种地区菜系**、**6 种口味**、**3 种餐次**、原分类、可做状态（`全部状态` / `现在可做` / `需要补料` / `单位待核对`）及中英文关键词检索；筛选状态保存在 URL 中，刷新或详情返回不丢失。 |
+| **用现有食材（主食材推荐）** | 仅依据**主食材匹配度**排序（`主食材齐备`、`部分主食材匹配`、`主食材单位待核对`），逐项展示库存对比并单独标注所缺调料，避免因为少一味调料而错过好菜。 |
+| **每日灵感** | 按 `Asia/Shanghai` 自然日提供 **3 道确定性每日推荐**，选菜完全不受当前库存限制，同时共享当前激活的国家/地区/口味/餐次筛选条件。 |
+| **经核验的 USDA 热量估算** | 展示每份与整道菜的估算千卡、基础份数、烹调状态假设，以及可展开追溯的 **USDA FoodData Central (SR Legacy)** 原始记录（**69 条核验映射**覆盖 **21 道完整菜谱**）；其余未覆盖菜谱诚实标示为 `暂无数据`，绝不显示伪造的 `0 千卡`。 |
+| **多菜合并购物清单与已购状态** | 支持同时保存多道菜谱，先汇总共同食材需求再统一扣除一次库存；支持勾选/撤销 **已购** 状态且跨刷新/重启保留，**不会**擅自修改库存；当菜谱用量变更或出现单位冲突时自动提示重新核对。 |
+| **完整中英双语界面** | 右上角一键切换英文 / 简体中文并本地持久化，结合首屏前 `<html lang>` 同步脚本，实现 100 道菜谱、286 种原料、分类标签与营养说明的全量本地化。 |
+| **离线桌面客户端（macOS / Windows）** | 基于 Electron 打包离线安装包，内置 Express 本地服务、原生 SQLite（`better-sqlite3`）、自动数据库迁移与升级前自动备份。 |
 
-## 项目背景
+---
 
-许多人家中已有食材，却不知道可以做什么菜。浏览普通菜谱网站时，用户仍需手动核对库存，并逐项记录缺少的食材。本项目希望将食材管理、菜谱选择和采购准备连接起来，帮助用户节省时间、减少不必要的采购和食物浪费。
+## 界面展示
 
-## 目标用户与利益相关者
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>用现有食材（主食材推荐）</strong><br />
+      <em>按家中主食材覆盖率排序，清晰展示每项主食材缺口与完整可做状态。</em>
+      <img src="docs/screenshots/v1-desktop-staples.png" alt="用现有食材推荐界面，展示主食材齐备分组与逐项库存对比" />
+    </td>
+    <td width="50%" valign="top">
+      <strong>每日灵感</strong><br />
+      <em>按上海时区每日稳定推荐 3 道菜，独立于库存并给出参考缺料提示。</em>
+      <img src="docs/screenshots/v1-desktop-inspiration.png" alt="每日灵感页面，展示 3 道今日灵感菜谱与参考库存状态" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>USDA 热量估算与数据溯源</strong><br />
+      <em>每份/整道菜千卡、关键假设与可展开的 USDA SR Legacy 原始记录。</em>
+      <img src="docs/screenshots/v1-desktop-detail-nutrition.png" alt="菜谱详情页营养与热量模块，展示每份热量、整道菜热量与 USDA 来源链接" />
+    </td>
+    <td width="50%" valign="top">
+      <strong>多菜合并购物清单与已购勾选</strong><br />
+      <em>跨菜谱汇总采购总量，支持持久化已购勾选，绝不误改库存。</em>
+      <img src="docs/screenshots/v1-desktop-shopping.png" alt="多菜合并购物清单页面，展示已保存菜谱数、待购项与勾选框" />
+    </td>
+  </tr>
+</table>
 
-| 利益相关者 | 主要需求 |
-| --- | --- |
-| 家庭烹饪者 | 根据家中已有食材找到合适的菜谱。 |
-| 学生与忙碌上班族 | 减少选菜和准备购物清单所需的时间。 |
-| 关注健康饮食的用户 | 查看热量估算，辅助日常饮食选择。 |
-| 开发团队 | 需求明确、功能可测试、代码便于维护。 |
-| 系统管理员 | 维护菜谱记录与基本系统数据，并监控错误。 |
+<details>
+<summary><strong>查看英文默认界面（English UI）</strong></summary>
 
-## V0 历史原型
+<p align="center">
+  <img src="docs/screenshots/v1-desktop-recipes.png" alt="Pantry & Plate 英文主界面" width="900" />
+</p>
 
-- 两蛋一番茄示例入口，以及从空库存自己添加。
-- 食材与数量的新增、编辑、删除。
-- 两道样例菜谱、需要／已有／缺少对照、动态匹配及单位不兼容提示。
-- 不重复累加、随库存更新、不扣库存的单道菜购物清单。
-- 手机浏览器布局、键盘操作和确认对话框；刷新会重置会话。
+</details>
 
-[技术与搭建计划](docs/V0-IMPLEMENTATION-PLAN.zh-CN.md) · [设计与素材记录](docs/design/V0-DESIGN.md)
+---
 
-## 版本功能
+## 下载桌面客户端
 
-### V1 — 本地核心 MVP 已实现于开发分支
+可在 [**GitHub Releases**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) 直接下载离线安装包及校验文件（`SHA256SUMS.txt`、`SOURCE_COMMIT.txt`）：
 
-- **食材库存管理：** 添加、编辑和删除食材，并记录数量。
-- **菜谱浏览：** 查看菜谱、所需食材和基本烹饪步骤。
-- **基于库存的菜谱匹配：** 将菜谱区分为“现有食材可直接制作”和“购买缺失食材后可制作”。
-- **购物清单：** 持久保存多道菜，显示逐菜缺口与合并采购量；共享食材需求先相加，再扣一次库存。可单独移除或确认清空。[实现与迁移说明](docs/V1-MULTI-RECIPE.md)。
+| 平台 | 支持系统 / 架构 | 安装包文件 | 安装提示 |
+| --- | --- | --- | --- |
+| **macOS** | macOS 15+（`arm64` Apple Silicon） | `Pantry-and-Plate-1.0.0-dev-mac-arm64.dmg` | 打开 DMG 后拖入「应用程序」。当前采用 ad-hoc 签名（未经 Apple 公证），首次打开如遇 Gatekeeper 拦截，请 **右键 → 打开** 或在「系统设置 → 隐私与安全性」中允许。 |
+| **Windows** | Windows 11（`x64`） | `Pantry-and-Plate-1.0.0-dev-win-x64.exe` | 运行 NSIS 安装程序（支持静默当前用户安装：`/S /currentuser`）。当前安装包未签名，核对 `SHA256SUMS.txt` 后若出现 SmartScreen 提示，点击 **更多信息 → 仍要运行**。 |
 
-核心使用流程：**录入库存食材 → 浏览匹配菜谱 → 查看缺失食材 → 生成购物清单**。
+> [!NOTE]
+> **本地数据存放路径与升级保护**
+> 所有库存、购物清单与已购记录均仅保存在本机 SQLite 数据库：
+> - **macOS：** `~/Library/Application Support/Pantry & Plate/pantry.sqlite`
+> - **Windows：** `%APPDATA%\Pantry & Plate\pantry.sqlite`
+>
+> 当版本包含数据库结构或菜谱目录升级时，应用会在执行迁移前自动在同一目录下生成时间戳备份（`pantry-before-upgrade-*.sqlite`）。
 
-### V2 — 增强应用
+---
 
-[V2 完整开发计划](docs/V2-DEVELOPMENT-PLAN.zh-CN.md)：100 道带图菜谱、食材/调料分类、基于已有食材的推荐与库存无关的每日灵感、菜系/口味/餐次组合筛选，以及已购状态、可追溯热量估算和真实反馈改进；配方倍数为可选建议。公网部署与 App 包装保留为后续阶段。
+## 源码运行
 
-- **两种推荐：** 按已有主食材推荐（含部分匹配），或获取不依赖库存的每日灵感；数据库区分食材和调料。
-- **100 道菜与组合检索：** 按国家/地区菜系、口味和餐次分类；每项可单用，不同条件组合取交集。
-- **热量估算：** 根据菜谱食材展示整道菜和每份的热量估算。
-- **购物清单优化：** 多菜合并已按追加需求提前完成于 V1；V2 继续考虑已购状态与后续便利性改进。
-- **根据反馈改进：** 根据 V1 用户评价优化匹配结果、筛选和易用性。
-- **可选功能，视时间而定：** 食材临期提醒。
+### 环境要求
 
-### 不包含的范围
+- **Node.js `22.23.1`**（固定版本见 [`.nvmrc`](.nvmrc)，支持范围 `>=22.12.0 <23`）
+- **npm**（随 Node.js 附带）
 
-- 自行训练专用 AI 模型。
-- 在线下单、支付或配送管理。
-- 专业医学营养建议。
-
-应用只生成待购食材清单，不处理实际购买流程。热量数据为日常参考用的估算值。
-
-## 开发方法与路线图
-
-项目采用**迭代增量开发（Iterative-Incremental Development）**。先通过 V1 完成核心使用流程，再通过用户评价确定 V2 的改进和增强功能。两个版本都应能够独立使用和演示。
-
-| 阶段 | 计划工作 | 预期交付物 |
-| --- | --- | --- |
-| V0 准备与第 1 天评估 | 先准备本地原型，再于正式第 1 天检查可复用代码、需求及候选技术栈。 | 可运行原型、技术检查和按优先级排列的需求清单。 |
-| 迭代 1 — V1 | 实现食材管理、菜谱浏览与匹配、缺失食材清单。 | 可运行的 MVP 与核心测试用例。 |
-| 用户测试与评价 | 邀请样本用户完成典型任务，记录缺陷和反馈。 | 评价总结与调整后的 V2 需求清单。 |
-| 迭代 2 — V2 | 改进 V1，增加每日推荐、热量估算和购物清单优化。 | 增强应用、回归测试与演示。 |
-
-V0 已合入 main。本分支在其基础上完成 V1 本地核心开发；原两轮五工作日安排保留为历史计划；扩充到 100 菜后的 V2 建议分三个五工作日阶段，详见新版计划。技术实现不能代替独立复现和真实评价。
-
-## 版本验收目标
-
-以下为产品验收目标；本轮已执行的技术结果见 V1-ACCEPTANCE，未执行的用户评价与发布门槛单独列出。
-
-**V1**
-
-- 用户可以保存食材及数量，并修改或删除库存记录。
-- 用户可以查看菜谱所需食材和制作步骤。
-- 用户可以区分现在能做的菜谱和需要补充食材的菜谱。
-- 用户可以获得缺失食材的购物清单。
-
-**V2**
-
-- 用户可以获得不依赖当前库存的每日菜谱推荐。
-- 用户可以查看整道菜及每份的热量估算。
-- 用户可以合并多道菜的待购食材，并标记已购买的项目。
-- 增强功能加入后，V1 的核心流程仍能正常使用。
-
-## 开始使用
-
-使用 `.nvmrc` 中的 Node.js 22.23.1：
+### 快速启动（开发模式）
 
 ```bash
-git clone --branch feat/v1-core https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
+git clone https://github.com/kekepepe/Smart-Recipe-Pantry-Planner.git
 cd Smart-Recipe-Pantry-Planner
 npm ci
 npm run db:init
 npm run dev
 ```
 
-开发页为 [127.0.0.1:5173](http://127.0.0.1:5173/)。构建后 `npm start` 提供 [同源 V1 服务](http://127.0.0.1:3001/)；`npm run preview` 仅为静态预览，不能代替 V1 服务。
+浏览器访问 **[http://127.0.0.1:5173/](http://127.0.0.1:5173/)**。
+
+### 构建并运行本地完整服务
+
+```bash
+npm run build
+npm start
+```
+
+在 **[http://127.0.0.1:3001/](http://127.0.0.1:3001/)** 提供打包后的前端页面与 SQLite API 服务。
+
+### 本地构建桌面安装包
+
+```bash
+npm run package:desktop
+```
+
+更多平台打包参数（`--mac --arm64` / `--win --x64`）与冒烟测试脚本（`node desktop/smoke.js`）详见 [docs/desktop-packaging.md](docs/desktop-packaging.md)。
+
+### 数据库运维命令
+
+```bash
+npm run db:init      # 初始化 SQLite 数据库、执行迁移并写入菜谱种子数据
+npm run db:migrate   # 执行待应用的 SQLite 迁移脚本
+npm run db:seed      # 重新同步菜谱与原料目录
+npm run db:backup    # 备份本地 SQLite 数据库
+npm run db:restore   # 从备份恢复数据库
+npm run db:repair    # 重建派生购物缓存，同时保留用户库存与已购标记
+```
+
+---
+
+## 系统架构
+
+```mermaid
+flowchart LR
+    subgraph Client["前端界面（React 19 + Vite 8）"]
+        UI["页面：首页 · 我的库存 · 查找菜谱 · 菜谱详情 · 购物清单"]
+        I18N["双语国际化 Provider（EN / 简体中文）"]
+    end
+
+    subgraph Domain["纯领域规则引擎（src/）"]
+        D1["discover-recipes · evaluate-recipe"]
+        D2["recommend-by-staples · daily-inspiration"]
+        D3["evaluate-shopping · purchased-marks · nutrition"]
+    end
+
+    subgraph Server["本地后端服务（Express 5 · 127.0.0.1）"]
+        API["REST API（snapshot / recipes / recommendations / inspiration / nutrition）"]
+        STORE["事务型 Store 与乐观并发校验（expectedRevision）"]
+    end
+
+    subgraph Storage["本机离线持久化"]
+        DB[("SQLite（better-sqlite3）\npantry.sqlite + 版本化迁移")]
+        CAT["内置静态目录与资源\n100 道菜谱 · 286 种原料 · 69 条 USDA 映射"]
+    end
+
+    subgraph Desktop["桌面容器（Electron）"]
+        EL["desktop/main.js\n启动本地回环 Express + BrowserWindow"]
+    end
+
+    UI <--> I18N
+    UI <--> API
+    UI -.复用同一纯筛选规则.-> D1
+    API --> STORE
+    STORE --> D1
+    STORE --> D2
+    STORE --> D3
+    STORE <--> DB
+    CAT --> DB
+    EL --> Server
+    EL --> Client
+```
+
+### 技术栈一览
+
+| 层级 | 核心技术 |
+| --- | --- |
+| **前端** | React 19、Vite 8、原生可访问性 CSS、Hash 路由、运行时零外部 API 依赖 |
+| **后端** | Node.js 22（ESM）、Express 5（仅绑定 `127.0.0.1` + 同源请求防护）、事务型 `Store` 与乐观锁并发控制 |
+| **数据存储** | SQLite（`better-sqlite3`）、版本化迁移（`001`–`004`）、约束校验与备份/修复 CLI |
+| **桌面打包** | Electron 45 + `electron-builder` 26（`macOS arm64 DMG`、`Windows x64 NSIS`） |
+| **测试与 CI** | Node 原生测试框架（`node --test`）、Playwright Chromium 端到端测试、GitHub Actions 三平台矩阵 |
+
+---
+
+## 测试与质量保障
+
+首次执行浏览器端到端测试前请安装 Chromium，然后运行完整校验链：
 
 ```bash
 npx playwright install chromium
-npm run check:v1
+npm run check:v1   # 等价别名：npm run check:v2
 ```
 
-[运行手册](docs/V1-RUNBOOK.md) 包含配置、迁移、失败恢复与备份。数据库留在本机，不上传 GitHub。以上命令选择开发分支，main 合并/发布状态以 [发布记录](docs/V1-RELEASE.md) 为准。
+完整校验链包含 6 个阶段：
 
-## 项目文档
+1. **`npm run test:final`**：完整性预检 + 纯领域规则单元测试（缺口计算、多菜汇总、多维检索、主食材推荐、每日灵感、已购标记、USDA 热量估算、286 原料与 100 菜谱纯中文校验）。
+2. **`npm run demo`**：核心缺口计算命令行演示验证。
+3. **`npm run test:api`**：Express REST API 契约、参数校验、乐观并发冲突（`409`）与异常处理测试。
+4. **`npm run test:integration`**：真实 SQLite 进程重启持久化、`003`→`004` 迁移、备份恢复、缓存修复与原子回滚集成测试。
+5. **`npm run build`**：生产环境 Vite 前端构建校验。
+6. **`npm run test:e2e`**：Playwright Chromium 桌面与移动端端到端测试（引导流程、库存增删改、多维筛选、主食材推荐、每日灵感、已购状态、营养展示与中英文语言隔离）。
 
-- [产品需求](docs/PRD.zh-CN.md)记录目标用户、版本范围和验收标准。
-- [第一轮项目总结完整版](docs/iteration-1-report.zh-CN.md)汇总规划决策、实现成果和第一轮 GitHub 证据。
+GitHub Actions 持续集成工作流：
+- [**V1 checks**](.github/workflows/test.yml)：Ubuntu（含 Playwright Chromium）、macOS、Windows 三平台回归测试。
+- [**Desktop installer candidates**](.github/workflows/desktop.yml)：自动构建并冒烟验证 `macos-arm64` DMG 与 `windows-x64` NSIS 安装包。
+
+---
+
+## 诚实边界与数据溯源
+
+本项目坚持**准确透明、绝不伪造数据**的工程原则：
+
+- **严格单位安全**：库存匹配与购物汇总绝不擅自猜测 `克` / `毫升` / `个` 之间的换算；遇到不可比较单位时明确标注 `单位待核对`。
+- **热量数据失败关闭（Fail-Closed）**：仅展示经 **USDA FoodData Central (SR Legacy)** 核验的完整估算（详见 [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)）。当前 **21 / 100 道菜谱**具备完整估算（**69 条原料映射**），其余 **79 道**明确标示 `暂无数据` 并列出缺失映射的必需原料，绝不输出残缺总和或伪造 `0 千卡`。
+- **已购标记不误改库存**：在购物清单中勾选「已购」仅记录本次采购进度，不会擅自扣减或增加你的厨房库存。
+- **完全离线运行**：全部菜谱、原料字典、营养表与 100 张菜谱插图均随项目打包在本地。
+
+---
+
+## 文档索引
+
+| 分类 | 文档链接 |
+| --- | --- |
+| **运行与打包** | [V2 源码运行手册](docs/V2-RUNBOOK.md) · [桌面打包与验收指南](docs/desktop-packaging.md) · [V1 运行手册](docs/V1-RUNBOOK.md) |
+| **功能契约** | [主食材推荐契约](docs/STAPLE-RECOMMENDATIONS-CONTRACT.md) · [每日灵感契约](docs/DAILY-INSPIRATION-CONTRACT.md) · [已购状态契约](docs/PURCHASED-MARKS-CONTRACT.md) · [营养估算契约](docs/NUTRITION-CONTRACT.md) · [多菜清单说明](docs/V1-MULTI-RECIPE.md) |
+| **数据与溯源** | [USDA 营养来源审计](docs/NUTRITION-SOURCES.md) · [菜谱目录与来源](docs/RECIPE-CATALOG.md) · [V2 检索与目录说明](docs/V2-DISCOVERY.md) |
+| **需求与规划** | [产品需求文档（中文）](docs/PRD.zh-CN.md) · [PRD（EN）](docs/PRD.md) · [V2 开发计划](docs/V2-DEVELOPMENT-PLAN.zh-CN.md) · [迭代 1 总结报告](docs/iteration-1-report.zh-CN.md) |
+
+---
+
+## 参与贡献
+
+欢迎提交 Issue、改进建议或经过 USDA 核验的营养映射数据！提交 PR 前请阅读 **[CONTRIBUTING.md](CONTRIBUTING.md)** 了解开发环境、分支规范与自动化校验要求。
+
+### 项目团队
+
+- **Peng Ke** ([@kekepepe](https://github.com/kekepepe))
+- **ChangPeng Shi** ([@Lsiav](https://github.com/Lsiav))
+- **HaoZhe Feng** ([@fhhhz-todd](https://github.com/fhhhz-todd))
+- **ZheKai Mao** ([@Justmao1](https://github.com/Justmao1))
+
+---
+
+## 开源许可与致谢
+
+- **软件源代码**：采用 **[MIT License](LICENSE)** 开源。
+- **第三方菜谱与营养数据（独立许可与署名说明）**：
+  - 18 道中式家常菜谱改编自 [Anduin2017/HowToCook](https://github.com/Anduin2017/HowToCook)（**Unlicense**，原文快照保存在 `data/sources/howtocook/`）。
+  - 80 道世界菜谱改编自 [UniTools Recipes](https://github.com/farcrak/unitools-recipes)（**CC BY-SA 4.0**，署名：*UniTools — theunitools.com*；改编数据 `data/world-recipes.json` 继续适用 **CC BY-SA 4.0**，不误标为 MIT）。
+  - 69 条营养映射数据来源于 **USDA FoodData Central — SR Legacy**（Public Domain / CC0 1.0，完整审计表见 [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)）。
+  - 100 张内置菜谱插图为本项目统一生成，完整清单与哈希见 `data/world-image-manifest.json`。
