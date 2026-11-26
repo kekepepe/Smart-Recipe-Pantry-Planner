@@ -81,7 +81,7 @@ for (const [label, viewport] of [
     await expect(page.getByRole('article').first()).toContainText('Can make now');
 
     // Expanding the panel and selecting a dimension filter keeps it open after reload.
-    await page.getByRole('button', { name: 'All recipes', exact: true }).click();
+    await page.getByRole('button', { name: 'Any status', exact: true }).click();
     await panel.locator('> summary').click();
     await expect(panel).toHaveAttribute('open', '');
     await page.getByRole('checkbox', { name: 'China', exact: true }).check();
@@ -152,3 +152,65 @@ for (const [label, viewport] of [
     expect(errors).toEqual([]);
   });
 }
+
+test('E4 #43/#47 polish: distinct Any status filter, natural ZH shortage truncation, locale punctuation, empty pantry group note and pre-paint html lang', async ({ page, service, database }) => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+
+  const store = new Store(database.db);
+  store.onboard({ mode: 'sample', expectedRevision: 0 }); // 2 eggs, 1 tomato; no seasonings
+
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(service.url + '/#/recipes');
+
+  // 1. Distinct view tab ("All recipes") vs availability filter ("Any status") in EN.
+  await expect(page.getByRole('tab', { name: 'All recipes', exact: true })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Filter recipes', exact: true }).getByRole('button', { name: 'Any status', exact: true })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Filter recipes', exact: true }).getByRole('button', { name: 'All recipes', exact: true })).toHaveCount(0);
+
+  // 2. Daily inspiration banner in EN hides raw hex hash and exposes friendly label with tooltip.
+  await page.getByRole('tab', { name: 'Daily inspiration', exact: true }).click();
+  const enBanner = page.locator('.inspiration-section .view-banner');
+  await expect(enBanner).toContainText('Current catalog.');
+  expect(await enBanner.innerText()).not.toMatch(/[0-9a-f]{8,}/);
+
+  // 3. Empty seasonings group in Pantry shows subtle helper text in EN.
+  await page.getByRole('link', { name: 'My pantry', exact: true }).click();
+  await expect(page.getByText('No seasonings added yet.', { exact: true })).toBeVisible();
+
+  // 4. Switch to ZH and verify all localized polish items.
+  await page.getByRole('button', { name: 'Switch interface language to Chinese' }).click();
+  await expect(page.getByText('暂未添加调料。', { exact: true })).toBeVisible();
+
+  // Pre-paint script sets <html lang="zh-CN"> before React renders on reload.
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
+
+  await page.getByRole('link', { name: '查找菜谱', exact: true }).first().click();
+  await page.getByRole('tab', { name: '全部菜谱', exact: true }).click();
+  await expect(page.getByRole('tab', { name: '全部菜谱', exact: true })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('group', { name: '按可做状态筛选菜谱', exact: true }).getByRole('button', { name: '全部状态', exact: true })).toBeVisible();
+
+  // Natural Chinese shortage truncation ("等另缺 N 项", never "等共多出").
+  const tomatoEggsZh = page.getByRole('article').filter({ hasText: '西红柿炒鸡蛋' }).first();
+  await expect(tomatoEggsZh).toContainText('等另缺 1 项');
+  await expect(tomatoEggsZh).not.toContainText('等共多出');
+
+  // Staple recommendations in ZH uses full-width colon "：" rather than ASCII ": ".
+  await page.getByRole('tab', { name: '用现有食材', exact: true }).click();
+  const stapleItem = page.locator('.staple-breakdown .staple-item').first();
+  await expect(stapleItem).toBeVisible();
+  const stapleText = await stapleItem.innerText();
+  expect(stapleText).toContain('：');
+  expect(stapleText).not.toContain(': ');
+
+  // Daily inspiration banner in ZH uses full-width period "。" rather than ASCII ". ".
+  await page.getByRole('tab', { name: '每日灵感', exact: true }).click();
+  const zhBanner = page.locator('.inspiration-section .view-banner');
+  await expect(zhBanner).toContainText('当前菜谱库版本。');
+  expect(await zhBanner.innerText()).not.toContain('. ');
+
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  expect(errors).toEqual([]);
+});

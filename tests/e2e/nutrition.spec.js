@@ -34,6 +34,7 @@ const test = base.extend({
   emptyService: async ({ database }, use) => {
     const s = await listen(createApp(database.db, {
       serveStatic: true,
+      nutritionMappings: [],
       now: () => new Date('2026-11-25T08:00:00.000Z'),
     }));
     try { await use(s); } finally { await s.close(); }

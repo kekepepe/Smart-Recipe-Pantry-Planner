@@ -63,17 +63,20 @@ export default function Pantry() {
     <PageHeading title={t.pantryTitle} subtitle={t.pantrySubtitle}><a href="#/recipes" className="heading-link">{t.navRecipes} <Icon name="arrow" /></a></PageHeading>
     <div className="pantry-layout">
       <section aria-label={t.yourIngredientsAria}>
-        {snapshot.pantry.length ? <>{['food', 'seasoning'].map(kind => <div key={kind}><h2>{kind === 'food' ? t.foodHeading : t.seasoningsHeading}</h2><ul className="pantry-list" aria-label={kind === 'food' ? t.foodListAria : t.seasoningsListAria}>{snapshot.pantry.filter(item => snapshot.ingredients.find(i => i.id === item.ingredientId).kind === kind).map(item => {
-          const entry = snapshot.ingredients.find(ing => ing.id === item.ingredientId);
-          const displayName = getIngredientName(entry, lang);
-          const ariaTarget = lang === 'zh-CN' ? displayName : item.ingredientId;
-          return <li className="pantry-row" key={item.ingredientId}>
-            <strong>{displayName}</strong>
-            <span className="stock-amount">{formatQuantity(item.quantity, item.unit, lang)}</span>
-            <button className="text-button" onClick={() => edit(item)} disabled={busy} aria-label={t.editItemAria(ariaTarget)}>{t.editBtn}</button>
-            <button className="text-button" onClick={() => remove(item)} disabled={busy} aria-label={t.removeItemAria(ariaTarget)}>{t.removeBtn}</button>
-          </li>;
-        })}</ul></div>)}</> : <EmptyState title={t.pantryEmptyTitle}>{t.pantryEmptyCopy}</EmptyState>}
+        {snapshot.pantry.length ? <>{['food', 'seasoning'].map(kind => {
+          const groupItems = snapshot.pantry.filter(item => snapshot.ingredients.find(i => i.id === item.ingredientId).kind === kind);
+          return <div key={kind}><h2>{kind === 'food' ? t.foodHeading : t.seasoningsHeading}</h2>{groupItems.length ? <ul className="pantry-list" aria-label={kind === 'food' ? t.foodListAria : t.seasoningsListAria}>{groupItems.map(item => {
+            const entry = snapshot.ingredients.find(ing => ing.id === item.ingredientId);
+            const displayName = getIngredientName(entry, lang);
+            const ariaTarget = lang === 'zh-CN' ? displayName : item.ingredientId;
+            return <li className="pantry-row" key={item.ingredientId}>
+              <strong>{displayName}</strong>
+              <span className="stock-amount">{formatQuantity(item.quantity, item.unit, lang)}</span>
+              <button className="text-button" onClick={() => edit(item)} disabled={busy} aria-label={t.editItemAria(ariaTarget)}>{t.editBtn}</button>
+              <button className="text-button" onClick={() => remove(item)} disabled={busy} aria-label={t.removeItemAria(ariaTarget)}>{t.removeBtn}</button>
+            </li>;
+          })}</ul> : <p className="helper pantry-group-empty">{kind === 'food' ? t.emptyFoodGroup : t.emptySeasoningsGroup}</p>}</div>;
+        })}</> : <EmptyState title={t.pantryEmptyTitle}>{t.pantryEmptyCopy}</EmptyState>}
         <p className="helper">{t.pantryHelper}</p>
         {savedKey ? <p className="success" role="status">{t[savedKey]}</p> : null}
       </section>

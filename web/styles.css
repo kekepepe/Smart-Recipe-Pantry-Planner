@@ -63,6 +63,8 @@ img { display: block; max-width: 100%; }
 .recipe-status.ready { color: var(--green); }
 .recipe-status.missing, .recipe-status.units { color: var(--amber); }
 .recipe-status.missing { display: inline-block; gap: 0; }
+:lang(zh-CN) .recipe-status.missing { word-break: keep-all; overflow-wrap: break-word; }
+.pantry-group-empty { margin: 0 0 18px; }
 .recipe-actions .button { padding-inline: 16px; }
 .footer { color: #647065; border-top: 1px solid var(--border); text-align: center; padding: 22px 0 28px; font-size: 13px; }
 .helper { color: var(--muted); font-size: 13px; line-height: 1.65; }
