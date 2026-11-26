@@ -15,7 +15,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-22.23.1-339933?logo=node.js&logoColor=white)](.nvmrc)
 [![License: MIT](https://img.shields.io/badge/Code%20License-MIT-blue.svg)](LICENSE)
 
-[**Download v1.0.0**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**Features**](#features) · [**Screenshots**](#interface-showcase) · [**Quick Start**](#run-from-source) · [**Architecture**](#architecture) · [**Documentation**](#documentation)
+[**Download v1.0.1**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**Features**](#features) · [**Screenshots**](#interface-showcase) · [**Quick Start**](#run-from-source) · [**Architecture**](#architecture) · [**Documentation**](#documentation)
 
 **English** | [简体中文](README.zh-CN.md)
 
@@ -98,7 +98,9 @@ Pre-built offline installers for **macOS (Apple Silicon)** and **Windows (x64)**
 | **Windows** | Windows 11 (`x64`) | `Pantry-and-Plate-1.0.0-dev-win-x64.exe` | Run the NSIS installer (or silent per-user install: `/S /currentuser`). Unsigned build: verify `SHA256SUMS.txt`, then choose **More info → Run anyway** if SmartScreen prompts. |
 
 > [!NOTE]
-> **Local Data Storage & Automatic Upgrade Backups**
+> **Upgrading & Local Data Storage**
+> Upgrading from an earlier release (such as `v1.0.0`) does **not** duplicate the app or erase your data: quit the running app first, then install the new release over the existing one (**macOS:** drag into *Applications* and choose **Replace**; **Windows:** run the new NSIS installer over the existing directory—`deleteAppDataOnUninstall` is disabled).
+>
 > All pantry items, shopping selections, and purchased marks stay strictly on your machine:
 > - **macOS:** `~/Library/Application Support/Pantry & Plate/pantry.sqlite`
 > - **Windows:** `%APPDATA%\Pantry & Plate\pantry.sqlite`
