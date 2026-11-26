@@ -24,14 +24,44 @@ const env = { ...process.env, PANTRY_LITE_DATA_DIR: dataDir };
 const node = process.execPath;
 const start = args => execFileSync(node, ['lite/start.js', ...args], { cwd: packageRoot, env, encoding: 'utf8' });
 let origin;
+const cookieJar = new Map();
 
-async function request(path, method = 'GET', body) {
+function trackCookies(headers) {
+  for (const raw of (headers.getSetCookie?.() || [])) {
+    const [pair, ...attrs] = raw.split(';').map(x => x.trim());
+    const eq = pair.indexOf('=');
+    if (eq <= 0) continue;
+    const k = pair.slice(0, eq);
+    const v = pair.slice(eq + 1);
+    if (!v || attrs.some(a => /^max-age=0/i.test(a))) cookieJar.delete(k);
+    else cookieJar.set(k, v);
+  }
+}
+
+async function request(path, method = 'GET', body, expectedStatus = 200) {
+  const cookieHeader = [...cookieJar.entries()].map(([k, v]) => `${k}=${v}`).join('; ');
+  const headers = {
+    ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+    ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+  };
   const result = await fetch(origin + path, {
     method, signal: AbortSignal.timeout(2000),
-    ...(body === undefined ? {} : { body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' } }),
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    ...(Object.keys(headers).length ? { headers } : {}),
   });
-  assert.equal(result.status, 200, path);
+  trackCookies(result.headers);
+  assert.equal(result.status, expectedStatus, path);
   return result.json();
+}
+
+async function authenticateLite() {
+  const status = await request('/api/auth/status');
+  if (status.authenticated) return;
+  if (!status.initialized) {
+    await request('/api/auth/setup', 'POST', { username: 'liteuser', password: 'lite-password-123', rememberMe: true }, 201);
+  } else {
+    await request('/api/auth/login', 'POST', { username: 'liteuser', password: 'lite-password-123', rememberMe: true }, 200);
+  }
 }
 
 async function launch() {
@@ -86,6 +116,7 @@ try {
   await launch();
   assert.match(start(['--no-browser']), /already running/);
   assert.match(await (await fetch(origin)).text(), /<title>/);
+  await authenticateLite();
   const before = await request('/api/snapshot');
   assert.equal(before.recipes.length, 100);
   assert((await fetch(origin + before.recipes[0].image)).ok);
@@ -117,9 +148,12 @@ try {
   env.PANTRY_LITE_DATA_DIR = join(scratch, 'imported data');
   assert.match(start(['--import', backupPath]), /Imported a copy/);
   await launch();
+  cookieJar.clear();
+  await authenticateLite();
   assert.deepEqual(data(await request('/api/snapshot')), original);
   await stop();
   await launch();
+  await authenticateLite();
   assert.deepEqual(data(await request('/api/snapshot')), original);
   assert.equal(digest(backupPath), originalHash);
   await stop();
@@ -151,6 +185,19 @@ try {
     assert.equal(initialStatus.updater?.enabled, true);
     assert.equal(initialStatus.isUpdated, false);
 
+    // Unauthenticated update check must be rejected with 401
+    const unauthCheck = await fetch(origin + '/api/lite-update/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(2000),
+    });
+    assert.equal(unauthCheck.status, 401);
+    await unauthCheck.body?.cancel();
+
+    // Restore session via remember-me before checking and applying update
+    await authenticateLite();
+
     const check = await request('/api/lite-update/check', 'POST', {});
     assert.equal(check.status, 'update-available');
     assert.equal(check.latestVersion, '9.9.9');
@@ -171,6 +218,7 @@ try {
     }
     assert.ok(updatedStatus, 'Lite should self-restart into updated bundle 9.9.9');
     restartedPid = updatedStatus.pid;
+    await authenticateLite();
     assert.deepEqual(data(await request('/api/snapshot')), original);
 
     // Terminate the detached restarted Lite process cleanly before testing rollback
@@ -192,6 +240,7 @@ try {
     const rolledBackStatus = await request('/api/lite-status');
     assert.equal(rolledBackStatus.isUpdated, false);
     assert.equal(rolledBackStatus.version, initialStatus.builtInVersion);
+    await authenticateLite();
     assert.deepEqual(data(await request('/api/snapshot')), original);
   } finally {
     if (restartedPid) {

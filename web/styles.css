@@ -335,3 +335,35 @@ input[aria-invalid=true], select[aria-invalid=true] { border-color: #a94331; }
 .lite-update-copy { flex: 1 1 280px; line-height: 1.5; }
 .lite-update-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
 .lite-update-cta { min-height: 36px; padding: 6px 14px; font-size: 13px; }
+
+/* Local Offline Auth (Issue #55) */
+.header-actions { flex-wrap: wrap; justify-content: flex-end; }
+.account-action { white-space: nowrap; }
+.auth-card { width: min(500px, 100%); margin: 16px auto 24px; padding: 34px 36px; border: 1px solid var(--border); border-radius: 12px; background: #fafbf8; }
+.auth-card h1 { font-size: clamp(28px, 3vw, 36px); margin-bottom: 10px; }
+.auth-card .subtitle { color: #566057; font-size: 16px; margin-bottom: 20px; }
+.auth-info-box { padding: 14px 16px; margin-bottom: 20px; border-radius: 8px; background: #edf3ea; border: 1px solid #d1dfd0; font-size: 13px; color: #2b3c30; }
+.auth-info-box p { margin-bottom: 8px; }
+.auth-info-box p:last-child { margin-bottom: 0; }
+.auth-banner-notice { padding: 12px 14px; margin-bottom: 18px; border-radius: 8px; background: #fdf3dc; border: 1px solid #e7c580; color: #6e4511; font-size: 14px; }
+.auth-form { display: flex; flex-direction: column; gap: 16px; }
+.auth-field label { margin-bottom: 6px; }
+.auth-field-helper { margin: 6px 0 0; }
+.password-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: stretch; }
+.password-toggle { min-height: 46px; padding: 8px 14px; font-size: 13px; white-space: nowrap; }
+.auth-remember-label { display: flex; align-items: flex-start; gap: 10px; font-weight: 500; font-size: 14px; margin: 4px 0 0; cursor: pointer; }
+.auth-remember-label input { inline-size: 18px; block-size: 18px; min-height: 0; flex-shrink: 0; margin: 3px 0 0; padding: 0; accent-color: var(--green); }
+.auth-remember-helper { margin: -8px 0 4px 28px; }
+.auth-submit { width: 100%; margin-top: 4px; }
+.auth-footer-note { margin: 18px 0 0; }
+.auth-modal { width: min(480px, calc(100% - 32px)); }
+.auth-modal h2 { margin-bottom: 8px; }
+.auth-modal .helper { margin-bottom: 16px; }
+@media (max-width: 760px) {
+  .header-actions { gap: 10px 12px; }
+  .auth-card { padding: 24px 20px; margin-top: 4px; }
+}
+@media (max-width: 420px) {
+  .header-actions { gap: 8px 10px; }
+  .account-action { font-size: 12px; }
+}

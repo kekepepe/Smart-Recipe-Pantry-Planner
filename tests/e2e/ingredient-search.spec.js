@@ -1,13 +1,13 @@
 import { test as base, expect } from '@playwright/test';
 import { createApp } from '../../server/app.js';
-import { fixture, listen } from '../helpers.js';
+import { fixture, listen, signInPage } from '../helpers.js';
 
 const test = base.extend({
-  service: async ({}, use) => {
+  service: async ({ page }, use) => {
     const database = fixture();
     try {
       const service = await listen(createApp(database.db, { serveStatic: true }));
-      try { await use(service); } finally { await service.close(); }
+      try { await signInPage(page, service); await use(service); } finally { await service.close(); }
     } finally { database.close(); }
   },
 });

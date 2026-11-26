@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, session, shell } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, safeStorage, session, shell } from 'electron';
 import { randomUUID } from 'node:crypto';
 import { readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createApp } from '../server/app.js';
 import { initializeDatabase } from '../server/db/initialize.js';
+import { createDesktopRememberStore } from './remember-store.js';
 
 const host = '127.0.0.1';
 const accessToken = randomUUID();
@@ -52,10 +53,16 @@ function registerLanguagePreference() {
 }
 
 async function start() {
-  const dbPath = join(app.getPath('userData'), 'pantry.sqlite');
+  const userDataDir = app.getPath('userData');
+  const dbPath = join(userDataDir, 'pantry.sqlite');
   database = await initializeDatabase(dbPath);
 
-  const expressApp = createApp(database, { serveStatic: true });
+  const desktopRememberStore = createDesktopRememberStore(userDataDir, safeStorage);
+  const expressApp = createApp(database, {
+    serveStatic: true,
+    desktopMode: true,
+    desktopRememberStore,
+  });
   let authority;
   server = createServer((request, response) => {
     if (request.headers.host !== authority || request.headers['x-pantry-desktop'] !== accessToken) {

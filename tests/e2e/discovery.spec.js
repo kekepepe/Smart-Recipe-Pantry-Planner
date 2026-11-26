@@ -1,9 +1,9 @@
 import { test as base, expect } from '@playwright/test';
 import { createApp } from '../../server/app.js';
-import { fixture, listen } from '../helpers.js';
+import { fixture, listen, signInPage } from '../helpers.js';
 const test=base.extend({
  database:async({},use)=>{const f=fixture();try{await use(f);}finally{f.close();}},
- service:async({database},use)=>{const s=await listen(createApp(database.db,{serveStatic:true}));try{await use(s);}finally{await s.close();}},
+ service:async({database,page},use)=>{const s=await listen(createApp(database.db,{serveStatic:true}));try{await signInPage(page,s);await use(s);}finally{await s.close();}},
 });
 for(const [name,viewport] of [['desktop',{width:1440,height:1000}],['mobile',{width:375,height:812}]]){
  test(`discovery ${name}: single filters, all dimensions, retained query, zero results and clear`,async({page,service},info)=>{

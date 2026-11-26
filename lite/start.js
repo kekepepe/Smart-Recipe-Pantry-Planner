@@ -108,6 +108,18 @@ async function runService(dbPath, port, showBrowser) {
     if (urlPath === '/api/lite-update/check' || urlPath === '/api/lite-update/apply') {
       if (req.method !== 'POST') return sendJson(res, 405, { error: 'Method not allowed.' });
       if (!isTrustedLoopbackRequest(req, origin)) return sendJson(res, 403, { error: 'Use the app from its own local address.' });
+      const rawSessionCookie = (req.headers.cookie || '')
+        .split(';')
+        .map(part => part.trim())
+        .find(part => part.startsWith('pantry_session='))
+        ?.slice('pantry_session='.length);
+      let sessionToken = '';
+      if (rawSessionCookie) {
+        try { sessionToken = decodeURIComponent(rawSessionCookie); } catch { sessionToken = rawSessionCookie; }
+      }
+      if (!handler?.authService?.validateSession(sessionToken)) {
+        return sendJson(res, 401, { error: 'Sign in before checking or applying updates.' });
+      }
       if (updating) return sendJson(res, 409, { error: 'An update operation is already in progress.' });
 
       updating = true;

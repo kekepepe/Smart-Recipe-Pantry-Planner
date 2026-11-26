@@ -1,10 +1,10 @@
 import { test as base, expect } from '@playwright/test';
 import { createApp } from '../../server/app.js';
 import { Store } from '../../server/services/store.js';
-import { fixture, listen } from '../helpers.js';
+import { fixture, listen, signInPage } from '../helpers.js';
 const test = base.extend({
   database: async ({}, use) => { const f = fixture(); try { await use(f); } finally { f.close(); } },
-  service: async ({ database }, use) => { const s = await listen(createApp(database.db, { serveStatic: true })); try { await use(s); } finally { await s.close(); } },
+  service: async ({ database, page }, use) => { const s = await listen(createApp(database.db, { serveStatic: true })); try { await signInPage(page, s); await use(s); } finally { await s.close(); } },
 });
 test.beforeEach(async ({ page, service }) => { await page.goto(service.url); });
 const sample = page => page.getByRole('button', { name: 'Use sample pantry' }).click();
@@ -57,7 +57,8 @@ test('100 recipes: Chinese search/category persist through detail, images load a
   }
   await page.getByLabel('Find a recipe').fill('西兰花'); await expect(page.getByRole('article')).toHaveCount(1);
   await page.getByRole('link', { name: 'View recipe: Garlic broccoli' }).click();
-  await expect(page.getByRole('link', { name: 'View original recipe' })).toHaveAttribute('href', /308cc8b7/);
+  await expect(page.locator('.instructions .source')).toHaveCount(0);
+  expect(snapshot.recipes.find(r => r.id === 'garlic-broccoli')?.sourceUrl).toMatch(/308cc8b7/);
   await expect(page.getByRole('row')).toHaveCount(7);
   await page.screenshot({ path: info.outputPath('v1-recipe-detail.png'), fullPage: true });
   await page.getByRole('link', { name: 'Back to recipes', exact: true }).click(); await expect(page.getByLabel('Find a recipe')).toHaveValue('西兰花');
@@ -86,6 +87,7 @@ test('A13: server conflict loads new snapshot without overwriting the form draft
 });
 
 test('A17: initial service failure offers retry; keyboard completes onboarding', async ({ page }) => {
+  await expect(page.getByRole('button', { name: 'Use sample pantry' })).toBeVisible();
   await page.route('**/api/snapshot', route => route.fulfill({ status: 503, json: { error: { code: 'STORAGE_UNAVAILABLE', message: 'Storage unavailable; retry.' } } }), { times: 1 });
   await page.reload(); await expect(page.getByRole('heading', { name: 'Unable to load' })).toBeVisible();
   await page.getByRole('button', { name: 'Try again' }).click(); await expect(page.getByRole('button', { name: 'Use sample pantry' })).toBeVisible();

@@ -29,6 +29,7 @@ export function useLiteUpdater() {
     try {
       const res = await fetch('/api/lite-update/check', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: '{}',
       });
@@ -46,6 +47,7 @@ export function useLiteUpdater() {
     try {
       const res = await fetch('/api/lite-update/apply', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: '{}',
       });
