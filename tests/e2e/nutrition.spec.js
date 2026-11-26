@@ -143,8 +143,8 @@ test('P04 nutrition: estimated dishes display servings, whole/per-serving kcal, 
   await expect(panel).toContainText('Egg, whole, raw');
   await expect(panel).toContainText('Salt, table');
   await expect(panel).toContainText('55 g edible / piece');
-  await expect(panel).toContainText('Verified by ChangPeng · 2026-11-01');
-  await expect(panel.getByRole('link', { name: 'Source record' })).toHaveCount(2);
+  await expect(panel).not.toContainText('Verified by');
+  await expect(panel.getByRole('link', { name: 'Source record' })).toHaveCount(0);
 
   await page.screenshot({ path: info.outputPath('nutrition-estimated-detail-desktop.png'), fullPage: true });
 

@@ -192,15 +192,6 @@ export function NutritionPanel({ recipeId }) {
                           {t.nutritionKcalPer100g(record.kcalPer100g)} · {t.nutritionStateLabel(stateLabel)} · {formatConversionBasis(record, lang, t)}
                         </p>
                         {record.notes ? <p className="nutrition-source-notes">{record.notes}</p> : null}
-                        <p className="nutrition-source-meta">
-                          {t.nutritionVerifiedMeta(record.verifiedBy, record.sourceDate)}
-                          {record.sourceUrl ? (
-                            <>
-                              {' · '}
-                              <a href={record.sourceUrl} target="_blank" rel="noreferrer">{t.nutritionViewSource}</a>
-                            </>
-                          ) : null}
-                        </p>
                       </li>
                     );
                   })}
@@ -237,15 +228,6 @@ export function NutritionPanel({ recipeId }) {
                           {t.nutritionKcalPer100g(record.kcalPer100g)} · {t.nutritionStateLabel(stateLabel)} · {formatConversionBasis(record, lang, t)}
                         </p>
                         {record.notes ? <p className="nutrition-source-notes">{record.notes}</p> : null}
-                        <p className="nutrition-source-meta">
-                          {t.nutritionVerifiedMeta(record.verifiedBy, record.sourceDate)}
-                          {record.sourceUrl ? (
-                            <>
-                              {' · '}
-                              <a href={record.sourceUrl} target="_blank" rel="noreferrer">{t.nutritionViewSource}</a>
-                            </>
-                          ) : null}
-                        </p>
                       </li>
                     );
                   })}

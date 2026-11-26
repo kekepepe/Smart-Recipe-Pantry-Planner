@@ -69,8 +69,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await page.getByRole('link', { name: 'Find recipes', exact: true }).first().click();
     await page.getByRole('link', { name: 'View recipe: Tomato & egg stir-fry', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Tomato & egg stir-fry' })).toBeVisible();
-    // Open adaptation details to verify hidden details text too.
-    await page.locator('details.source > summary').click();
+    await expect(page.locator('details.source')).toHaveCount(0);
     assertPureEnglish(await collectVisibleAndControlText(page), `${name} EN Detail`);
 
     await page.getByRole('button', { name: 'Add missing ingredients to list', exact: true }).click();
@@ -121,12 +120,12 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await expect(page.getByText('第 2 / 5 页', { exact: false }).first()).toBeVisible();
     assertPureChinese(await collectVisibleAndControlText(page), `${name} ZH Recipes page 2`);
 
-    // World recipe detail (CC BY-SA 4.0 license + steps + adaptation details) in Chinese
+    // World recipe detail (steps without source/adaptation footnotes) in Chinese
     await page.getByLabel('搜索菜谱').fill('牛丼');
     await expect(page.getByRole('article')).toHaveCount(1);
     await page.getByRole('link', { name: '查看菜谱：牛丼', exact: true }).click();
     await expect(page.getByRole('heading', { name: '牛丼' })).toBeVisible();
-    await page.locator('details.source > summary').click();
+    await expect(page.locator('details.source')).toHaveCount(0);
     assertPureChinese(await collectVisibleAndControlText(page), `${name} ZH Detail (Gyudon)`);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 

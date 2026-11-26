@@ -51,10 +51,6 @@ export default function RecipeDetail({ recipeId }) {
         <section className="instructions">
           <h2>{t.howToMakeIt}</h2>
           <ol>{recipe.displaySteps.map((step, index) => <li key={index}>{step}</li>)}</ol>
-          <p className="source">{recipe.displaySource} {recipe.sourceUrl ? <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">{t.viewOriginalRecipe}</a> : null}</p>
-          <p className="source">{recipe.displayImageCredit} {recipe.imageSourceUrl ? <a href={recipe.imageSourceUrl} target="_blank" rel="noreferrer">{t.imageSource}</a> : null} {recipe.imageLicenseUrl ? <a href={recipe.imageLicenseUrl} target="_blank" rel="noreferrer">{t.imageLicense}</a> : null}</p>
-          {recipe.sourceLicense === 'CC BY-SA 4.0' ? <p className="source">{t.ccLicensePrefix}<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">{t.ccLicenseName}</a> · <a href="/recipe-licenses/unitools.txt">{t.ccLicenseText}</a>{t.ccLicenseSuffix}</p> : null}
-          {recipe.displayAdaptationNotes ? <details className="source"><summary>{t.adaptationDetailsSummary}</summary><p>{recipe.displayAdaptationNotes}</p></details> : null}
         </section>
       </div>
       <img className="detail-photo" src={recipe.image} alt={recipe.displayImageAlt} />

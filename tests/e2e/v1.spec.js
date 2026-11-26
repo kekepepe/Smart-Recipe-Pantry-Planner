@@ -57,7 +57,8 @@ test('100 recipes: Chinese search/category persist through detail, images load a
   }
   await page.getByLabel('Find a recipe').fill('西兰花'); await expect(page.getByRole('article')).toHaveCount(1);
   await page.getByRole('link', { name: 'View recipe: Garlic broccoli' }).click();
-  await expect(page.getByRole('link', { name: 'View original recipe' })).toHaveAttribute('href', /308cc8b7/);
+  await expect(page.locator('.instructions .source')).toHaveCount(0);
+  expect(snapshot.recipes.find(r => r.id === 'garlic-broccoli')?.sourceUrl).toMatch(/308cc8b7/);
   await expect(page.getByRole('row')).toHaveCount(7);
   await page.screenshot({ path: info.outputPath('v1-recipe-detail.png'), fullPage: true });
   await page.getByRole('link', { name: 'Back to recipes', exact: true }).click(); await expect(page.getByLabel('Find a recipe')).toHaveValue('西兰花');
