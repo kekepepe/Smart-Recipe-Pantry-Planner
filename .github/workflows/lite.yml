@@ -1,7 +1,7 @@
 name: Lite ZIP candidates
 on:
   push:
-    branches: ['feat/v1.0.1-lite']
+    branches: [main, 'feat/v1.0.1-lite', 'feat/lite-in-app-updater']
   workflow_dispatch:
 
 permissions:
@@ -27,6 +27,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run package:lite
+      - run: npm run package:lite-bundle
       - run: node lite/smoke.js
       - uses: actions/setup-node@v4
         with:
@@ -36,5 +37,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: pantry-lite-${{ matrix.platform }}-${{ github.sha }}
-          path: lite-dist/*.zip
+          path: |
+            lite-dist/*.zip
+            lite-dist/*-Lite-Bundle.tar.gz
+            lite-dist/lite-update-manifest.json
           if-no-files-found: error

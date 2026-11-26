@@ -30,6 +30,7 @@ export function createApp(db, { serveStatic = false, fault, now, nutritionMappin
     next();
   };
   app.get('/api/health', (req, res) => { db.prepare('SELECT 1').get(); res.json({ status: 'ok' }); });
+  app.get('/api/lite-status', (req, res) => res.json({ updater: { enabled: false } }));
   app.get('/api/recipes', (req, res) => {
     try { const snapshot = store.getSnapshot(); res.json({ ...discoverRecipes(snapshot, new URL(req.originalUrl, 'http://local').searchParams), catalogVersion: snapshot.catalogVersion, pantryRevision: snapshot.revision }); }
     catch (error) { if (error.code === 'INVALID_FILTER') throw new ServiceError(400, error.code, error.message, error.field); throw error; }

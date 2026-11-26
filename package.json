@@ -25,6 +25,7 @@
     "check:v2-discovery": "npm run check:v1",
     "check:v2": "npm run check:v1",
     "package:lite": "npm run build && node lite/package.js",
+    "package:lite-bundle": "npm run build && node lite/package-bundle.js",
     "package:desktop": "npm run build && electron-builder --config desktop/electron-builder.yml --publish never"
   },
   "engines": {

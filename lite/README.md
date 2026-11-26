@@ -16,4 +16,8 @@ Lite creates a separate database, `pantry.sqlite`, inside `~/Library/Application
 2. With Lite stopped, run `node lite/start.js --import "/path/to/backup.sqlite"` in the extracted folder. The command verifies the backup and imports a separate copy into a new Lite data directory. If you already launched Lite, point `PANTRY_LITE_DATA_DIR` at a new directory for the import and subsequent starts.
 3. Start Lite and check your inventory, recipe selection, shopping quantities and purchased marks. Keep the backup until you have verified the result.
 
-中文版快速说明：先装好对应架构的 Node.js 22.14 或更高的 22.x，再解压双击对应启动文件。浏览器界面可切换中文。使用时保留启动窗口，按 Ctrl+C 停止。已有 Electron 数据请先退出旧版并制作 SQLite 备份，再用上面的导入命令复制到 Lite 的独立数据目录。
+## In-app updates (Lite only)
+
+Lite stays offline by default and never connects to the internet on startup. When you are online, click **Check updates** in the header to check GitHub Releases for a lightweight Lite update bundle (`dist/`, `server/`, `src/`, `data/`). Lite verifies the bundle's SHA-256 digest before applying it into `.updates/` and restarting automatically, while keeping your `pantry.sqlite` database untouched. If an update fails to start, Lite automatically rolls back to the built-in version. When production dependencies or the Lite launcher itself change, Lite will prompt you to download a new Lite ZIP.
+
+中文版快速说明：先装好对应架构的 Node.js 22.14 或更高的 22.x，再解压双击对应启动文件。浏览器界面可切换中文。使用时保留启动窗口，按 Ctrl+C 停止。已有 Electron 数据请先退出旧版并制作 SQLite 备份，再用上面的导入命令复制到 Lite 的独立数据目录。联网时可点击顶部「检查更新」直接应用轻量业务更新包并自动重启（自动校验 SHA-256 并在异常时回滚，不影响本地数据库）。

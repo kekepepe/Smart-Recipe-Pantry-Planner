@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useApp } from './AppProvider.jsx';
 import { useI18n } from './i18n/index.jsx';
+import { LiteUpdateBanner, useLiteUpdater } from './components/LiteUpdater.jsx';
 import Home from './pages/Home.jsx';
 import Pantry from './pages/Pantry.jsx';
 import Recipes from './pages/Recipes.jsx';
@@ -14,6 +15,7 @@ function readRoute() {
 export default function App() {
   const { snapshot, busy, notice, loadError, syncError, refreshing, refresh, recipeScroll } = useApp();
   const { toggleLang, t } = useI18n();
+  const liteUpdater = useLiteUpdater();
   const [route, setRoute] = useState(readRoute);
 
   useEffect(() => {
@@ -46,11 +48,22 @@ export default function App() {
         {[['/pantry', t.navPantry], ['/recipes', t.navRecipes], ['/shopping', t.navShopping]].map(([path, label]) => <a key={path} href={`#${path}`} aria-current={activeRoute === path || (path === '/recipes' && activeRoute.startsWith('/recipes/')) ? 'page' : undefined}>{label}</a>)}
       </nav>
       <div className="header-actions">
+        {liteUpdater.enabled ? (
+          <button
+            type="button"
+            className="secondary lite-update-btn"
+            onClick={liteUpdater.check}
+            disabled={['checking', 'applying', 'restarting'].includes(liteUpdater.state.phase)}
+          >
+            {t.liteCheckUpdates}
+          </button>
+        ) : null}
         <button type="button" className="secondary lang-toggle" onClick={toggleLang} aria-label={t.langSwitchAria}>{t.langSwitchLabel}</button>
         <button type="button" className="text-button reset-button" onClick={refresh} disabled={busy || refreshing}>{refreshing ? t.loadingShort : t.reloadData}</button>
       </div>
     </header>
     <div className="demo-notice">{t.demoNotice(snapshot?.recipes.length ?? 100)}</div>
+    <LiteUpdateBanner updater={liteUpdater} />
     <main className="shell main" id="main" tabIndex="-1" aria-busy={busy}>{page}</main>
     <div className="sr-only" role="status" aria-live="polite">{notice}</div>
     {syncError ? <p className="shell error" role="alert">{syncError}</p> : null}
