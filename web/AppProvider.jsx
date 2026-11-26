@@ -13,6 +13,8 @@ export function AppProvider({ children }) {
   tRef.current = t;
 
   const [snapshot, setSnapshot] = useState(null);
+  const [nutritionIndex, setNutritionIndex] = useState({ status: 'idle', data: null, byId: new Map(), error: null });
+  const nutritionEpoch = useRef(0);
   const latest = useRef(null);
   const epoch = useRef(0);
   const lock = useRef(false);
@@ -59,6 +61,27 @@ export function AppProvider({ children }) {
     } finally { if (token === epoch.current) setRefreshing(false); }
   }, [accept]);
 
+  const loadNutritionIndex = useCallback(async () => {
+    const token = ++nutritionEpoch.current;
+    setNutritionIndex(prev => ({ ...prev, status: 'loading', error: null }));
+    try {
+      const data = await client.getNutritionIndex();
+      if (token !== nutritionEpoch.current) return;
+      const byId = new Map((data.nutrition || []).map(item => [item.recipeId, item]));
+      setNutritionIndex({ status: 'ready', data, byId, error: null });
+    } catch (error) {
+      if (token !== nutritionEpoch.current) return;
+      setNutritionIndex(prev => ({ status: 'error', data: prev.data, byId: prev.byId, error }));
+    }
+  }, []);
+
+  const catalogVersion = snapshot?.catalogVersion ?? null;
+  useEffect(() => {
+    if (!catalogVersion) return;
+    loadNutritionIndex();
+    return () => { nutritionEpoch.current++; };
+  }, [catalogVersion, loadNutritionIndex]);
+
   useEffect(() => {
     refresh();
     const onFocus = () => refresh();
@@ -101,7 +124,7 @@ export function AppProvider({ children }) {
     ? (syncError.key ? t[syncError.key] : translateError(syncError, lang))
     : '';
 
-  return <AppContext.Provider value={{ snapshot, busy, purchaseReview, notice: resolvedNotice, loadError: resolvedLoadError, syncError: resolvedSyncError, refreshing, refresh, mutate, filter, setFilter, query, setQuery, category, setCategory, recipeScroll, confirmAction }}>
+  return <AppContext.Provider value={{ snapshot, nutritionIndex, reloadNutrition: loadNutritionIndex, busy, purchaseReview, notice: resolvedNotice, loadError: resolvedLoadError, syncError: resolvedSyncError, refreshing, refresh, mutate, filter, setFilter, query, setQuery, category, setCategory, recipeScroll, confirmAction }}>
     {children}{confirmation ? <Confirmation request={confirmation} resolve={resolveConfirmation} /> : null}
   </AppContext.Provider>;
 }

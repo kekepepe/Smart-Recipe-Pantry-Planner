@@ -1,4 +1,5 @@
 import { DomainError, evaluateRecipe, validateItem } from '../../src/evaluate-recipe.js';
+import { computeNutrition } from '../../src/nutrition.js';
 import { ingredients, recipes, samplePantry } from '../data/fixtures.js';
 
 // Intentionally session-only. No localStorage, database or network writes.
@@ -27,6 +28,27 @@ export function createMockClient() {
 
   return {
     async getSnapshot() { return snapshot(); },
+    async getNutritionIndex() {
+      const nutrition = recipes.map(recipe => computeNutrition(recipe, new Map()));
+      return copy({
+        nutrition,
+        total: nutrition.length,
+        estimatedCount: 0,
+        mappingsLoaded: 0,
+        catalogVersion: 'mock',
+        pantryRevision: sessionId,
+      });
+    },
+    async getNutritionDetail(recipeId) {
+      const recipe = recipes.find(entry => entry.id === recipeId);
+      if (!recipe) throw new DomainError('This recipe could not be found.', '', 'NOT_FOUND');
+      return copy({
+        ...computeNutrition(recipe, new Map()),
+        mappings: [],
+        catalogVersion: 'mock',
+        pantryRevision: sessionId,
+      });
+    },
     async savePantryItem(item) {
       const validated = validateItem(item, ingredients);
       checkFailure();
