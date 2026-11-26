@@ -9,13 +9,14 @@
 **一款离线优先、完整中英双语的桌面与本地 Web 应用：将家中现有食材转化为 100 道带图菜谱、有据可查的热量估算与多菜合并购物清单。**
 
 [![V1 Checks](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/test.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/test.yml)
+[![Lite Packages](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/lite.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/lite.yml)
 [![Desktop Installers](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/desktop.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/desktop.yml)
 [![Latest Release](https://img.shields.io/github/v/release/kekepepe/Smart-Recipe-Pantry-Planner?label=Release&color=245a42)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest)
 [![Platforms](https://img.shields.io/badge/Platforms-macOS%20arm64%20%7C%20Windows%20x64%20%7C%20Web-245a42)](#下载桌面客户端)
 [![Node.js](https://img.shields.io/badge/Node.js-22.23.1-339933?logo=node.js&logoColor=white)](.nvmrc)
 [![License: MIT](https://img.shields.io/badge/Code%20License-MIT-blue.svg)](LICENSE)
 
-[**下载 v1.0.1**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**核心特性**](#核心特性) · [**界面展示**](#界面展示) · [**源码运行**](#源码运行) · [**系统架构**](#系统架构) · [**文档索引**](#文档索引)
+[**下载 v1.0.2**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**核心特性**](#核心特性) · [**界面展示**](#界面展示) · [**源码运行**](#源码运行) · [**系统架构**](#系统架构) · [**文档索引**](#文档索引)
 
 [English](README.md) | **简体中文**
 
@@ -44,7 +45,8 @@
 | **经核验的 USDA 热量估算** | 展示每份与整道菜的估算千卡、基础份数、烹调状态假设，以及可展开追溯的 **USDA FoodData Central (SR Legacy)** 原始记录（**69 条核验映射**覆盖 **21 道完整菜谱**）；其余未覆盖菜谱诚实标示为 `暂无数据`，绝不显示伪造的 `0 千卡`。 |
 | **多菜合并购物清单与已购状态** | 支持同时保存多道菜谱，先汇总共同食材需求再统一扣除一次库存；支持勾选/撤销 **已购** 状态且跨刷新/重启保留，**不会**擅自修改库存；当菜谱用量变更或出现单位冲突时自动提示重新核对。 |
 | **完整中英双语界面** | 右上角一键切换英文 / 简体中文并本地持久化，结合首屏前 `<html lang>` 同步脚本，实现 100 道菜谱、286 种原料、分类标签与营养说明的全量本地化。 |
-| **离线桌面客户端（macOS / Windows）** | 基于 Electron 打包离线安装包，内置 Express 本地服务、原生 SQLite（`better-sqlite3`）、自动数据库迁移与升级前自动备份。 |
+| **本地离线登录与自动登录** | 支持按本机 SQLite 数据库设置本地账号与哈希密码，提供「记住登录」（30 天可撤销凭据自动登录）与修改密码；从旧版升级后自动保留全部库存与购物清单数据。 |
+| **离线轻量版（Lite）与桌面版** | **Lite 轻量版（`v1.0.2`，约 28 MB ZIP）**复用本机 Node.js（`22.14+` 的 `22.x`）与默认浏览器，内置一键应用内增量更新与失败自动回滚；未安装 Node.js 的电脑仍可下载 `v1.0.1` 完整 Electron 离线安装包。 |
 
 ---
 
@@ -90,22 +92,32 @@
 
 ## 下载桌面客户端
 
-可在 [**GitHub Releases**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) 直接下载离线安装包及校验文件（`SHA256SUMS.txt`、`SOURCE_COMMIT.txt`）：
+### 最新版本：v1.0.2 Lite 轻量版（macOS / Windows）
 
-| 平台 | 支持系统 / 架构 | 安装包文件 | 安装提示 |
+可在 [**GitHub Releases（`v1.0.2`）**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) 下载离线 **Lite 轻量版**（约 28 MB ZIP）、校验文件（`SHA256SUMS.txt`、`SOURCE_COMMIT.txt`）以及应用内增量更新包（`Pantry-and-Plate-1.0.2-Lite-Bundle.tar.gz`、`lite-update-manifest.json`）：
+
+| 平台 | 支持系统 / 架构 | Lite 安装包文件（`v1.0.2`） | 运行说明 |
 | --- | --- | --- | --- |
-| **macOS** | macOS 15+（`arm64` Apple Silicon） | `Pantry-and-Plate-1.0.1-mac-arm64.dmg` | 打开 DMG 后拖入「应用程序」。当前采用 ad-hoc 签名（未经 Apple 公证），首次打开如遇 Gatekeeper 拦截，请 **右键 → 打开** 或在「系统设置 → 隐私与安全性」中允许。 |
-| **Windows** | Windows 11（`x64`） | `Pantry-and-Plate-1.0.1-win-x64.exe` | 运行 NSIS 安装程序（支持静默当前用户安装：`/S /currentuser`）。当前安装包未签名，核对 `SHA256SUMS.txt` 后若出现 SmartScreen 提示，点击 **更多信息 → 仍要运行**。 |
+| **macOS** | macOS 15+（`arm64` Apple Silicon） | `Pantry-and-Plate-1.0.2-Lite-mac-arm64.zip` | 需本机已安装原生 `arm64` **Node.js `22.14+`（`22.x`）**。解压后双击 **`Start Lite.command`**（或运行 `node lite/start.js`），即可断网启动并在默认浏览器打开。 |
+| **Windows** | Windows 11（`x64`） | `Pantry-and-Plate-1.0.2-Lite-win-x64.zip` | 需本机已安装 `x64` **Node.js `22.14+`（`22.x`）**。解压后双击 **`Start Lite.cmd`**（或运行 `node lite/start.js`），即可断网启动并在默认浏览器打开。 |
+
+> [!TIP]
+> **应用内增量更新（Lite `v1.0.2+`）**
+> Lite 默认保持离线，不会在启动时联网。联网状态下点击顶部「**检查更新**」，即可通过 `lite-update-manifest.json` 下载并校验轻量业务更新包（`Pantry-and-Plate-1.0.2-Lite-Bundle.tar.gz`），自动校验 SHA-256 并重启生效，异常时自动回滚，全程不影响本地 `pantry.sqlite` 数据库。原 `v1.0.1-lite` 用户需先手动下载一次 `v1.0.2` Lite ZIP 以启用应用内更新能力。
+
+### 完整离线安装包（无需本机安装 Node.js）
+
+若电脑未安装 Node.js，仍可在 [**`v1.0.1` 发布页**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/tag/v1.0.1) 下载完整 Electron 离线安装包（约 155 MB：`Pantry-and-Plate-1.0.1-mac-arm64.dmg`、`Pantry-and-Plate-1.0.1-win-x64.exe`）。
 
 > [!NOTE]
-> **从旧版本升级与本地数据存放路径**
-> 从旧版本（如 `v1.0.0`）升级**不会**安装出两个重复应用，也**不会**丢失数据：先退出正在运行的旧版应用，再直接覆盖安装新版即可（**macOS**：拖入「应用程序」并选择 **替换**；**Windows**：直接运行新版 NSIS 安装程序覆盖原目录，卸载配置已关闭清除用户数据）。
+> **数据迁移与本地数据存放路径**
+> 所有库存、购物清单、已购记录与本地账号凭据均仅保存在本机 SQLite 数据库：
+> - **Lite（macOS）：** `~/Library/Application Support/Pantry & Plate Lite/pantry.sqlite`
+> - **Lite（Windows）：** `%LOCALAPPDATA%\Pantry & Plate Lite\pantry.sqlite`
+> - **完整 Electron 版（macOS）：** `~/Library/Application Support/Pantry & Plate/pantry.sqlite`
+> - **完整 Electron 版（Windows）：** `%APPDATA%\Pantry & Plate\pantry.sqlite`
 >
-> 所有库存、购物清单与已购记录均仅保存在本机 SQLite 数据库：
-> - **macOS：** `~/Library/Application Support/Pantry & Plate/pantry.sqlite`
-> - **Windows：** `%APPDATA%\Pantry & Plate\pantry.sqlite`
->
-> 当版本包含数据库结构或菜谱目录升级时，应用会在执行迁移前自动在同一目录下生成时间戳备份（`pantry-before-upgrade-*.sqlite`）。
+> 可通过 `node lite/start.js --import "/path/to/backup.sqlite"` 将已有 SQLite 备份导入 Lite 数据目录。当版本包含数据库结构或菜谱目录升级时，应用会在执行迁移前自动在同一目录下生成时间戳备份（`pantry-before-upgrade-*.sqlite`）。
 
 ---
 
@@ -206,7 +218,7 @@ flowchart LR
 | --- | --- |
 | **前端** | React 19、Vite 8、原生可访问性 CSS、Hash 路由、运行时零外部 API 依赖 |
 | **后端** | Node.js 22（ESM）、Express 5（仅绑定 `127.0.0.1` + 同源请求防护）、事务型 `Store` 与乐观锁并发控制 |
-| **数据存储** | SQLite（`better-sqlite3`）、版本化迁移（`001`–`004`）、约束校验与备份/修复 CLI |
+| **数据存储** | SQLite（`better-sqlite3`）、版本化迁移（`001`–`005`）、约束校验与备份/修复 CLI |
 | **桌面打包** | Electron 45 + `electron-builder` 26（`macOS arm64 DMG`、`Windows x64 NSIS`） |
 | **测试与 CI** | Node 原生测试框架（`node --test`）、Playwright Chromium 端到端测试、GitHub Actions 三平台矩阵 |
 

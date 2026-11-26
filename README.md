@@ -9,13 +9,14 @@
 **An offline-first, bilingual desktop & local web app that turns what is already in your kitchen into illustrated recipes, verified nutrition estimates, and combined shopping lists.**
 
 [![V1 Checks](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/test.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/test.yml)
+[![Lite Packages](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/lite.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/lite.yml)
 [![Desktop Installers](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/desktop.yml/badge.svg)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/actions/workflows/desktop.yml)
 [![Latest Release](https://img.shields.io/github/v/release/kekepepe/Smart-Recipe-Pantry-Planner?label=Release&color=245a42)](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest)
 [![Platforms](https://img.shields.io/badge/Platforms-macOS%20arm64%20%7C%20Windows%20x64%20%7C%20Web-245a42)](#download-desktop-app)
 [![Node.js](https://img.shields.io/badge/Node.js-22.23.1-339933?logo=node.js&logoColor=white)](.nvmrc)
 [![License: MIT](https://img.shields.io/badge/Code%20License-MIT-blue.svg)](LICENSE)
 
-[**Download v1.0.1**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**Features**](#features) · [**Screenshots**](#interface-showcase) · [**Quick Start**](#run-from-source) · [**Architecture**](#architecture) · [**Documentation**](#documentation)
+[**Download v1.0.2**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**Features**](#features) · [**Screenshots**](#interface-showcase) · [**Quick Start**](#run-from-source) · [**Architecture**](#architecture) · [**Documentation**](#documentation)
 
 **English** | [简体中文](README.zh-CN.md)
 
@@ -44,7 +45,8 @@ Home cooks frequently have ingredients on hand yet still spend time manually cro
 | **Verified USDA Nutrition Estimates** | Displays per-serving and whole-dish `kcal`, base servings, cooking-state assumptions, and expandable **USDA FoodData Central (SR Legacy)** source citations (**69 verified mappings** covering **21 complete recipes**). Unmapped dishes explicitly display `Unavailable`—never fabricated `0 kcal`. |
 | **Multi-Recipe Shopping List & Purchased Marks** | Save multiple recipes into one combined list, sum shared ingredients before subtracting pantry stock once, and check off **Purchased** items that persist across refreshes/restarts without mutating pantry stock. Automatically flags quantity changes and unit conflicts. |
 | **Full EN / 简体中文 Bilingual UI** | One-click language switcher persisted in `localStorage` with pre-paint `<html lang>` sync and 100% localized recipes, ingredients, taxonomy, nutrition labels, and status messages. |
-| **Offline Desktop App (macOS & Windows)** | Packaged Electron desktop app with bundled Node/Express local server, native SQLite (`better-sqlite3`), automatic schema migrations, and pre-upgrade database backups. |
+| **Local Offline Sign-In** | Optional single-user local account per SQLite database with hashed password storage, "Remember me" auto-login (30-day revocable token), password change, and automatic preservation of existing pantry/shopping data on upgrade. |
+| **Offline Lite & Desktop Editions** | **Lite edition (`v1.0.2`, ~28 MB ZIP)** reuses your system Node.js (`22.14+` in `22.x`) and default browser with one-click in-app incremental updates and automatic rollback. Standalone Electron installers (`v1.0.1`) remain available for machines without Node.js. |
 
 ---
 
@@ -90,22 +92,32 @@ Home cooks frequently have ingredients on hand yet still spend time manually cro
 
 ## Download Desktop App
 
-Pre-built offline installers for **macOS (Apple Silicon)** and **Windows (x64)** are published on [**GitHub Releases**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) along with `SHA256SUMS.txt` and `SOURCE_COMMIT.txt`.
+### Latest: v1.0.2 Lite (macOS & Windows)
 
-| Platform | Target OS / Arch | Installer Asset | Notes |
+Pre-built offline **Lite** packages (~28 MB ZIP) for **macOS (Apple Silicon)** and **Windows (x64)** are published on [**GitHub Releases (`v1.0.2`)**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) along with `SHA256SUMS.txt`, `SOURCE_COMMIT.txt`, and the in-app update assets (`Pantry-and-Plate-1.0.2-Lite-Bundle.tar.gz`, `lite-update-manifest.json`).
+
+| Platform | Target OS / Arch | Lite Package Asset (`v1.0.2`) | Notes |
 | --- | --- | --- | --- |
-| **macOS** | macOS 15+ (`arm64` Apple Silicon) | `Pantry-and-Plate-1.0.1-mac-arm64.dmg` | Drag **Pantry & Plate** to Applications. Uses ad-hoc signing (not notarized): on first launch, use **Right-click → Open** or allow in *System Settings → Privacy & Security*. |
-| **Windows** | Windows 11 (`x64`) | `Pantry-and-Plate-1.0.1-win-x64.exe` | Run the NSIS installer (or silent per-user install: `/S /currentuser`). Unsigned build: verify `SHA256SUMS.txt`, then choose **More info → Run anyway** if SmartScreen prompts. |
+| **macOS** | macOS 15+ (`arm64` Apple Silicon) | `Pantry-and-Plate-1.0.2-Lite-mac-arm64.zip` | Requires native `arm64` **Node.js `22.14+` (`22.x`)**. Extract and double-click **`Start Lite.command`** (or run `node lite/start.js`) to launch offline in your default browser. |
+| **Windows** | Windows 11 (`x64`) | `Pantry-and-Plate-1.0.2-Lite-win-x64.zip` | Requires `x64` **Node.js `22.14+` (`22.x`)**. Extract and double-click **`Start Lite.cmd`** (or run `node lite/start.js`) to launch offline in your default browser. |
+
+> [!TIP]
+> **In-App Incremental Updates (Lite `v1.0.2+`)**
+> Lite stays offline by default. When online, click **Check updates** in the header to download and verify lightweight app bundles (`Pantry-and-Plate-1.0.2-Lite-Bundle.tar.gz`) via `lite-update-manifest.json` with SHA-256 verification and automatic rollback—keeping your `pantry.sqlite` database untouched. Users on `v1.0.1-lite` should download the `v1.0.2` Lite ZIP once to enable in-app updates.
+
+### Standalone Electron Installers (No Node.js Required)
+
+If your machine does not have Node.js installed, full offline Electron installers (~155 MB) remain available on [**Release `v1.0.1`**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/tag/v1.0.1) (`Pantry-and-Plate-1.0.1-mac-arm64.dmg` and `Pantry-and-Plate-1.0.1-win-x64.exe`).
 
 > [!NOTE]
 > **Upgrading & Local Data Storage**
-> Upgrading from an earlier release (such as `v1.0.0`) does **not** duplicate the app or erase your data: quit the running app first, then install the new release over the existing one (**macOS:** drag into *Applications* and choose **Replace**; **Windows:** run the new NSIS installer over the existing directory—`deleteAppDataOnUninstall` is disabled).
+> All pantry items, shopping selections, purchased marks, and local account credentials stay strictly on your machine:
+> - **Lite (macOS):** `~/Library/Application Support/Pantry & Plate Lite/pantry.sqlite`
+> - **Lite (Windows):** `%LOCALAPPDATA%\Pantry & Plate Lite\pantry.sqlite`
+> - **Electron (macOS):** `~/Library/Application Support/Pantry & Plate/pantry.sqlite`
+> - **Electron (Windows):** `%APPDATA%\Pantry & Plate\pantry.sqlite`
 >
-> All pantry items, shopping selections, and purchased marks stay strictly on your machine:
-> - **macOS:** `~/Library/Application Support/Pantry & Plate/pantry.sqlite`
-> - **Windows:** `%APPDATA%\Pantry & Plate\pantry.sqlite`
->
-> Before applying a schema or catalog upgrade, the app automatically writes a timestamped backup (`pantry-before-upgrade-*.sqlite`) in the same folder.
+> You can import an existing SQLite backup into Lite with `node lite/start.js --import "/path/to/backup.sqlite"`. Before applying a schema or catalog upgrade, the app automatically writes a timestamped backup (`pantry-before-upgrade-*.sqlite`) in the same folder.
 
 ---
 
@@ -206,7 +218,7 @@ flowchart LR
 | --- | --- |
 | **Frontend** | React 19, Vite 8, custom accessible CSS, hash routing, zero runtime external API dependencies |
 | **Backend** | Node.js 22 (ESM), Express 5 (loopback-only with same-origin CSRF protection), transactional `Store` with optimistic concurrency (`expectedRevision`) |
-| **Database** | SQLite via `better-sqlite3` with versioned SQL migrations (`001`–`004`), foreign-key/check constraints, and backup/repair CLI |
+| **Database** | SQLite via `better-sqlite3` with versioned SQL migrations (`001`–`005`), foreign-key/check constraints, and backup/repair CLI |
 | **Desktop** | Electron 45 + `electron-builder` 26 (`macOS arm64 DMG`, `Windows x64 NSIS`) |
 | **Testing & CI** | Node built-in test runner (`node --test`), Playwright Chromium E2E, GitHub Actions 3-OS matrix (`Ubuntu`, `macOS`, `Windows`) |
 

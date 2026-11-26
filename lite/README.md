@@ -1,4 +1,4 @@
-# Pantry & Plate v1.0.1 Lite
+# Pantry & Plate v1.0.2 Lite
 
 Lite uses the Node.js installed on this computer and opens the system's default browser. All app assets and production dependencies are already in the ZIP.
 
