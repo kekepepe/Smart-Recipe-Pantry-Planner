@@ -451,9 +451,9 @@ const MESSAGES = {
     inspirationPick: index => `今日灵感第 ${index} 道`,
     toBuyCount: count => `还有 ${count} 项待采购`,
 
-    pageTitle: '食库与餐盘 · 智能菜谱与库存规划',
-    brand: '食库与餐盘',
-    brandAria: '食库与餐盘首页',
+    pageTitle: '今天吃什么 · 智能菜谱与库存规划',
+    brand: '今天吃什么',
+    brandAria: '今天吃什么首页',
     skipToContent: '跳到主要内容',
     mainNavAria: '主导航',
     navPantry: '我的库存',

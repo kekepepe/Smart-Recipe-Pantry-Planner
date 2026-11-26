@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="public/favicon.svg" alt="食库与餐盘图标" width="68" height="68" />
+<img src="public/favicon.svg" alt="今天吃什么图标" width="68" height="68" />
 
-# 食库与餐盘 · Pantry & Plate
+# 今天吃什么 · Pantry & Plate
 
 ### Smart Recipe & Pantry Planner（智能菜谱与库存规划工具）
 
@@ -25,10 +25,10 @@
 
 ## 为什么做这个项目？
 
-许多人家中已有不少食材，却总在纠结“今天做什么”，浏览普通菜谱网站时仍要逐项核对库存、手写缺料清单。**食库与餐盘（Pantry & Plate）** 将本地食材库存、100 道世界家常菜谱库、经核验的 USDA 热量估算和多菜合并购物清单整合进一个清爽、私密、完全离线可用的工作台——无需注册账号、无云端追踪、绝不编造营养或库存数据。
+许多人家中已有不少食材，却总在纠结“今天做什么”，浏览普通菜谱网站时仍要逐项核对库存、手写缺料清单。**今天吃什么（Pantry & Plate）** 将本地食材库存、100 道世界家常菜谱库、经核验的 USDA 热量估算和多菜合并购物清单整合进一个清爽、私密、完全离线可用的工作台——无需注册账号、无云端追踪、绝不编造营养或库存数据。
 
 <p align="center">
-  <img src="docs/screenshots/v1-desktop-zh-recipes.png" alt="食库与餐盘中文桌面端主界面，展示当前库存、多维筛选、热量估算徽章与带图菜谱列表" width="960" />
+  <img src="docs/screenshots/v1-desktop-zh-recipes.png" alt="今天吃什么中文桌面端主界面，展示当前库存、多维筛选、热量估算徽章与带图菜谱列表" width="960" />
 </p>
 
 ---
