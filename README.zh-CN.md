@@ -15,7 +15,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-22.23.1-339933?logo=node.js&logoColor=white)](.nvmrc)
 [![License: MIT](https://img.shields.io/badge/Code%20License-MIT-blue.svg)](LICENSE)
 
-[**下载 v1.0.0**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**核心特性**](#核心特性) · [**界面展示**](#界面展示) · [**源码运行**](#源码运行) · [**系统架构**](#系统架构) · [**文档索引**](#文档索引)
+[**下载 v1.0.1**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**核心特性**](#核心特性) · [**界面展示**](#界面展示) · [**源码运行**](#源码运行) · [**系统架构**](#系统架构) · [**文档索引**](#文档索引)
 
 [English](README.md) | **简体中文**
 
@@ -98,7 +98,9 @@
 | **Windows** | Windows 11（`x64`） | `Pantry-and-Plate-1.0.0-dev-win-x64.exe` | 运行 NSIS 安装程序（支持静默当前用户安装：`/S /currentuser`）。当前安装包未签名，核对 `SHA256SUMS.txt` 后若出现 SmartScreen 提示，点击 **更多信息 → 仍要运行**。 |
 
 > [!NOTE]
-> **本地数据存放路径与升级保护**
+> **从旧版本升级与本地数据存放路径**
+> 从旧版本（如 `v1.0.0`）升级**不会**安装出两个重复应用，也**不会**丢失数据：先退出正在运行的旧版应用，再直接覆盖安装新版即可（**macOS**：拖入「应用程序」并选择 **替换**；**Windows**：直接运行新版 NSIS 安装程序覆盖原目录，卸载配置已关闭清除用户数据）。
+>
 > 所有库存、购物清单与已购记录均仅保存在本机 SQLite 数据库：
 > - **macOS：** `~/Library/Application Support/Pantry & Plate/pantry.sqlite`
 > - **Windows：** `%APPDATA%\Pantry & Plate\pantry.sqlite`
