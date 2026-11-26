@@ -16,7 +16,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-22.23.1-339933?logo=node.js&logoColor=white)](.nvmrc)
 [![License: MIT](https://img.shields.io/badge/Code%20License-MIT-blue.svg)](LICENSE)
 
-[**下载 v1.0.2**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**核心特性**](#核心特性) · [**界面展示**](#界面展示) · [**源码运行**](#源码运行) · [**系统架构**](#系统架构) · [**文档索引**](#文档索引)
+[**下载 v1.0.3**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**核心特性**](#核心特性) · [**界面展示**](#界面展示) · [**源码运行**](#源码运行) · [**系统架构**](#系统架构) · [**文档索引**](#文档索引)
 
 [English](README.md) | **简体中文**
 
@@ -46,7 +46,7 @@
 | **多菜合并购物清单与已购状态** | 支持同时保存多道菜谱，先汇总共同食材需求再统一扣除一次库存；支持勾选/撤销 **已购** 状态且跨刷新/重启保留，**不会**擅自修改库存；当菜谱用量变更或出现单位冲突时自动提示重新核对。 |
 | **完整中英双语界面** | 右上角一键切换英文 / 简体中文并本地持久化，结合首屏前 `<html lang>` 同步脚本，实现 100 道菜谱、286 种原料、分类标签与营养说明的全量本地化。 |
 | **本地离线登录与自动登录** | 支持按本机 SQLite 数据库设置本地账号与哈希密码，提供「记住登录」（30 天可撤销凭据自动登录）与修改密码；从旧版升级后自动保留全部库存与购物清单数据。 |
-| **离线轻量版（Lite）与桌面版** | **Lite 轻量版（`v1.0.2`，约 28 MB ZIP）**复用本机 Node.js（`22.14+` 的 `22.x`）与默认浏览器，内置一键应用内增量更新与失败自动回滚；未安装 Node.js 的电脑仍可下载 `v1.0.1` 完整 Electron 离线安装包。 |
+| **离线轻量版（Lite）与桌面版** | **Lite 原生轻量安装包（`v1.0.3`，约 28 MB `.dmg` / `.exe`）**复用本机 Node.js（`22.14+` 的 `22.x`）与默认浏览器，无终端黑框、支持菜单栏/托盘控制及一键应用内增量更新与失败自动回滚；未安装 Node.js 的电脑仍可下载 `v1.0.1` 完整 Electron 离线安装包。 |
 
 ---
 
@@ -92,18 +92,18 @@
 
 ## 下载桌面客户端
 
-### 最新版本：v1.0.2 Lite 轻量版（macOS / Windows）
+### 最新版本：v1.0.3 Lite 轻量原生安装包（macOS DMG / Windows EXE）
 
-可在 [**GitHub Releases（`v1.0.2`）**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) 下载离线 **Lite 轻量版**（约 28 MB ZIP）、校验文件（`SHA256SUMS.txt`、`SOURCE_COMMIT.txt`）以及应用内增量更新包（`Pantry-and-Plate-1.0.2-Lite-Bundle.tar.gz`、`lite-update-manifest.json`）：
+可在 [**GitHub Releases（`v1.0.3`）**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) 下载离线 **Lite 原生安装包**（约 28 MB）、校验文件（`SHA256SUMS.txt`、`SOURCE_COMMIT.txt`）以及应用内增量更新包（`Pantry-and-Plate-1.0.3-Lite-Bundle.tar.gz`、`lite-update-manifest.json`）：
 
-| 平台 | 支持系统 / 架构 | Lite 安装包文件（`v1.0.2`） | 运行说明 |
+| 平台 | 支持系统 / 架构 | Lite 安装包文件（`v1.0.3`） | 安装与运行说明 |
 | --- | --- | --- | --- |
-| **macOS** | macOS 15+（`arm64` Apple Silicon） | `Pantry-and-Plate-1.0.2-Lite-mac-arm64.zip` | 需本机已安装原生 `arm64` **Node.js `22.14+`（`22.x`）**。解压后双击 **`Start Lite.command`**（或运行 `node lite/start.js`），即可断网启动并在默认浏览器打开。 |
-| **Windows** | Windows 11（`x64`） | `Pantry-and-Plate-1.0.2-Lite-win-x64.zip` | 需本机已安装 `x64` **Node.js `22.14+`（`22.x`）**。解压后双击 **`Start Lite.cmd`**（或运行 `node lite/start.js`），即可断网启动并在默认浏览器打开。 |
+| **macOS** | macOS 15+（`arm64` Apple Silicon） | `Pantry-and-Plate-1.0.3-Lite-mac-arm64.dmg` | 需本机已安装原生 `arm64` **Node.js `22.14+`（`22.x`）**。打开 DMG 将 **Pantry & Plate Lite** 拖入「应用程序」即可直接启动（无终端黑框，顶部菜单栏可打开界面或退出服务）。首次打开如遇 Gatekeeper 提示请 **右键 → 打开**。 |
+| **Windows** | Windows 11（`x64`） | `Pantry-and-Plate-1.0.3-Lite-win-x64.exe` | 需本机已安装 `x64` **Node.js `22.14+`（`22.x`）**。当前用户 NSIS 安装包（支持 `/S` 静默安装），自带桌面/开始菜单快捷方式与系统托盘图标，卸载保留本地 SQLite 数据。 |
 
 > [!TIP]
 > **应用内增量更新（Lite `v1.0.2+`）**
-> Lite 默认保持离线，不会在启动时联网。联网状态下点击顶部「**检查更新**」，即可通过 `lite-update-manifest.json` 下载并校验轻量业务更新包（`Pantry-and-Plate-1.0.2-Lite-Bundle.tar.gz`），自动校验 SHA-256 并重启生效，异常时自动回滚，全程不影响本地 `pantry.sqlite` 数据库。原 `v1.0.1-lite` 用户需先手动下载一次 `v1.0.2` Lite ZIP 以启用应用内更新能力。
+> Lite 默认保持离线，不会在启动时联网。联网状态下点击顶部「**检查更新**」，即可通过 `lite-update-manifest.json` 下载并校验轻量业务更新包（`Pantry-and-Plate-1.0.3-Lite-Bundle.tar.gz`），写入用户可写数据目录并自动重启生效，异常时自动回滚，全程不影响安装目录与本地 `pantry.sqlite` 数据库。
 
 ### 完整离线安装包（无需本机安装 Node.js）
 

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync, spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createServer as createHttpServer } from 'node:http';
 import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
@@ -12,13 +12,19 @@ import { initializeDatabase } from '../server/db/initialize.js';
 import { Store } from '../server/services/store.js';
 import { createLiteBundle } from './package-bundle.js';
 
+const isMac = process.platform === 'darwin';
 const target = { darwin: 'mac-arm64', win32: 'win-x64' }[process.platform];
-const zip = resolve('lite-dist', readdirSync('lite-dist').find(name => name.endsWith(`-Lite-${target}.zip`)));
+const ext = isMac ? '.dmg' : '.exe';
+const installerFile = readdirSync('lite-dist').find(name => name.endsWith(`-Lite-${target}${ext}`));
+assert.ok(installerFile, `Missing Lite installer ending with -Lite-${target}${ext} in lite-dist/`);
+const installerPath = resolve('lite-dist', installerFile);
+
 const scratch = mkdtempSync(join(tmpdir(), 'pantry lite smoke '));
 const dataDir = join(scratch, 'user data');
 const backupPath = join(scratch, 'v1.0.1 backup.sqlite');
-const name = zip.split(/[\\/]/).at(-1).slice(0, -4);
-const packageRoot = join(scratch, name);
+let mountPoint = null;
+let installDir = null;
+let packageRoot = null;
 let service;
 const env = { ...process.env, PANTRY_LITE_DATA_DIR: dataDir };
 const node = process.execPath;
@@ -38,11 +44,12 @@ function trackCookies(headers) {
   }
 }
 
-async function request(path, method = 'GET', body, expectedStatus = 200) {
+async function request(path, method = 'GET', body, expectedStatus = 200, extraHeaders = {}) {
   const cookieHeader = [...cookieJar.entries()].map(([k, v]) => `${k}=${v}`).join('; ');
   const headers = {
     ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
     ...(cookieHeader ? { Cookie: cookieHeader } : {}),
+    ...extraHeaders,
   };
   const result = await fetch(origin + path, {
     method, signal: AbortSignal.timeout(2000),
@@ -92,10 +99,37 @@ const data = snapshot => ({
   pantry: snapshot.pantry, recipes: snapshot.shoppingRecipeIds,
   shortages: snapshot.shopping.shortages, purchased: snapshot.purchasedMarks,
 });
+
 try {
-  execFileSync('tar', ['-xf', zip, '-C', scratch]);
+  if (isMac) {
+    mountPoint = join(scratch, 'dmg-mount');
+    mkdirSync(mountPoint, { recursive: true });
+    execFileSync('hdiutil', ['attach', '-nobrowse', '-readonly', '-mountpoint', mountPoint, installerPath], { stdio: 'inherit' });
+    const dmgApp = join(mountPoint, 'Pantry & Plate Lite.app');
+    assert(existsSync(dmgApp), 'DMG should contain Pantry & Plate Lite.app');
+    assert(existsSync(join(mountPoint, 'Applications')), 'DMG should contain Applications link');
+    const installedApp = join(scratch, 'Pantry & Plate Lite.app');
+    cpSync(dmgApp, installedApp, { recursive: true });
+    execFileSync('hdiutil', ['detach', mountPoint, '-force'], { stdio: 'inherit' });
+    mountPoint = null;
+
+    assert(existsSync(join(installedApp, 'Contents/Info.plist')));
+    assert(existsSync(join(installedApp, 'Contents/Resources/icon.icns')));
+    assert(existsSync(join(installedApp, 'Contents/MacOS/PantryPlateLite')));
+    packageRoot = join(installedApp, 'Contents/Resources/app');
+  } else {
+    installDir = join(scratch, 'installed-lite');
+    execFileSync(installerPath, ['/S', `/D=${installDir}`], { stdio: 'inherit' });
+    for (let wait = 0; wait < 100; wait += 1) {
+      if (existsSync(join(installDir, 'PantryPlateLite.exe')) && existsSync(join(installDir, 'Uninstall.exe'))) break;
+      await delay(100);
+    }
+    assert(existsSync(join(installDir, 'PantryPlateLite.exe')), 'Installed folder should contain PantryPlateLite.exe');
+    assert(existsSync(join(installDir, 'Uninstall.exe')), 'Installed folder should contain Uninstall.exe');
+    packageRoot = join(installDir, 'app');
+  }
+
   assert(existsSync(join(packageRoot, 'LICENSE')));
-  assert(existsSync(join(packageRoot, process.platform === 'darwin' ? 'Start Lite.command' : 'Start Lite.cmd')));
   const modules = join(packageRoot, 'node_modules');
   for (const excluded of ['electron', 'electron-builder', 'vite', 'playwright']) {
     assert(!existsSync(join(modules, excluded)), `Unexpected runtime package: ${excluded}`);
@@ -104,15 +138,16 @@ try {
     [`${process.platform}-${process.arch}.node`]);
 
   const occupied = createServer();
-  await new Promise(resolve => occupied.listen(0, '127.0.0.1', resolve));
+  await new Promise(resolveListen => occupied.listen(0, '127.0.0.1', resolveListen));
   env.PANTRY_LITE_PORT = String(occupied.address().port);
   origin = `http://127.0.0.1:${env.PANTRY_LITE_PORT}`;
   try {
     assert.throws(() => start(['--no-browser']), /Port \d+ is in use/);
   } finally {
-    await new Promise(resolve => occupied.close(resolve));
+    await new Promise(resolveClose => occupied.close(resolveClose));
   }
 
+  env.PANTRY_LITE_CONTROL_TOKEN = 'smoke-control-token';
   await launch();
   assert.match(start(['--no-browser']), /already running/);
   assert.match(await (await fetch(origin)).text(), /<title>/);
@@ -128,7 +163,14 @@ try {
   const nutrition = await request('/api/nutrition');
   assert.equal(nutrition.estimatedCount, 21);
   assert(nutrition.nutrition.some(recipe => recipe.status === 'unavailable'));
-  await stop();
+
+  // Verify graceful launcher shutdown endpoint rejects wrong token and stops cleanly with valid token
+  await request('/api/lite-shutdown', 'POST', undefined, 403, { 'X-Lite-Control-Token': 'wrong-token' });
+  const closed = once(service, 'exit');
+  const shutdownResp = await request('/api/lite-shutdown', 'POST', undefined, 200, { 'X-Lite-Control-Token': 'smoke-control-token' });
+  assert.equal(shutdownResp.status, 'stopping');
+  await closed;
+  service = null;
 
   const backup = await initializeDatabase(backupPath);
   const store = new Store(backup);
@@ -158,7 +200,7 @@ try {
   assert.equal(digest(backupPath), originalHash);
   await stop();
 
-  // Verify Lite-only in-app incremental bundle update, live restart, data preservation, and rollback
+  // Verify Lite-only in-app incremental bundle update into writable user data dir, live restart, data preservation, and rollback
   const mockReleaseDir = join(scratch, 'mock-release');
   const { bundlePath, manifestPath, manifest } = createLiteBundle({
     outputDir: mockReleaseDir,
@@ -217,31 +259,33 @@ try {
       }
     }
     assert.ok(updatedStatus, 'Lite should self-restart into updated bundle 9.9.9');
+    assert.equal(existsSync(join(packageRoot, '.updates')), false, 'Install directory must remain untouched by updates');
+    assert.equal(existsSync(join(env.PANTRY_LITE_DATA_DIR, 'updates', '9.9.9', 'server', 'app.js')), true);
     restartedPid = updatedStatus.pid;
     await authenticateLite();
     assert.deepEqual(data(await request('/api/snapshot')), original);
 
-    // Terminate the detached restarted Lite process cleanly before testing rollback
-    if (restartedPid) {
-      try { process.kill(restartedPid); } catch {}
-      restartedPid = null;
-      for (let wait = 0; wait < 50; wait += 1) {
-        const alive = await fetch(origin + '/api/lite-status', { signal: AbortSignal.timeout(300) })
-          .then(r => r.ok).catch(() => false);
-        if (!alive) break;
-        await delay(100);
-      }
+    // Terminate the detached restarted Lite process cleanly via control token
+    const shutdownRestarted = await request('/api/lite-shutdown', 'POST', undefined, 200, { 'X-Lite-Control-Token': 'smoke-control-token' });
+    assert.equal(shutdownRestarted.status, 'stopping');
+    restartedPid = null;
+    for (let wait = 0; wait < 50; wait += 1) {
+      const alive = await fetch(origin + '/api/lite-status', { signal: AbortSignal.timeout(300) })
+        .then(r => r.ok).catch(() => false);
+      if (!alive) break;
+      await delay(100);
     }
     service = null;
 
-    // Corrupt the updated bundle entrypoint and verify automatic rollback to built-in version
-    writeFileSync(join(packageRoot, '.updates', '9.9.9', 'server', 'app.js'), 'throw new Error("corrupt-bundle");');
+    // Corrupt the updated bundle entrypoint in user data dir and verify automatic rollback to built-in version
+    writeFileSync(join(env.PANTRY_LITE_DATA_DIR, 'updates', '9.9.9', 'server', 'app.js'), 'throw new Error("corrupt-bundle");');
     await launch();
     const rolledBackStatus = await request('/api/lite-status');
     assert.equal(rolledBackStatus.isUpdated, false);
     assert.equal(rolledBackStatus.version, initialStatus.builtInVersion);
     await authenticateLite();
     assert.deepEqual(data(await request('/api/snapshot')), original);
+    await stop();
   } finally {
     if (restartedPid) {
       try { process.kill(restartedPid); } catch {}
@@ -250,8 +294,18 @@ try {
     delete env.PANTRY_LITE_UPDATE_URL;
   }
 
-  console.log('Lite smoke passed: extracted dependencies, loopback startup, duplicate and occupied ports, offline assets and APIs, backup import, in-app hot update, automatic rollback, and restart persistence.');
+  // On Windows, verify silent uninstall removes installed binaries while preserving user SQLite data
+  if (!isMac && installDir) {
+    execFileSync(join(installDir, 'Uninstall.exe'), ['/S', `_?=${installDir}`], { stdio: 'inherit' });
+    assert.equal(existsSync(join(installDir, 'PantryPlateLite.exe')), false, 'Uninstaller should remove PantryPlateLite.exe');
+    assert.equal(existsSync(join(env.PANTRY_LITE_DATA_DIR, 'pantry.sqlite')), true, 'Uninstaller must preserve user SQLite data');
+  }
+
+  console.log(`Lite native installer (${ext}) smoke passed: installer verification, loopback startup, graceful shutdown, offline assets and APIs, backup import, writable-dir hot update, automatic rollback, and restart persistence.`);
 } finally {
   await stop();
+  if (mountPoint) {
+    try { execFileSync('hdiutil', ['detach', mountPoint, '-force'], { stdio: 'ignore' }); } catch {}
+  }
   rmSync(scratch, { recursive: true, force: true });
 }
