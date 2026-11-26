@@ -94,7 +94,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 1000 }], ['mo
     await expect(page.getByRole('list', { name: '已购食材' }).getByRole('checkbox').first()).toBeChecked();
 
     // Home in Chinese
-    await page.getByRole('link', { name: '食库与餐盘首页' }).click();
+    await page.getByRole('link', { name: '今天吃什么首页' }).click();
     await expect(page.getByRole('heading', { name: '好味道，从手边的食材开始。' })).toBeVisible();
     assertPureChinese(await collectVisibleAndControlText(page), `${name} ZH Home`);
 
