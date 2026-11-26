@@ -94,8 +94,8 @@
 
 | 平台 | 支持系统 / 架构 | 安装包文件 | 安装提示 |
 | --- | --- | --- | --- |
-| **macOS** | macOS 15+（`arm64` Apple Silicon） | `Pantry-and-Plate-1.0.0-dev-mac-arm64.dmg` | 打开 DMG 后拖入「应用程序」。当前采用 ad-hoc 签名（未经 Apple 公证），首次打开如遇 Gatekeeper 拦截，请 **右键 → 打开** 或在「系统设置 → 隐私与安全性」中允许。 |
-| **Windows** | Windows 11（`x64`） | `Pantry-and-Plate-1.0.0-dev-win-x64.exe` | 运行 NSIS 安装程序（支持静默当前用户安装：`/S /currentuser`）。当前安装包未签名，核对 `SHA256SUMS.txt` 后若出现 SmartScreen 提示，点击 **更多信息 → 仍要运行**。 |
+| **macOS** | macOS 15+（`arm64` Apple Silicon） | `Pantry-and-Plate-1.0.1-mac-arm64.dmg` | 打开 DMG 后拖入「应用程序」。当前采用 ad-hoc 签名（未经 Apple 公证），首次打开如遇 Gatekeeper 拦截，请 **右键 → 打开** 或在「系统设置 → 隐私与安全性」中允许。 |
+| **Windows** | Windows 11（`x64`） | `Pantry-and-Plate-1.0.1-win-x64.exe` | 运行 NSIS 安装程序（支持静默当前用户安装：`/S /currentuser`）。当前安装包未签名，核对 `SHA256SUMS.txt` 后若出现 SmartScreen 提示，点击 **更多信息 → 仍要运行**。 |
 
 > [!NOTE]
 > **从旧版本升级与本地数据存放路径**

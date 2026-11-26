@@ -94,8 +94,8 @@ Pre-built offline installers for **macOS (Apple Silicon)** and **Windows (x64)**
 
 | Platform | Target OS / Arch | Installer Asset | Notes |
 | --- | --- | --- | --- |
-| **macOS** | macOS 15+ (`arm64` Apple Silicon) | `Pantry-and-Plate-1.0.0-dev-mac-arm64.dmg` | Drag **Pantry & Plate** to Applications. Uses ad-hoc signing (not notarized): on first launch, use **Right-click → Open** or allow in *System Settings → Privacy & Security*. |
-| **Windows** | Windows 11 (`x64`) | `Pantry-and-Plate-1.0.0-dev-win-x64.exe` | Run the NSIS installer (or silent per-user install: `/S /currentuser`). Unsigned build: verify `SHA256SUMS.txt`, then choose **More info → Run anyway** if SmartScreen prompts. |
+| **macOS** | macOS 15+ (`arm64` Apple Silicon) | `Pantry-and-Plate-1.0.1-mac-arm64.dmg` | Drag **Pantry & Plate** to Applications. Uses ad-hoc signing (not notarized): on first launch, use **Right-click → Open** or allow in *System Settings → Privacy & Security*. |
+| **Windows** | Windows 11 (`x64`) | `Pantry-and-Plate-1.0.1-win-x64.exe` | Run the NSIS installer (or silent per-user install: `/S /currentuser`). Unsigned build: verify `SHA256SUMS.txt`, then choose **More info → Run anyway** if SmartScreen prompts. |
 
 > [!NOTE]
 > **Upgrading & Local Data Storage**
