@@ -4,6 +4,7 @@ directories:
 artifactName: Pantry-and-Plate-${version}-${os}-${arch}.${ext}
 files:
   - desktop/main.js
+  - desktop/icons/icon-256.png
   - dist/**/*
   - server/**/*
   - src/**/*
@@ -12,12 +13,17 @@ files:
   - data/world-recipes.json
   - data/nutrition-mappings.json
 mac:
+  icon: desktop/icons/icon.icns
   identity: "-"
   notarize: false
   target: dmg
 win:
+  icon: desktop/icons/icon.ico
   target: nsis
 nsis:
   oneClick: false
   perMachine: false
   deleteAppDataOnUninstall: false
+  installerIcon: desktop/icons/icon.ico
+  uninstallerIcon: desktop/icons/icon.ico
+  installerHeaderIcon: desktop/icons/icon.ico

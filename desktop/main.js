@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog, session, shell } from 'electron';
 import { randomUUID } from 'node:crypto';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createApp } from '../server/app.js';
 import { openDatabase } from '../server/db/connection.js';
 import { migrate, migration } from '../server/db/migrate.js';
@@ -10,6 +11,7 @@ import { Store } from '../server/services/store.js';
 
 const host = '127.0.0.1';
 const accessToken = randomUUID();
+const windowIconPath = fileURLToPath(new URL('./icons/icon-256.png', import.meta.url));
 let database;
 let server;
 let origin;
@@ -68,6 +70,7 @@ function showWindow() {
   window = new BrowserWindow({
     width: 1280,
     height: 900,
+    icon: windowIconPath,
     webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true },
   });
   window.webContents.on('will-navigate', (event, url) => {
