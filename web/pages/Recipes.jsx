@@ -3,6 +3,7 @@ import { useApp } from '../AppProvider.jsx';
 import { client } from '../services/client.js';
 import { discoverRecipes, taxonomy } from '../../src/discover-recipes.js';
 import { EmptyState, IngredientAmount, PageHeading, RecipeStatus } from '../components/ui.jsx';
+import { NutritionBadge } from '../components/Nutrition.jsx';
 
 import { formatQuantity, getCategoryLabel, getIngredientName, getLocalizedRecipe, getTagLabel, translateError, useI18n } from '../i18n/index.jsx';
 import { ZH_INGREDIENTS } from '../i18n/zh-ingredients.js';
@@ -55,7 +56,7 @@ function groupBadgeMeta(rec, t) {
 }
 
 export default function Recipes() {
-  const { snapshot, recipeScroll } = useApp();
+  const { snapshot, nutritionIndex, reloadNutrition, recipeScroll } = useApp();
   const { lang, t } = useI18n();
   const [search, setSearch] = useState(() => window.location.search);
   const [filtersOpen, setFiltersOpen] = useState(() => hasActiveDimensions(window.location.search));
@@ -226,6 +227,12 @@ export default function Recipes() {
       <button className="text-button" onClick={clear}>{t.clearFilters}</button>
       {hint ? <p className="helper" role="status">{t[hint]}</p> : null}
     </details>
+    {nutritionIndex.status === 'error' ? (
+      <p className="helper nutrition-index-error" role="status">
+        {t.nutritionIndexLoadError}{' '}
+        <button type="button" className="text-button" onClick={reloadNutrition}>{t.tryAgain}</button>
+      </p>
+    ) : null}
     {view === 'all' ? <>
       {error ? <div className="error" role="alert">{translateError(error, lang)} <button className="text-button" onClick={clear}>{t.clearInvalidFilters}</button></div> : <>
       <p className="helper" role="status">{t.recipesSummaryLine(result.total, snapshot.recipes.length, result.page, result.pages)}</p>
@@ -236,6 +243,7 @@ export default function Recipes() {
           <div className="recipe-copy">
             <h2>{recipe.displayTitle}</h2>
             <p className="recipe-meta">{t.servingsMeta(recipe.servings, recipe.time)}</p>
+            <NutritionBadge nutrition={nutritionIndex.byId.get(recipe.id)} />
             <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => getTagLabel(d, id, lang, id))).join(' · ')}</p>
             <p className="description">{recipe.displayDescription}</p>
             <p className="ingredient-caption"><strong>{t.ingredientsPrefix}</strong> {recipe.requirements.map((item, index) => <span key={item.ingredientId}>{index ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</p>
@@ -299,6 +307,7 @@ export default function Recipes() {
                       <p className={`group-badge ${badge.className}`}>{badge.text}</p>
                       <h2>{recipe.displayTitle}</h2>
                       <p className="recipe-meta">{t.servingsMeta(recipe.servings, recipe.time)}</p>
+                      <NutritionBadge nutrition={nutritionIndex.byId.get(recipe.id)} />
                       <p className="staple-coverage">
                         <strong>{t.staplesOwned(rec.ownedKinds, rec.stapleTotal)}</strong>
                         <span> · {t.staplesEnough(rec.sufficientKinds, rec.stapleTotal)}</span>
@@ -383,6 +392,7 @@ export default function Recipes() {
                     <p className="pick-badge">{t.inspirationPick(index + 1)}</p>
                     <h2>{recipe.displayTitle}</h2>
                     <p className="recipe-meta">{t.servingsMeta(recipe.servings, recipe.time)}</p>
+                    <NutritionBadge nutrition={nutritionIndex.byId.get(recipe.id)} />
                     <p className="recipe-tags">{['countries', 'regions', 'tastes', 'meals'].flatMap(d => (recipe[d] || []).map(id => getTagLabel(d, id, lang))).join(' · ')}</p>
                     <p className="description">{recipe.displayDescription}</p>
                     <p className="ingredient-caption"><strong>{t.ingredientsPrefix}</strong> {recipe.requirements.map((item, idx) => <span key={item.ingredientId}>{idx ? ' · ' : ''}<IngredientAmount item={item} /></span>)}</p>

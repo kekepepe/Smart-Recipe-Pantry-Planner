@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useApp } from '../AppProvider.jsx';
 import { Icon, PageHeading, RecipeStatus } from '../components/ui.jsx';
+import { NutritionPanel } from '../components/Nutrition.jsx';
 import { formatQuantity, getIngredientName, getLocalizedRecipe, translateError, useI18n } from '../i18n/index.jsx';
 
 export default function RecipeDetail({ recipeId }) {
@@ -46,6 +47,7 @@ export default function RecipeDetail({ recipeId }) {
           </>}
           {error ? <p className="error" role="alert">{translateError(error, lang)}</p> : null}
         </div>
+        <NutritionPanel recipeId={recipe.id} />
         <section className="instructions">
           <h2>{t.howToMakeIt}</h2>
           <ol>{recipe.displaySteps.map((step, index) => <li key={index}>{step}</li>)}</ol>

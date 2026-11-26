@@ -21,6 +21,8 @@ export function createHttpClient(fetcher = (...args) => fetch(...args)) {
     getSnapshot: () => request('/snapshot'),
     getStapleRecommendations: (query = '') => request(`/recommendations/staples${query ? `?${query}` : ''}`),
     getDailyInspiration: (query = '') => request(`/inspiration${query ? `?${query}` : ''}`),
+    getNutritionIndex: () => request('/nutrition'),
+    getNutritionDetail: recipeId => request(`/nutrition/${encodeURIComponent(recipeId)}`),
     onboard: (mode, expectedRevision) => request('/onboarding', 'POST', { mode, expectedRevision }),
     savePantryItem: (item, expectedRevision) => request(`/pantry/${encodeURIComponent(item.ingredientId)}`, 'PUT', { quantity: item.quantity, unit: item.unit, expectedRevision }),
     deletePantryItem: (id, expectedRevision) => request(`/pantry/${encodeURIComponent(id)}`, 'DELETE', { expectedRevision }),

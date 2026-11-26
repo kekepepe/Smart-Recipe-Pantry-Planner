@@ -4,6 +4,7 @@ import Confirmation from './components/Confirmation.jsx';
 import { translateError, useI18n } from './i18n/index.jsx';
 
 const AppContext = createContext(null);
+const EMPTY_NUTRITION_INDEX = { catalogVersion: null, status: 'idle', byId: new Map() };
 
 export function AppProvider({ children }) {
   const { lang, t } = useI18n();
@@ -13,6 +14,8 @@ export function AppProvider({ children }) {
   tRef.current = t;
 
   const [snapshot, setSnapshot] = useState(null);
+  const [loadedNutritionIndex, setNutritionIndex] = useState(EMPTY_NUTRITION_INDEX);
+  const nutritionEpoch = useRef(0);
   const latest = useRef(null);
   const epoch = useRef(0);
   const lock = useRef(false);
@@ -59,6 +62,37 @@ export function AppProvider({ children }) {
     } finally { if (token === epoch.current) setRefreshing(false); }
   }, [accept]);
 
+  const catalogVersion = snapshot?.catalogVersion ?? null;
+  // Hide estimates from the previous catalog immediately, before the effect runs.
+  const nutritionIndex = loadedNutritionIndex.catalogVersion === catalogVersion
+    ? loadedNutritionIndex
+    : EMPTY_NUTRITION_INDEX;
+
+  const loadNutritionIndex = useCallback(async () => {
+    if (!catalogVersion) return;
+    const token = ++nutritionEpoch.current;
+    const emptyIndex = { ...EMPTY_NUTRITION_INDEX, catalogVersion };
+    setNutritionIndex({ ...emptyIndex, status: 'loading' });
+    try {
+      const data = await client.getNutritionIndex();
+      if (token !== nutritionEpoch.current) return;
+      if (data.catalogVersion !== catalogVersion) {
+        setNutritionIndex({ ...emptyIndex, status: 'error' });
+        return;
+      }
+      const byId = new Map(data.nutrition.map(item => [item.recipeId, item]));
+      setNutritionIndex({ catalogVersion, status: 'ready', byId });
+    } catch {
+      if (token !== nutritionEpoch.current) return;
+      setNutritionIndex({ ...emptyIndex, status: 'error' });
+    }
+  }, [catalogVersion]);
+
+  useEffect(() => {
+    loadNutritionIndex();
+    return () => { nutritionEpoch.current++; };
+  }, [loadNutritionIndex]);
+
   useEffect(() => {
     refresh();
     const onFocus = () => refresh();
@@ -101,7 +135,7 @@ export function AppProvider({ children }) {
     ? (syncError.key ? t[syncError.key] : translateError(syncError, lang))
     : '';
 
-  return <AppContext.Provider value={{ snapshot, busy, purchaseReview, notice: resolvedNotice, loadError: resolvedLoadError, syncError: resolvedSyncError, refreshing, refresh, mutate, filter, setFilter, query, setQuery, category, setCategory, recipeScroll, confirmAction }}>
+  return <AppContext.Provider value={{ snapshot, nutritionIndex, reloadNutrition: loadNutritionIndex, busy, purchaseReview, notice: resolvedNotice, loadError: resolvedLoadError, syncError: resolvedSyncError, refreshing, refresh, mutate, filter, setFilter, query, setQuery, category, setCategory, recipeScroll, confirmAction }}>
     {children}{confirmation ? <Confirmation request={confirmation} resolve={resolveConfirmation} /> : null}
   </AppContext.Provider>;
 }
