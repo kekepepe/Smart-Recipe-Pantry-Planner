@@ -309,7 +309,7 @@ export default function Recipes() {
                           const ing = ingredientMap.get(staple.ingredientId);
                           return (
                             <li key={staple.ingredientId} className={`staple-item staple-${staple.state}`}>
-                              <strong>{getIngredientName(ing, lang)}</strong>: {formatStapleState(staple, lang, t)}
+                              <strong>{getIngredientName(ing, lang)}</strong>{lang === 'zh-CN' ? '：' : ': '}{formatStapleState(staple, lang, t)}
                             </li>
                           );
                         })}
@@ -362,7 +362,7 @@ export default function Recipes() {
           <div>
             <strong>{t.inspirationDate(inspiration.data.date)}</strong>
             <p className="helper">
-              {t.inspirationCount(inspiration.data.count, inspiration.data.totalCandidates)} · {t.catalogLabel} <span title={inspiration.data.catalogVersion}>{lang === 'en' ? inspiration.data.catalogVersion.slice(0, 10) : t.currentCatalog}</span>. {t.inspirationExplanation}
+              {t.inspirationCount(inspiration.data.count, inspiration.data.totalCandidates)} · <span title={inspiration.data.catalogVersion}>{t.currentCatalog}</span>{lang === 'zh-CN' ? '。' : '. '}{t.inspirationExplanation}
             </p>
           </div>
           <button type="button" className="secondary" onClick={() => setView('all')}>{t.browseAllAction}</button>
