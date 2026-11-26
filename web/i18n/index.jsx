@@ -131,7 +131,7 @@ const MESSAGES = {
     inspirationLoadError: "Unable to load daily inspiration",
     inspirationLoading: "Loading today’s inspiration…",
     catalogLabel: "Catalog",
-    currentCatalog: "Current version",
+    currentCatalog: "Current catalog",
     inspirationExplanation: "Selected independently of your pantry; pantry status below is shown for reference only.",
     inspirationEmptyTitle: "No inspiration matches these filters",
     inspirationEmptyCopy: "Try clearing a filter to see today’s picks; your pantry and shopping list are kept.",
@@ -213,6 +213,8 @@ const MESSAGES = {
     removeItemAria: id => `Remove ${id}`,
     pantryEmptyTitle: 'A fresh start',
     pantryEmptyCopy: 'Add your first ingredient, or browse recipes to see what you could make.',
+    emptyFoodGroup: 'No main food ingredients added yet.',
+    emptySeasoningsGroup: 'No seasonings added yet.',
     pantryHelper: 'Changing your pantry updates recipe matches and your selected shopping list.',
     editIngredientHeading: 'Edit ingredient',
     addIngredientHeading: 'Add an ingredient',
@@ -262,7 +264,7 @@ const MESSAGES = {
     regionHint: 'Region selection updated to match your countries.',
     availabilityGroupAria: 'Filter recipes',
     availabilityOptions: [
-      ['all', 'All recipes'],
+      ['all', 'Any status'],
       ['ready', 'Can make now'],
       ['needsShopping', 'Need ingredients'],
       ['checkUnits', 'Check units'],
@@ -385,7 +387,7 @@ const MESSAGES = {
     inspirationLoadError: "无法加载每日灵感",
     inspirationLoading: "正在加载今日灵感…",
     catalogLabel: "菜谱库",
-    currentCatalog: "当前版本",
+    currentCatalog: "当前菜谱库版本",
     inspirationExplanation: "选菜与库存无关，以下库存状态仅供参考。",
     inspirationEmptyTitle: "没有符合筛选条件的每日灵感",
     inspirationEmptyCopy: "试试清除筛选条件。库存和购物清单会保留。",
@@ -467,6 +469,8 @@ const MESSAGES = {
     removeItemAria: name => `移除${name}`,
     pantryEmptyTitle: '从这里开始记录',
     pantryEmptyCopy: '先录入第一种食材，或直接浏览菜谱看看想做什么。',
+    emptyFoodGroup: '暂未添加主食材。',
+    emptySeasoningsGroup: '暂未添加调料。',
     pantryHelper: '修改库存会自动更新菜谱匹配状态和已选购物清单。',
     editIngredientHeading: '编辑食材',
     addIngredientHeading: '添加食材',
@@ -516,7 +520,7 @@ const MESSAGES = {
     regionHint: '已自动清除与所选国家不兼容的地区。',
     availabilityGroupAria: '按可做状态筛选菜谱',
     availabilityOptions: [
-      ['all', '全部菜谱'],
+      ['all', '全部状态'],
       ['ready', '现在可做'],
       ['needsShopping', '需要补料'],
       ['checkUnits', '单位待核对'],
@@ -539,7 +543,7 @@ const MESSAGES = {
     canMakeNow: '现在可做',
     checkUnits: '单位待核对',
     needPrefix: '还缺 ',
-    moreCount: n => ` 等共多出 ${n} 项`,
+    moreCount: n => ` 等另缺 ${n} 项`,
 
     // Recipe Detail
     recipeNotFoundTitle: '未找到该菜谱',
@@ -646,11 +650,14 @@ export function getCategoryLabel(category, lang) {
 export function getLocalizedRecipe(recipe, lang) {
   if (!recipe) return null;
   if (lang !== 'zh-CN') {
+    const displayNote = typeof recipe.note === 'string'
+      ? recipe.note.replace('optional upstream additions are omitted', 'optional extra garnishes are omitted')
+      : recipe.note;
     return {
       ...recipe,
       displayTitle: recipe.title,
       displayDescription: recipe.description,
-      displayNote: recipe.note,
+      displayNote,
       displaySteps: recipe.steps,
       displaySource: recipe.source,
       displayImageCredit: recipe.imageCredit,
