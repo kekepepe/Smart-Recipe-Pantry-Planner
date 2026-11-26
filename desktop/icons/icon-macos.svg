@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="tile-bg" x1="512" y1="100" x2="512" y2="924" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="55%" stop-color="#f7f9f5" />
+      <stop offset="100%" stop-color="#e8efe5" />
+    </linearGradient>
+    <filter id="tile-shadow" x="40" y="56" width="944" height="944" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#14291c" flood-opacity="0.22" />
+    </filter>
+  </defs>
+  <!-- macOS HIG squircle tile (824x824 centered inside 1024x1024 safe area) -->
+  <g filter="url(#tile-shadow)">
+    <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="url(#tile-bg)" />
+    <rect x="103" y="103" width="818" height="818" rx="182" ry="182" fill="none" stroke="#d5dfd4" stroke-width="6" />
+  </g>
+  <!-- Exact Pantry & Plate botanical leaf emblem from public/favicon.svg -->
+  <g transform="translate(208.2 186.5) scale(15.5)">
+    <path fill="#245a42" d="M34 5C17 5 12 13 17 23 29 24 35 17 34 5ZM5 15c-1 13 3 20 14 18C21 22 15 16 5 15Z" />
+    <path fill="none" stroke="#245a42" stroke-width="2" stroke-linecap="round" d="M19 36c0-13 4-20 10-26M18 29l-8-9" />
+  </g>
+</svg>
