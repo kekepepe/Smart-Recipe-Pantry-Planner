@@ -4,17 +4,30 @@ import { EmptyState, Icon, PageHeading } from '../components/ui.jsx';
 import { formatQuantity, getIngredientName, getUnitLabel, translateError, useI18n } from '../i18n/index.jsx';
 
 const blank = { ingredientId: '', quantity: '', unit: '' };
+const ingredientKinds = ['food', 'seasoning'];
+
+function normalizeSearch(value) {
+  return value.normalize('NFKC').toLowerCase().trim();
+}
 
 export default function Pantry() {
   const { snapshot, busy, mutate, confirmAction } = useApp();
   const { lang, t } = useI18n();
   const [draft, setDraft] = useState(blank);
+  const [query, setQuery] = useState('');
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState(null);
   const [savedKey, setSavedKey] = useState('');
+  const searchRef = useRef(null);
   const quantityRef = useRef(null);
   const formRef = useRef(null);
   const selected = snapshot.ingredients.find(item => item.id === draft.ingredientId);
+  const terms = normalizeSearch(query).split(/\s+/).filter(Boolean);
+  const choices = snapshot.ingredients.filter(item => {
+    const name = normalizeSearch(getIngredientName(item, lang));
+    return terms.every(term => name.includes(term));
+  });
+  const selectedIsFiltered = selected && !choices.includes(selected);
 
   function edit(item) {
     setDraft({ ...item, quantity: String(item.quantity) });
@@ -33,7 +46,12 @@ export default function Pantry() {
     setError(null);
   }
 
-  function cancel() { setDraft(blank); setEditing(false); setError(null); }
+  function cancel() { setDraft(blank); setQuery(''); setEditing(false); setError(null); }
+
+  function clearSearch() {
+    setQuery('');
+    searchRef.current?.focus();
+  }
 
   async function save(event) {
     event.preventDefault();
@@ -63,7 +81,7 @@ export default function Pantry() {
     <PageHeading title={t.pantryTitle} subtitle={t.pantrySubtitle}><a href="#/recipes" className="heading-link">{t.navRecipes} <Icon name="arrow" /></a></PageHeading>
     <div className="pantry-layout">
       <section aria-label={t.yourIngredientsAria}>
-        {snapshot.pantry.length ? <>{['food', 'seasoning'].map(kind => {
+        {snapshot.pantry.length ? <>{ingredientKinds.map(kind => {
           const groupItems = snapshot.pantry.filter(item => snapshot.ingredients.find(i => i.id === item.ingredientId).kind === kind);
           return <div key={kind}><h2>{kind === 'food' ? t.foodHeading : t.seasoningsHeading}</h2>{groupItems.length ? <ul className="pantry-list" aria-label={kind === 'food' ? t.foodListAria : t.seasoningsListAria}>{groupItems.map(item => {
             const entry = snapshot.ingredients.find(ing => ing.id === item.ingredientId);
@@ -82,10 +100,35 @@ export default function Pantry() {
       </section>
       <form className="pantry-form" ref={formRef} onSubmit={save} noValidate aria-label={editing ? t.editIngredientHeading : t.addIngredientAria}>
         <h2>{editing ? t.editIngredientHeading : t.addIngredientHeading}</h2>
+        <label htmlFor="ingredient-search">{t.ingredientSearchLabel}</label>
+        <div className="ingredient-search">
+          <input
+            ref={searchRef}
+            id="ingredient-search"
+            autoComplete="off"
+            value={query}
+            onChange={event => setQuery(event.target.value)}
+            onKeyDown={event => {
+              if (event.key === 'Enter' && !event.nativeEvent.isComposing) event.preventDefault();
+            }}
+            disabled={busy}
+          />
+          {query ? <button type="button" className="text-button" onClick={clearSearch} disabled={busy}>{t.ingredientSearchClear}</button> : null}
+        </div>
         <label htmlFor="ingredient">{t.ingredientLabel}</label>
         <select id="ingredient" value={draft.ingredientId} onChange={event => selectIngredient(event.target.value)} disabled={busy} aria-invalid={error?.field === 'ingredientId'} aria-describedby={error?.field === 'ingredientId' ? 'form-error' : undefined}>
-          <option value="">{t.selectIngredient}</option>{['food', 'seasoning'].map(kind => <optgroup key={kind} label={kind === 'food' ? t.foodHeading : t.seasoningsHeading}>{snapshot.ingredients.filter(i => i.kind === kind).map(item => <option value={item.id} key={item.id}>{getIngredientName(item, lang)}</option>)}</optgroup>)}
+          <option value="">{t.selectIngredient}</option>
+          {selectedIsFiltered ? <option value={selected.id} hidden>{getIngredientName(selected, lang)}</option> : null}
+          {ingredientKinds.map(kind => {
+            const group = choices.filter(item => item.kind === kind);
+            return group.length ? <optgroup key={kind} label={kind === 'food' ? t.foodHeading : t.seasoningsHeading}>
+              {group.map(item => <option value={item.id} key={item.id}>{getIngredientName(item, lang)}</option>)}
+            </optgroup> : null;
+          })}
         </select>
+        <div role="status">
+          {terms.length && !choices.length ? <p className="helper">{t.ingredientSearchEmpty}</p> : null}
+        </div>
         <div className="quantity-fields">
           <div><label htmlFor="quantity">{t.quantityLabel}</label><input ref={quantityRef} id="quantity" inputMode="decimal" placeholder={t.quantityPlaceholder} autoComplete="off" value={draft.quantity} onChange={event => setDraft({ ...draft, quantity: event.target.value })} disabled={busy} aria-invalid={error?.field === 'quantity'} aria-describedby={error?.field === 'quantity' ? 'quantity-help form-error' : 'quantity-help'} /></div>
           <div><label htmlFor="unit">{t.unitLabel}</label><select id="unit" value={draft.unit} onChange={event => setDraft({ ...draft, unit: event.target.value })} disabled={busy || !selected} aria-invalid={error?.field === 'unit'} aria-describedby={error?.field === 'unit' ? 'form-error' : undefined}><option value="">{t.selectUnit}</option>{selected?.allowedUnits.map(unit => <option key={unit} value={unit}>{getUnitLabel(unit, lang)}</option>)}</select></div>
