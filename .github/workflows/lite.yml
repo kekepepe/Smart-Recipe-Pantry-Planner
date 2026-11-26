@@ -30,7 +30,7 @@ jobs:
       - run: node lite/smoke.js
       - uses: actions/setup-node@v4
         with:
-          node-version: '22.12.0'
+          node-version: '22.14.0'
       - name: Smoke test minimum supported Node.js
         run: node lite/smoke.js
       - uses: actions/upload-artifact@v4

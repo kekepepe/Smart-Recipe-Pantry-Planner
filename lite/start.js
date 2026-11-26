@@ -102,7 +102,7 @@ async function runService(dbPath, port, showBrowser) {
 
 try {
   const [major, minor] = process.versions.node.split('.').map(Number);
-  if (major !== 22 || minor < 12) throw new Error('Install Node.js 22.12 or newer in the Node.js 22 series.');
+  if (major !== 22 || minor < 14) throw new Error('Install Node.js 22.14 or newer in the Node.js 22 series.');
   const supported = (platform === 'darwin' && process.arch === 'arm64') ||
     (platform === 'win32' && process.arch === 'x64');
   if (!supported) throw new Error('Use native arm64 Node.js on macOS or x64 Node.js on Windows, with the matching Lite ZIP.');

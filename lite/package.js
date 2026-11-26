@@ -1,6 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { chmodSync, cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
+import { chmodSync, cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
@@ -19,24 +18,10 @@ try {
   execFileSync(process.execPath, [process.env.npm_execpath, 'ci', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund'], {
     cwd: root, stdio: 'inherit',
   });
-  const sqlite = join(root, 'node_modules/better-sqlite3');
-  const buildConfig = join(sqlite, 'binding.gyp');
-  const originalConfig = readFileSync(buildConfig, 'utf8');
-  // The upstream prebuild uses Node-API 10, which is unavailable in Node.js 22.12.
-  if (!originalConfig.includes("'NAPI_VERSION=10'")) throw new Error('Review the SQLite build configuration for this dependency version.');
-  writeFileSync(buildConfig, originalConfig.replace("'NAPI_VERSION=10'", "'NAPI_VERSION=9'"));
-  const require = createRequire(import.meta.url);
-  const nodeGyp = require.resolve('node-gyp/bin/node-gyp.js');
-  execFileSync(process.execPath, [nodeGyp, 'rebuild', '--force_build=1'], { cwd: sqlite, stdio: 'inherit' });
-  writeFileSync(buildConfig, originalConfig);
-
-  const prebuilds = join(sqlite, 'prebuilds');
+  const prebuilds = join(root, 'node_modules/better-sqlite3/prebuilds');
   for (const file of readdirSync(prebuilds)) {
     if (file.endsWith('.node') && file !== `${target}.node`) rmSync(join(prebuilds, file));
   }
-
-  cpSync(join(sqlite, 'build/Release/better_sqlite3.node'), join(prebuilds, `${target}.node`));
-  rmSync(join(sqlite, 'build'), { recursive: true, force: true });
 
   const sources = ['dist', 'server', 'src', 'web/data/fixtures.js', 'data/catalog.js', 'data/world-recipes.json', 'data/nutrition-mappings.json', 'lite/start.js'];
   for (const file of sources) {
