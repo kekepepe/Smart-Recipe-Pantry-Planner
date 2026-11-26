@@ -68,8 +68,9 @@ export function createApp(db, {
 
   const asyncRoute = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
-  // Public health check and local auth bootstrap routes
+  // Public health check, Lite mode probe, and local auth bootstrap routes
   app.get('/api/health', (req, res) => { db.prepare('SELECT 1').get(); res.json({ status: 'ok' }); });
+  app.get('/api/lite-status', (req, res) => res.json({ updater: { enabled: false } }));
 
   const handleSessionQuery = (req, res) => {
     const cookies = parseCookies(req.headers.cookie);

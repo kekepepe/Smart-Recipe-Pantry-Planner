@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useApp } from './AppProvider.jsx';
 import { useI18n } from './i18n/index.jsx';
+import { LiteUpdateBanner, useLiteUpdater } from './components/LiteUpdater.jsx';
 import AuthGate from './pages/AuthGate.jsx';
 import ChangePasswordModal from './components/ChangePasswordModal.jsx';
 import Home from './pages/Home.jsx';
@@ -16,6 +17,7 @@ function readRoute() {
 export default function App() {
   const { auth, retryAuthBootstrap, signOut, snapshot, busy, notice, loadError, syncError, refreshing, refresh, recipeScroll } = useApp();
   const { toggleLang, t } = useI18n();
+  const liteUpdater = useLiteUpdater();
   const [route, setRoute] = useState(readRoute);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
 
@@ -67,6 +69,16 @@ export default function App() {
         </nav>
       ) : null}
       <div className="header-actions">
+        {auth.authenticated && liteUpdater.enabled ? (
+          <button
+            type="button"
+            className="secondary lite-update-btn"
+            onClick={liteUpdater.check}
+            disabled={['checking', 'applying', 'restarting'].includes(liteUpdater.state.phase)}
+          >
+            {t.liteCheckUpdates}
+          </button>
+        ) : null}
         <button type="button" className="secondary lang-toggle" onClick={toggleLang} aria-label={t.langSwitchAria}>{t.langSwitchLabel}</button>
         {auth.authenticated ? <>
           <button type="button" className="text-button reset-button" onClick={refresh} disabled={busy || refreshing}>{refreshing ? t.loadingShort : t.reloadData}</button>
@@ -75,7 +87,10 @@ export default function App() {
         </> : null}
       </div>
     </header>
-    {auth.authenticated ? <div className="demo-notice">{t.demoNotice(snapshot?.recipes.length ?? 100)}</div> : null}
+    {auth.authenticated ? <>
+      <div className="demo-notice">{t.demoNotice(snapshot?.recipes.length ?? 100)}</div>
+      <LiteUpdateBanner updater={liteUpdater} />
+    </> : null}
     <main className="shell main" id="main" tabIndex="-1" aria-busy={busy}>{page}</main>
     <div className="sr-only" role="status" aria-live="polite">{notice}</div>
     {syncError ? <p className="shell error" role="alert">{syncError}</p> : null}

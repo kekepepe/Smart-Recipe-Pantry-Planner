@@ -397,6 +397,23 @@ const MESSAGES = {
     checkUnitsInPantry: 'Check units in your pantry before calculating this recipe.',
     noMissingForRecipe: 'No missing ingredients for this recipe on its own.',
 
+    // Lite in-app updater (Lite only)
+    liteCheckUpdates: 'Check updates',
+    liteUpdateChecking: 'Checking for Lite updates…',
+    liteUpdateUpToDate: version => `Pantry & Plate Lite v${version} is up to date.`,
+    liteUpdateAvailable: (current, latest, size) =>
+      `Update available: v${current} → v${latest}${size ? ` (${size})` : ''}. Your local pantry data will stay intact.`,
+    liteUpdateFullRequired: latest =>
+      `v${latest} requires updated runtime dependencies. Download the latest Lite ZIP from GitHub Releases; your local database stays intact.`,
+    liteUpdateApplying: 'Downloading and verifying update bundle…',
+    liteUpdateRestarting: version => `Update v${version || ''} applied. Restarting Lite…`,
+    liteUpdateRestartManual: 'Update applied. Refresh this page once Lite finishes restarting.',
+    liteUpdateError: msg => `Could not check or apply update: ${msg}`,
+    liteUpdateApplyBtn: 'Update & restart',
+    liteUpdateDownloadZip: 'Open Releases',
+    liteUpdateReloadBtn: 'Refresh page',
+    liteUpdateDismiss: 'Dismiss',
+
     // Local Offline Auth (Issue #55)
     authSetupTitle: 'Set up your local account',
     authSetupSubtitle: 'Protect your pantry, saved recipes, and shopping list on this device — completely offline.',
@@ -740,6 +757,23 @@ const MESSAGES = {
     missingForAria: title => `${title}的缺料列表`,
     checkUnitsInPantry: '计算该菜谱前，请先核对库存中的单位。',
     noMissingForRecipe: '仅制作这道菜目前不缺任何用料。',
+
+    // Lite in-app updater (Lite only)
+    liteCheckUpdates: '检查更新',
+    liteUpdateChecking: '正在检查精简版更新…',
+    liteUpdateUpToDate: version => `当前已是最新版本（${version}）。`,
+    liteUpdateAvailable: (current, latest, size) =>
+      `发现新版本：${current} → ${latest}${size ? `（${size}）` : ''}，本地库存与购物数据会完整保留。`,
+    liteUpdateFullRequired: latest =>
+      `${latest} 包含运行依赖变更，请前往发布页面下载新版压缩包（本地数据库会自动保留）。`,
+    liteUpdateApplying: '正在下载并校验更新包…',
+    liteUpdateRestarting: version => `已安装 ${version || ''}，正在重启本地服务…`,
+    liteUpdateRestartManual: '更新已完成，请稍后刷新页面。',
+    liteUpdateError: msg => `更新失败：${msg}`,
+    liteUpdateApplyBtn: '立即更新并重启',
+    liteUpdateDownloadZip: '前往下载页面',
+    liteUpdateReloadBtn: '刷新页面',
+    liteUpdateDismiss: '关闭',
 
     // Local Offline Auth (Issue #55)
     authSetupTitle: '首次设置本地账号',

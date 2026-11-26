@@ -2,13 +2,15 @@ import assert from 'node:assert/strict';
 import { execFileSync, spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createServer as createHttpServer } from 'node:http';
 import { createServer } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { initializeDatabase } from '../server/db/initialize.js';
 import { Store } from '../server/services/store.js';
+import { createLiteBundle } from './package-bundle.js';
 
 const target = { darwin: 'mac-arm64', win32: 'win-x64' }[process.platform];
 const zip = resolve('lite-dist', readdirSync('lite-dist').find(name => name.endsWith(`-Lite-${target}.zip`)));
@@ -154,7 +156,101 @@ try {
   await authenticateLite();
   assert.deepEqual(data(await request('/api/snapshot')), original);
   assert.equal(digest(backupPath), originalHash);
-  console.log('Lite smoke passed: extracted dependencies, loopback startup, duplicate and occupied ports, offline assets and APIs, backup import, and restart persistence.');
+  await stop();
+
+  // Verify Lite-only in-app incremental bundle update, live restart, data preservation, and rollback
+  const mockReleaseDir = join(scratch, 'mock-release');
+  const { bundlePath, manifestPath, manifest } = createLiteBundle({
+    outputDir: mockReleaseDir,
+    version: '9.9.9',
+    notes: 'Smoke test hot-update bundle',
+  });
+  const mockServer = createHttpServer((req, res) => {
+    if (req.url === '/lite-update-manifest.json') {
+      res.writeHead(200, { 'Content-Type': 'application/json' }).end(readFileSync(manifestPath));
+      return;
+    }
+    if (req.url === `/${manifest.bundleFile}`) {
+      res.writeHead(200, { 'Content-Type': 'application/gzip' }).end(readFileSync(bundlePath));
+      return;
+    }
+    res.writeHead(404).end();
+  });
+  await new Promise(resolveListen => mockServer.listen(0, '127.0.0.1', resolveListen));
+  let restartedPid = null;
+  try {
+    env.PANTRY_LITE_UPDATE_URL = `http://127.0.0.1:${mockServer.address().port}/lite-update-manifest.json`;
+    await launch();
+    const initialStatus = await request('/api/lite-status');
+    assert.equal(initialStatus.updater?.enabled, true);
+    assert.equal(initialStatus.isUpdated, false);
+
+    // Unauthenticated update check must be rejected with 401
+    const unauthCheck = await fetch(origin + '/api/lite-update/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(2000),
+    });
+    assert.equal(unauthCheck.status, 401);
+    await unauthCheck.body?.cancel();
+
+    // Restore session via remember-me before checking and applying update
+    await authenticateLite();
+
+    const check = await request('/api/lite-update/check', 'POST', {});
+    assert.equal(check.status, 'update-available');
+    assert.equal(check.latestVersion, '9.9.9');
+
+    const apply = await request('/api/lite-update/apply', 'POST', {});
+    assert.equal(apply.status, 'restarting');
+    assert.equal(apply.version, '9.9.9');
+
+    let updatedStatus = null;
+    for (let attempt = 0; attempt < 100; attempt += 1) {
+      await delay(150);
+      const next = await fetch(origin + '/api/lite-status', { signal: AbortSignal.timeout(1000) })
+        .then(r => (r.ok ? r.json() : null)).catch(() => null);
+      if (next?.version === '9.9.9' && next?.isUpdated === true) {
+        updatedStatus = next;
+        break;
+      }
+    }
+    assert.ok(updatedStatus, 'Lite should self-restart into updated bundle 9.9.9');
+    restartedPid = updatedStatus.pid;
+    await authenticateLite();
+    assert.deepEqual(data(await request('/api/snapshot')), original);
+
+    // Terminate the detached restarted Lite process cleanly before testing rollback
+    if (restartedPid) {
+      try { process.kill(restartedPid); } catch {}
+      restartedPid = null;
+      for (let wait = 0; wait < 50; wait += 1) {
+        const alive = await fetch(origin + '/api/lite-status', { signal: AbortSignal.timeout(300) })
+          .then(r => r.ok).catch(() => false);
+        if (!alive) break;
+        await delay(100);
+      }
+    }
+    service = null;
+
+    // Corrupt the updated bundle entrypoint and verify automatic rollback to built-in version
+    writeFileSync(join(packageRoot, '.updates', '9.9.9', 'server', 'app.js'), 'throw new Error("corrupt-bundle");');
+    await launch();
+    const rolledBackStatus = await request('/api/lite-status');
+    assert.equal(rolledBackStatus.isUpdated, false);
+    assert.equal(rolledBackStatus.version, initialStatus.builtInVersion);
+    await authenticateLite();
+    assert.deepEqual(data(await request('/api/snapshot')), original);
+  } finally {
+    if (restartedPid) {
+      try { process.kill(restartedPid); } catch {}
+    }
+    await new Promise(resolveClose => mockServer.close(resolveClose));
+    delete env.PANTRY_LITE_UPDATE_URL;
+  }
+
+  console.log('Lite smoke passed: extracted dependencies, loopback startup, duplicate and occupied ports, offline assets and APIs, backup import, in-app hot update, automatic rollback, and restart persistence.');
 } finally {
   await stop();
   rmSync(scratch, { recursive: true, force: true });
