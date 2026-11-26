@@ -118,7 +118,7 @@ try {
     assert(existsSync(join(installedApp, 'Contents/MacOS/PantryPlateLite')));
     packageRoot = join(installedApp, 'Contents/Resources/app');
   } else {
-    installDir = join(scratch, 'installed-lite');
+    installDir = mkdtempSync(join(tmpdir(), 'pantry-lite-inst-'));
     execFileSync(installerPath, ['/S', `/D=${installDir}`], { stdio: 'inherit' });
     for (let wait = 0; wait < 100; wait += 1) {
       if (existsSync(join(installDir, 'PantryPlateLite.exe')) && existsSync(join(installDir, 'Uninstall.exe'))) break;
@@ -306,6 +306,9 @@ try {
   await stop();
   if (mountPoint) {
     try { execFileSync('hdiutil', ['detach', mountPoint, '-force'], { stdio: 'ignore' }); } catch {}
+  }
+  if (installDir) {
+    rmSync(installDir, { recursive: true, force: true });
   }
   rmSync(scratch, { recursive: true, force: true });
 }
