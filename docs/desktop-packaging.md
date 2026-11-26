@@ -19,5 +19,6 @@
 2. 首次打开自动创建本地数据库并载入菜谱。可使用示例库存，浏览带图菜谱，将缺料加入购物清单，关闭应用后重新启动核对数据。
 3. 数据库位于 macOS 的 `~/Library/Application Support/Pantry & Plate/pantry.sqlite` 或 Windows 的 `%APPDATA%\Pantry & Plate\pantry.sqlite`。更新前退出应用并备份该文件。新版在同一目录读取数据，需要升级数据库或菜谱目录时会先写出 `pantry-before-upgrade-*.sqlite`。恢复时先退出应用并备份当前数据库，再用与目标版本兼容的备份替换数据库文件。
 4. 菜谱的原始来源链接会在系统浏览器中打开，访问来源网页需要网络。应用内的菜谱、图片和许可文本随安装包提供。
+5. **本地离线登录与恢复（Issue #55）**：首次启动需离线设置一个本机账号和密码（若从 `v1.0.1` 升级，会先自动生成 `pantry-before-upgrade-*.sqlite` 备份，新账号接管既有库存、选菜、购物清单与已购记录）。勾选「记住登录」后，30 天持久凭据经 Electron `safeStorage`（macOS 钥匙串 / Windows DPAPI）加密保存在同目录 `remember-credential.bin` 中；主动退出或修改密码会立即撤销并清除该凭据。本应用不提供在线找回密码或免密重设入口；如遗忘密码，可退出应用后恢复升级前备份（回退至备份时刻数据并重新设置账号），或移走/删除 `pantry.sqlite` 与 `remember-credential.bin` 以空库重新初始化（会清空该库既有数据）。详见 [`docs/LOCAL-AUTH-CONTRACT.md`](LOCAL-AUTH-CONTRACT.md)。
 
 两平台候选包完成独立验收后，正式 GitHub Release 使用同一固定提交对应的两份已验收安装包及校验值。

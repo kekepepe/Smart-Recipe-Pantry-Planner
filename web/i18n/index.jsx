@@ -396,6 +396,57 @@ const MESSAGES = {
     missingForAria: title => `Missing for ${title}`,
     checkUnitsInPantry: 'Check units in your pantry before calculating this recipe.',
     noMissingForRecipe: 'No missing ingredients for this recipe on its own.',
+
+    // Local Offline Auth (Issue #55)
+    authSetupTitle: 'Set up your local account',
+    authSetupSubtitle: 'Protect your pantry, saved recipes, and shopping list on this device — completely offline.',
+    authSignInTitle: 'Sign in to continue',
+    authSignInSubtitle: 'Unlock your local pantry, recipes, and shopping list on this device.',
+    authExistingDataNote: 'This account will take ownership of the existing pantry, saved recipes, shopping list, and purchased items already stored on this device.',
+    authFreshDataNote: 'Your account and kitchen data are stored only on this device and work without an internet connection.',
+    authNoRecoveryNote: 'Because this app is completely offline, forgotten passwords cannot be recovered online. Keep your password safe; local backup and reset steps are documented in the runbook.',
+    authSessionExpired: 'Your session has ended. Sign in again to continue.',
+    authUsernameLabel: 'Username',
+    authUsernamePlaceholder: 'Choose a local username (2–32 characters)',
+    authPasswordLabel: 'Password',
+    authPasswordPlaceholder: 'Enter your password',
+    authNewPasswordPlaceholder: 'At least 8 characters',
+    authPasswordHint: 'Use 8 to 128 characters. Stored locally with a salted hash.',
+    authConfirmPasswordLabel: 'Confirm password',
+    authConfirmPasswordPlaceholder: 'Re-enter your password',
+    authShowShort: 'Show',
+    authHideShort: 'Hide',
+    authShowPassword: 'Show password',
+    authHidePassword: 'Hide password',
+    authShowConfirmPassword: 'Show confirm password',
+    authHideConfirmPassword: 'Hide confirm password',
+    authShowCurrentPassword: 'Show current password',
+    authHideCurrentPassword: 'Hide current password',
+    authShowNewPassword: 'Show new password',
+    authHideNewPassword: 'Hide new password',
+    authRememberMeLabel: 'Remember sign-in on this device (auto sign-in for 30 days)',
+    authRememberMeHelper: 'Leave unchecked to require your password again after closing the app or restarting the local service.',
+    authSetupSubmit: 'Create account and continue',
+    authSettingUp: 'Creating account…',
+    authSignInSubmit: 'Sign in',
+    authSigningIn: 'Signing in…',
+    authChangePasswordButton: 'Change password',
+    authSignOutButton: 'Sign out',
+    authChangePasswordTitle: 'Change password',
+    authChangePasswordHelper: username => `Signed in as ${username}. Changing your password immediately signs out earlier sessions and clears remembered sign-ins.`,
+    authCurrentPasswordLabel: 'Current password',
+    authNewPasswordLabel: 'New password',
+    authConfirmNewPasswordLabel: 'Confirm new password',
+    authChangePasswordSubmit: 'Update password',
+    authUsernameValidation: 'Enter a username between 2 and 32 characters.',
+    authPasswordValidation: 'Use a password between 8 and 128 characters.',
+    authPasswordMismatch: 'The two passwords do not match.',
+    authFieldsRequired: 'Enter both username and password.',
+    authCurrentPasswordRequired: 'Enter your current password.',
+    authSetupSuccessNotice: 'Local account created and signed in.',
+    authSignInSuccessNotice: 'Signed in.',
+    authSignedOutNotice: 'Signed out.',
+    authPasswordChangedNotice: 'Password updated. Earlier sessions and remembered sign-ins have been invalidated.',
   },
 
   'zh-CN': {
@@ -689,6 +740,57 @@ const MESSAGES = {
     missingForAria: title => `${title}的缺料列表`,
     checkUnitsInPantry: '计算该菜谱前，请先核对库存中的单位。',
     noMissingForRecipe: '仅制作这道菜目前不缺任何用料。',
+
+    // Local Offline Auth (Issue #55)
+    authSetupTitle: '首次设置本地账号',
+    authSetupSubtitle: '为本机库存、菜谱与购物清单设置登录密码，全程可离线完成。',
+    authSignInTitle: '登录以继续使用',
+    authSignInSubtitle: '解锁本机保存的库存、选菜、购物清单与已购记录。',
+    authExistingDataNote: '此账号将接管这台设备上当前数据库已有的库存、选菜顺序、购物清单和已购记录。',
+    authFreshDataNote: '您的账号与厨房数据仅保存在本机，无需联网即可完成初始化、登录与退出。',
+    authNoRecoveryNote: '本应用完全离线运行，密码遗忘不支持在线找回。请妥善保管密码；支持的本地备份恢复方式见运行手册。',
+    authSessionExpired: '当前登录已过期或失效，请重新登录。',
+    authUsernameLabel: '用户名',
+    authUsernamePlaceholder: '请输入 2 至 32 位本地用户名',
+    authPasswordLabel: '密码',
+    authPasswordPlaceholder: '请输入密码',
+    authNewPasswordPlaceholder: '请输入至少 8 位密码',
+    authPasswordHint: '请使用 8 至 128 位密码，本地仅保存加盐派生哈希。',
+    authConfirmPasswordLabel: '确认密码',
+    authConfirmPasswordPlaceholder: '请再次输入密码',
+    authShowShort: '显示',
+    authHideShort: '隐藏',
+    authShowPassword: '显示密码',
+    authHidePassword: '隐藏密码',
+    authShowConfirmPassword: '显示确认密码',
+    authHideConfirmPassword: '隐藏确认密码',
+    authShowCurrentPassword: '显示当前密码',
+    authHideCurrentPassword: '隐藏当前密码',
+    authShowNewPassword: '显示新密码',
+    authHideNewPassword: '隐藏新密码',
+    authRememberMeLabel: '记住登录（在此设备自动登录，30 天有效）',
+    authRememberMeHelper: '不勾选时，刷新页面可保持当前登录，重启应用或本地服务后需要重新输入密码。',
+    authSetupSubmit: '完成设置并进入应用',
+    authSettingUp: '正在设置…',
+    authSignInSubmit: '登录',
+    authSigningIn: '正在登录…',
+    authChangePasswordButton: '修改密码',
+    authSignOutButton: '退出登录',
+    authChangePasswordTitle: '修改密码',
+    authChangePasswordHelper: username => `当前账号：${username}。修改密码后，此前的会话和记住登录凭据将全部失效。`,
+    authCurrentPasswordLabel: '当前密码',
+    authNewPasswordLabel: '新密码',
+    authConfirmNewPasswordLabel: '确认新密码',
+    authChangePasswordSubmit: '确认修改',
+    authUsernameValidation: '请输入 2 至 32 位用户名。',
+    authPasswordValidation: '请输入 8 至 128 位密码。',
+    authPasswordMismatch: '两次输入的密码不一致。',
+    authFieldsRequired: '请输入用户名和密码。',
+    authCurrentPasswordRequired: '请输入当前密码。',
+    authSetupSuccessNotice: '本地账号设置完成并已登录。',
+    authSignInSuccessNotice: '登录成功。',
+    authSignedOutNotice: '已退出登录。',
+    authPasswordChangedNotice: '密码已修改，此前的会话和记住登录凭据已全部失效。',
   },
 };
 
@@ -779,6 +881,19 @@ export function translateError(error, lang) {
   if (code === 'CATALOG_NOT_READY') return '菜谱目录尚未初始化，请先执行目录初始化。';
   if (code === 'LIST_OUT_OF_DATE') return '已保存的购物清单需要修复，请联系维护者执行修复。';
   if (code === 'ORIGIN_DENIED') return '请通过本地应用地址访问。';
+  if (code === 'AUTH_REQUIRED') return '请先登录以访问本地库存与菜谱。';
+  if (code === 'INVALID_CREDENTIALS') return '用户名或密码不正确。';
+  if (code === 'INVALID_CURRENT_PASSWORD') return '当前密码不正确。';
+  if (code === 'ACCOUNT_ALREADY_EXISTS') return '当前数据库已设置本地账号，请直接登录。';
+  if (code === 'ACCOUNT_NOT_INITIALIZED') return '尚未设置本地账号，请先完成首次设置。';
+  if (code === 'AUTH_RATE_LIMITED') {
+    const secs = typeof error === 'object' && error.retryAfterSeconds ? error.retryAfterSeconds : 60;
+    return `连续登录失败次数过多，请在 ${secs} 秒后重试。`;
+  }
+  if (message.includes('username between')) return '请输入 2 至 32 位用户名。';
+  if (message.includes('password between')) return '请输入 8 至 128 位密码。';
+  if (message.includes('both username and password')) return '请输入用户名和密码。';
+  if (message.includes('current password')) return '请输入当前密码。';
   if (message.includes('0 to 1,000,000')) return '数量必须在 0 到 1,000,000 之间。';
   if (message.includes('whole number') || message.includes('Whole')) return '按个计数的食材请输入整数。';
   if (message.includes('decimal')) return '克和毫升最多支持两位小数。';

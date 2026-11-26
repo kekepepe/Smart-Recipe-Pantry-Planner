@@ -22,8 +22,8 @@ const cli = (path, ...args) => execFileSync(process.execPath, ['scripts/db.js', 
 test('H02/H04: schema 003 to 004 preserves user rows and repeated migration preserves marks', t => {
   const f = fixture(); t.after(f.close);
   const before = marked(f.db);
-  // A schema-003 fixture: 004 is additive, so remove only its table/history in this isolated DB.
-  f.db.exec('DROP TABLE purchased_marks; DELETE FROM schema_migrations WHERE version=4');
+  // A schema-003 fixture: 004 and 005 are additive, so remove only their tables/history in this isolated DB.
+  f.db.exec('DROP TABLE auth_rate_limits; DROP TABLE auth_remember_tokens; DROP TABLE local_accounts; DROP TABLE purchased_marks; DELETE FROM schema_migrations WHERE version >= 4');
   const tables = ['pantry_items', 'shopping_selections', 'shopping_lists', 'shopping_list_items', 'workspaces'];
   const rows = () => tables.map(name => f.db.prepare(`SELECT * FROM ${name} ORDER BY rowid`).all());
   const oldRows = rows();

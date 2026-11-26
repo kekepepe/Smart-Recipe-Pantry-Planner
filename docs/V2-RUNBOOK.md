@@ -46,3 +46,12 @@ For a corrupt derived shopping cache, preserve a diagnostic copy with the servic
 PR #26 fixed the recipe-to-recipe unit-conflict defect at `ccab4ad`; Hao re-approved that head after 94 checks. This branch incorporates that fix and adds a failure-after-reconciliation rollback test. #26 has now merged as 2d693df. This branch incorporates main@95c084f (including C01/C02/C03 and E4 UI fixes) and targets main; its final head still requires designated review and current-head CI before author merge. Schema 004 remains unchanged.
 
 #27 recommendations and #28 nutrition are integrated from main alongside #26. #33 inspiration and remaining frontend/desktop changes are reviewed separately; this branch does not claim to include unmerged features. Their eventual combined routes/constructors and CI must be verified after integration. Nutrition currently loads JSON and has no production mappings: a database mapping table and loader require a confirmed scope decision, implementation and data review, not an unused placeholder table. H06 Windows installer acceptance is a separate work item; source tests do not certify a clean offline install.
+
+## Local offline sign-in and password recovery (Issue #55)
+
+Schema `005_local_auth.sql` adds single-account local offline sign-in (`local_accounts`, `auth_remember_tokens`, `auth_rate_limits`) while preserving all pre-upgrade `local` workspace data. See [`docs/LOCAL-AUTH-CONTRACT.md`](LOCAL-AUTH-CONTRACT.md) for the complete API, cookie, and Electron `safeStorage` specification.
+
+- **No online password reset:** The app operates fully offline and provides no passwordless reset button in the daily UI.
+- **Explicit local recovery options & data impact:**
+  1. **Restore an explicit pre-upgrade or CLI SQLite backup:** Stop the app/service, remove `remember-credential.bin` if present, and restore a pre-upgrade backup (`pantry-before-upgrade-*.sqlite`) or a verified CLI backup (`npm run db:restore <backup> <new-path>`). Data reverts to the exact backup snapshot (changes made after that backup are lost); restoring a pre-005 backup prompts you to create a new local account on next launch.
+  2. **Reset the local database:** Stop the app/service and move/delete `pantry.sqlite` (plus `-wal`/`-shm` and `remember-credential.bin`), then relaunch or run `npm run db:init`. All pantry, recipe selection, and purchased-mark data in the removed file are cleared unless backed up separately.

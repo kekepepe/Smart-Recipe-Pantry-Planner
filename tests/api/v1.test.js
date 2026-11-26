@@ -78,7 +78,11 @@ test('local write origin and JSON boundary reject cross-site posts and unknown r
 });
 
 test('A10: actual read-only SQLite rejection becomes 503, not false success or leaked SQL', async t => {
-  const f = fixture(); const readonly = openDatabase(f.path, { readonly: true }); const api = await listen(createApp(readonly));
+  const f = fixture();
+  const rwApi = await listen(createApp(f.db));
+  await rwApi.close();
+  const readonly = openDatabase(f.path, { readonly: true });
+  const api = await listen(createApp(readonly));
   t.after(async () => { await api.close(); readonly.close(); f.close(); });
   const r = await api.request('/pantry/egg', 'PUT', { quantity: 2, unit: 'piece', expectedRevision: 0 });
   assert.equal(r.status, 503); assert.equal(r.data.error.code, 'STORAGE_UNAVAILABLE');

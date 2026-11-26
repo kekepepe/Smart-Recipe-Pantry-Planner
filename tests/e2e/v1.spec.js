@@ -1,10 +1,10 @@
 import { test as base, expect } from '@playwright/test';
 import { createApp } from '../../server/app.js';
 import { Store } from '../../server/services/store.js';
-import { fixture, listen } from '../helpers.js';
+import { fixture, listen, signInPage } from '../helpers.js';
 const test = base.extend({
   database: async ({}, use) => { const f = fixture(); try { await use(f); } finally { f.close(); } },
-  service: async ({ database }, use) => { const s = await listen(createApp(database.db, { serveStatic: true })); try { await use(s); } finally { await s.close(); } },
+  service: async ({ database, page }, use) => { const s = await listen(createApp(database.db, { serveStatic: true })); try { await signInPage(page, s); await use(s); } finally { await s.close(); } },
 });
 test.beforeEach(async ({ page, service }) => { await page.goto(service.url); });
 const sample = page => page.getByRole('button', { name: 'Use sample pantry' }).click();
@@ -86,6 +86,7 @@ test('A13: server conflict loads new snapshot without overwriting the form draft
 });
 
 test('A17: initial service failure offers retry; keyboard completes onboarding', async ({ page }) => {
+  await expect(page.getByRole('button', { name: 'Use sample pantry' })).toBeVisible();
   await page.route('**/api/snapshot', route => route.fulfill({ status: 503, json: { error: { code: 'STORAGE_UNAVAILABLE', message: 'Storage unavailable; retry.' } } }), { times: 1 });
   await page.reload(); await expect(page.getByRole('heading', { name: 'Unable to load' })).toBeVisible();
   await page.getByRole('button', { name: 'Try again' }).click(); await expect(page.getByRole('button', { name: 'Use sample pantry' })).toBeVisible();
