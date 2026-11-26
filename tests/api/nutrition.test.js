@@ -10,7 +10,7 @@ const egg = { ingredientId: 'egg', entryName: 'Egg, whole, raw', state: 'raw', k
 const salt = { ingredientId: 'salt', entryName: 'Salt, table', state: 'raw', kcalPer100g: 0, basisUnit: 'g', sourceUrl: 'https://fdc.nal.usda.gov/fdc-app.html#/food-details/173464/nutrients', sourceDate: '2026-11-01', verifiedBy: 'ChangPeng', notes: 'Energy 0 per source; editorial fixed amount.' };
 
 test('nutrition API: without the M02 dataset every dish honestly reports unavailable, never a fabricated number', async t => {
-  const f = fixture(); const api = await listen(createApp(f.db));
+  const f = fixture(); const api = await listen(createApp(f.db, { nutritionMappings: [] }));
   t.after(async () => { await api.close(); f.close(); });
   const r = await api.request('/nutrition');
   assert.equal(r.status, 200);
@@ -23,6 +23,54 @@ test('nutrition API: without the M02 dataset every dish honestly reports unavail
   assert.match(steamed.unavailableReason, /egg, salt/);
   assert.equal(typeof r.data.catalogVersion, 'string');
   assert.equal(r.data.pantryRevision, 0); // read-only: pre-onboarding workspace untouched
+});
+
+test('nutrition API: default M02 production dataset loads >= 20 verified dishes and leaves unmapped dishes unavailable', async t => {
+  const f = fixture(); const api = await listen(createApp(f.db));
+  t.after(async () => { await api.close(); f.close(); });
+
+  const r = await api.request('/nutrition');
+  assert.equal(r.status, 200);
+  assert.equal(r.data.total, 100);
+  assert.equal(r.data.mappingsLoaded, 69);
+  assert.equal(r.data.estimatedCount, 21);
+  assert(r.data.estimatedCount >= 20);
+  assert.equal(r.data.pantryRevision, 0); // read-only
+
+  // Hand-calculated spot checks against USDA SR Legacy FDC entries in data/nutrition-mappings.json:
+  // scrambled-eggs: 2 large eggs x 50 g x 1.43 kcal/g = 143 kcal (1 serving).
+  const scrambled = r.data.nutrition.find(item => item.recipeId === 'scrambled-eggs');
+  assert.equal(scrambled.status, 'estimated');
+  assert.equal(scrambled.wholeDishKcal, 143);
+  assert.equal(scrambled.perServingKcal, 143);
+
+  // steamed-eggs: 2 large eggs (143) + 2 g table salt (sourced 0 kcal) = 143 kcal (1 serving).
+  const steamed = r.data.nutrition.find(item => item.recipeId === 'steamed-eggs');
+  assert.equal(steamed.status, 'estimated');
+  assert.equal(steamed.wholeDishKcal, 143);
+  assert(steamed.assumptions.some(a => a.ingredientId === 'salt'));
+
+  // tomato-eggs: 2 tomatoes (2x123x0.18=44.28) + 3 eggs (3x50x1.43=214.5) + 12 ml oil (12x0.92x8.84=97.5936) + 3 g salt (0) = 356.3736 / 2 = 178.1868.
+  const tomatoEggs = r.data.nutrition.find(item => item.recipeId === 'tomato-eggs');
+  assert.equal(tomatoEggs.status, 'estimated');
+  assert.equal(tomatoEggs.wholeDishKcal, 356.3736);
+  assert.equal(tomatoEggs.perServingKcal, 178.1868);
+  assert.deepEqual(tomatoEggs.display, { wholeDishKcal: 356, perServingKcal: 178 });
+
+  // Detail endpoint returns all 4 verified USDA provenance records on demand.
+  const detail = await api.request('/nutrition/tomato-eggs');
+  assert.equal(detail.status, 200);
+  assert.equal(detail.data.mappings.length, 4);
+  assert(detail.data.mappings.every(m => m.sourceUrl.startsWith('https://fdc.nal.usda.gov/food-details/') && m.sourceDate && m.verifiedBy));
+
+  // Withheld oil-bath / bone-in / compound dishes stay honestly unavailable with null energy (never fabricated 0 kcal).
+  for (const id of ['stir-fried-noodles', 'tortilla-espanola', 'buffalo-wings', 'fish-and-chips', 'bacalhau-a-bras']) {
+    const item = r.data.nutrition.find(entry => entry.recipeId === id);
+    assert.equal(item.status, 'unavailable');
+    assert.equal(item.wholeDishKcal, null);
+    assert.equal(item.perServingKcal, null);
+    assert(item.unmappedRequired.length > 0);
+  }
 });
 
 test('nutrition API: with a fixture dataset the mapped dishes estimate and the rest stay unavailable', async t => {
