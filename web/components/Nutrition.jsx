@@ -54,27 +54,52 @@ export function NutritionBadge({ nutrition }) {
   return <p className="nutrition-badge nutrition-unavailable">{t.nutritionUnavailableBrief}</p>;
 }
 
+const EMPTY_NUTRITION_DETAIL = { recipeId: null, catalogVersion: null, status: 'loading', data: null, error: null };
+
 export function NutritionPanel({ recipeId }) {
   const { snapshot } = useApp();
   const { lang, t } = useI18n();
-  const [state, setState] = useState({ status: 'loading', data: null, error: null });
+  const catalogVersion = snapshot?.catalogVersion ?? null;
+  const [loadedState, setState] = useState(EMPTY_NUTRITION_DETAIL);
   const [retryTick, setRetryTick] = useState(0);
 
+  // Hide estimates and sources from a different recipe or previous catalog immediately, before the effect runs.
+  const state = loadedState.recipeId === recipeId && loadedState.catalogVersion === catalogVersion
+    ? loadedState
+    : { ...EMPTY_NUTRITION_DETAIL, recipeId, catalogVersion };
+
   useEffect(() => {
+    if (!catalogVersion) return;
     let cancelled = false;
-    setState(prev => ({ status: 'loading', data: prev.data?.recipeId === recipeId ? prev.data : null, error: null }));
+    setState({ recipeId, catalogVersion, status: 'loading', data: null, error: null });
     client.getNutritionDetail(recipeId)
       .then(data => {
-        if (!cancelled) setState({ status: 'ready', data, error: null });
+        if (cancelled) return;
+        if (data.recipeId !== recipeId || data.catalogVersion !== catalogVersion) {
+          setState({
+            recipeId,
+            catalogVersion,
+            status: 'error',
+            data: null,
+            error: { key: 'nutritionDetailStaleError' },
+          });
+          return;
+        }
+        setState({ recipeId, catalogVersion, status: 'ready', data, error: null });
       })
       .catch(error => {
-        if (!cancelled) setState({ status: 'error', data: null, error });
+        if (!cancelled) setState({ recipeId, catalogVersion, status: 'error', data: null, error });
       });
     return () => { cancelled = true; };
-  }, [recipeId, retryTick]);
+  }, [recipeId, catalogVersion, retryTick]);
 
   const ingredientMap = new Map((snapshot?.ingredients || []).map(item => [item.id, item]));
-  const detail = state.data;
+  const detail = state.status === 'ready' && state.data?.recipeId === recipeId && state.data?.catalogVersion === catalogVersion
+    ? state.data
+    : null;
+  const errorMessage = state.error
+    ? (state.error.key ? t[state.error.key] : translateError(state.error, lang))
+    : '';
 
   return (
     <section className="nutrition-panel" aria-label={t.nutritionSectionAria}>
@@ -91,7 +116,7 @@ export function NutritionPanel({ recipeId }) {
         <p className="helper" role="status">{t.nutritionLoading}</p>
       ) : state.status === 'error' ? (
         <div className="nutrition-error" role="alert">
-          <p className="error">{translateError(state.error, lang)}</p>
+          <p className="error">{errorMessage}</p>
           <button type="button" className="secondary nutrition-retry" onClick={() => setRetryTick(n => n + 1)}>
             {t.tryAgain}
           </button>

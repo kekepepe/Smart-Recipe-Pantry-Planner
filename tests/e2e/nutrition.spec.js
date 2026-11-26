@@ -282,3 +282,90 @@ test('P04 nutrition: catalog changes hide stale estimates and retry only accepts
     releasePending.resolve();
   }
 });
+
+test('P04 nutrition: detail panel hides stale values on catalog change and rejects late or mismatched responses', async ({ page, mappedService }) => {
+  const { data: snapshot } = await mappedService.request('/snapshot');
+  const { data: detail } = await mappedService.request('/nutrition/steamed-eggs');
+  const pendingRequest = Promise.withResolvers();
+  const releasePending = Promise.withResolvers();
+  const middleVersion = 'catalog-detail-2';
+  const finalVersion = 'catalog-detail-3';
+  let catalogVersion = snapshot.catalogVersion;
+  let failFinalRequest = true;
+  let replyVersion = finalVersion;
+
+  const updatedDetail = {
+    ...detail,
+    wholeDishKcal: 220,
+    perServingKcal: 220,
+    display: { wholeDishKcal: 220, perServingKcal: 220 },
+  };
+
+  await page.route('**/api/snapshot', route => route.fulfill({ json: { ...snapshot, catalogVersion } }));
+  await page.route('**/api/nutrition/steamed-eggs', async route => {
+    const requestedVersion = catalogVersion;
+    if (requestedVersion === middleVersion) {
+      pendingRequest.resolve();
+      await releasePending.promise;
+      return route.fulfill({ json: { ...detail, catalogVersion: middleVersion } });
+    }
+    if (requestedVersion === finalVersion && failFinalRequest) {
+      failFinalRequest = false;
+      return route.fulfill({
+        status: 503,
+        json: { error: { code: 'STORAGE_UNAVAILABLE', message: 'Nutrition detail temporarily unavailable.' } },
+      });
+    }
+    const payload = requestedVersion === finalVersion && replyVersion === finalVersion ? updatedDetail : detail;
+    return route.fulfill({ json: {
+      ...payload,
+      catalogVersion: requestedVersion === finalVersion ? replyVersion : requestedVersion,
+    } });
+  });
+
+  try {
+    await page.goto(mappedService.url + '/#/recipes/steamed-eggs');
+    const panel = page.getByRole('region', { name: 'Nutrition and energy estimate', exact: true });
+    await expect(panel).toContainText('157 kcal');
+    await expect(panel).toContainText('Sourced estimate');
+
+    // Catalog changes to middleVersion while detail stays open: stale values hide immediately while loading.
+    catalogVersion = middleVersion;
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await pendingRequest.promise;
+    await expect(panel).toContainText('Loading nutrition estimate…');
+    await expect(panel).not.toContainText('157 kcal');
+
+    // Catalog advances to finalVersion whose first request fails: shows error/retry and keeps stale values hidden.
+    catalogVersion = finalVersion;
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    const retry = panel.getByRole('button', { name: 'Try again', exact: true });
+    await expect(retry).toBeVisible();
+    await expect(panel).not.toContainText('157 kcal');
+
+    // Late response from superseded middleVersion is ignored.
+    const lateResponse = page.waitForResponse(response => response.url().endsWith('/api/nutrition/steamed-eggs') && response.ok());
+    releasePending.resolve();
+    await lateResponse;
+    await expect(retry).toBeVisible();
+    await expect(panel).not.toContainText('157 kcal');
+
+    // Mismatched catalogVersion response is rejected instead of rendering stale data.
+    replyVersion = middleVersion;
+    const mismatchedResponse = page.waitForResponse(response => response.url().endsWith('/api/nutrition/steamed-eggs') && response.ok());
+    await retry.click();
+    await mismatchedResponse;
+    await expect(panel).toContainText('Nutrition details are out of date for the current recipe catalog.');
+    await expect(retry).toBeVisible();
+    await expect(panel).not.toContainText('157 kcal');
+
+    // Retry receiving matching finalVersion renders updated detail values.
+    replyVersion = finalVersion;
+    await retry.click();
+    await expect(panel).toContainText('220 kcal');
+    await expect(panel).toContainText('Sourced estimate');
+    await expect(retry).toHaveCount(0);
+  } finally {
+    releasePending.resolve();
+  }
+});
