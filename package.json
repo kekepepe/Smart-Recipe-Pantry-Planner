@@ -1,6 +1,6 @@
 {
   "name": "smart-recipe-pantry-planner",
-  "version": "1.0.0-dev",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
