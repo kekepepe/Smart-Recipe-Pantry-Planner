@@ -4,10 +4,7 @@ import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createApp } from '../server/app.js';
-import { openDatabase } from '../server/db/connection.js';
-import { migrate, migration } from '../server/db/migrate.js';
-import { catalogVersion, seed } from '../server/db/seed.js';
-import { Store } from '../server/services/store.js';
+import { initializeDatabase } from '../server/db/initialize.js';
 
 const host = '127.0.0.1';
 const accessToken = randomUUID();
@@ -19,27 +16,7 @@ let window;
 
 async function start() {
   const dbPath = join(app.getPath('userData'), 'pantry.sqlite');
-  database = openDatabase(dbPath, { create: true });
-
-  const hasMigrationHistory = database.prepare(
-    "SELECT 1 FROM sqlite_schema WHERE type = 'table' AND name = 'schema_migrations'",
-  ).get();
-  if (hasMigrationHistory) {
-    const schemaVersion = database.prepare('SELECT max(version) AS version FROM schema_migrations').get().version;
-    const installedCatalog = schemaVersion === migration.version
-      ? database.prepare('SELECT version FROM catalog_metadata WHERE id=1').get()?.version
-      : undefined;
-    if (schemaVersion < migration.version || installedCatalog !== catalogVersion) {
-      const stamp = new Date().toISOString().replaceAll(':', '-');
-      await database.backup(join(app.getPath('userData'), `pantry-before-upgrade-${stamp}.sqlite`));
-    }
-  }
-
-  database.transaction(() => {
-    migrate(database);
-    seed(database, { upgrade: true });
-    new Store(database).getSnapshot();
-  }).immediate();
+  database = await initializeDatabase(dbPath);
 
   const expressApp = createApp(database, { serveStatic: true });
   let authority;

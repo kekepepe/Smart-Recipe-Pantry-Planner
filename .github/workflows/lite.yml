@@ -1,0 +1,40 @@
+name: Lite ZIP candidates
+on:
+  push:
+    branches: ['feat/v1.0.1-lite']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            platform: mac-arm64
+          - runner: windows-2025
+            platform: win-x64
+    name: Build and test Lite (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+      - run: npm ci
+      - run: npm run package:lite
+      - run: node lite/smoke.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+      - name: Smoke test minimum supported Node.js
+        run: node lite/smoke.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pantry-lite-${{ matrix.platform }}-${{ github.sha }}
+          path: lite-dist/*.zip
+          if-no-files-found: error
