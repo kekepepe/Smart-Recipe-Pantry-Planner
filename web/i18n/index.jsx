@@ -688,7 +688,7 @@ const MESSAGES = {
 
 export function readStoredLang() {
   try {
-    const saved = window.localStorage.getItem(LANG_STORAGE_KEY);
+    const saved = window.pantryDesktopLanguage?.initial ?? window.localStorage.getItem(LANG_STORAGE_KEY);
     return SUPPORTED_LANGS.includes(saved) ? saved : 'en';
   } catch {
     return 'en';
@@ -798,9 +798,11 @@ export function I18nProvider({ children }) {
   }, [lang]);
 
   const setLang = next => {
-    if (SUPPORTED_LANGS.includes(next)) setLangState(next);
+    if (!SUPPORTED_LANGS.includes(next)) return;
+    window.pantryDesktopLanguage?.save(next);
+    setLangState(next);
   };
-  const toggleLang = () => setLangState(prev => (prev === 'en' ? 'zh-CN' : 'en'));
+  const toggleLang = () => setLang(lang === 'en' ? 'zh-CN' : 'en');
   const t = MESSAGES[lang];
 
   return <I18nContext.Provider value={{ lang, setLang, toggleLang, t }}>{children}</I18nContext.Provider>;
