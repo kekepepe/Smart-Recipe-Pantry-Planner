@@ -32,8 +32,8 @@ test('nutrition API: default M02 production dataset loads >= 20 verified dishes 
   const r = await api.request('/nutrition');
   assert.equal(r.status, 200);
   assert.equal(r.data.total, 100);
-  assert.equal(r.data.mappingsLoaded, 75);
-  assert.equal(r.data.estimatedCount, 23);
+  assert.equal(r.data.mappingsLoaded, 69);
+  assert.equal(r.data.estimatedCount, 21);
   assert(r.data.estimatedCount >= 20);
   assert.equal(r.data.pantryRevision, 0); // read-only
 
@@ -63,8 +63,8 @@ test('nutrition API: default M02 production dataset loads >= 20 verified dishes 
   assert.equal(detail.data.mappings.length, 4);
   assert(detail.data.mappings.every(m => m.sourceUrl.startsWith('https://fdc.nal.usda.gov/food-details/') && m.sourceDate && m.verifiedBy));
 
-  // Unmapped dishes stay honestly unavailable with null energy (never fabricated 0 kcal).
-  for (const id of ['stir-fried-noodles', 'fish-and-chips', 'bacalhau-a-bras']) {
+  // Withheld oil-bath / bone-in / compound dishes stay honestly unavailable with null energy (never fabricated 0 kcal).
+  for (const id of ['stir-fried-noodles', 'tortilla-espanola', 'buffalo-wings', 'fish-and-chips', 'bacalhau-a-bras']) {
     const item = r.data.nutrition.find(entry => entry.recipeId === id);
     assert.equal(item.status, 'unavailable');
     assert.equal(item.wholeDishKcal, null);

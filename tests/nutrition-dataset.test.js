@@ -10,7 +10,7 @@ const dataset = JSON.parse(readFileSync(join(root, 'data', 'nutrition-mappings.j
 
 test('M02 dataset: passes strict C03 schema validation with valid catalog units and USDA provenance', () => {
   validateNutritionMappings(dataset);
-  assert.equal(dataset.length, 75);
+  assert.equal(dataset.length, 69);
 
   const ingredientMap = new Map(ingredients.map(i => [i.id, i]));
   for (const record of dataset) {
@@ -33,8 +33,8 @@ test('M02 dataset: covers >= 20 complete catalog recipes with zero fabricated 0 
   const unavailable = summaries.filter(s => s.status === 'unavailable');
 
   assert.equal(summaries.length, 100);
-  assert.equal(estimated.length, 23);
-  assert.equal(unavailable.length, 77);
+  assert.equal(estimated.length, 21);
+  assert.equal(unavailable.length, 79);
   assert(estimated.length >= 20);
 
   for (const s of estimated) {
