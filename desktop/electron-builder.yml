@@ -4,6 +4,7 @@ directories:
 artifactName: Pantry-and-Plate-${version}-${os}-${arch}.${ext}
 files:
   - desktop/main.js
+  - desktop/remember-store.js
   - dist/**/*
   - server/**/*
   - src/**/*

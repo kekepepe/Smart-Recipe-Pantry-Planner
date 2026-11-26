@@ -1,7 +1,7 @@
 import { test as base, expect } from '@playwright/test';
 import { createApp } from '../../server/app.js';
 import { Store } from '../../server/services/store.js';
-import { fixture, listen } from '../helpers.js';
+import { fixture, listen, signInPage } from '../helpers.js';
 
 // Verified-shape fixture mappings used only to exercise the P04 UI end to end against C03 rules.
 const SAMPLE_MAPPINGS = [
@@ -31,21 +31,21 @@ const SAMPLE_MAPPINGS = [
 
 const test = base.extend({
   database: async ({}, use) => { const f = fixture(); try { await use(f); } finally { f.close(); } },
-  emptyService: async ({ database }, use) => {
+  emptyService: async ({ database, page }, use) => {
     const s = await listen(createApp(database.db, {
       serveStatic: true,
       nutritionMappings: [],
       now: () => new Date('2026-11-25T08:00:00.000Z'),
     }));
-    try { await use(s); } finally { await s.close(); }
+    try { await signInPage(page, s); await use(s); } finally { await s.close(); }
   },
-  mappedService: async ({ database }, use) => {
+  mappedService: async ({ database, page }, use) => {
     const s = await listen(createApp(database.db, {
       serveStatic: true,
       nutritionMappings: SAMPLE_MAPPINGS,
       now: () => new Date('2026-11-25T08:00:00.000Z'),
     }));
-    try { await use(s); } finally { await s.close(); }
+    try { await signInPage(page, s); await use(s); } finally { await s.close(); }
   },
 });
 

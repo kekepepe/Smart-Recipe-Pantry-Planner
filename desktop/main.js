@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, session, shell } from 'electron';
+import { app, BrowserWindow, dialog, safeStorage, session, shell } from 'electron';
 import { randomUUID } from 'node:crypto';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
@@ -7,6 +7,7 @@ import { openDatabase } from '../server/db/connection.js';
 import { migrate, migration } from '../server/db/migrate.js';
 import { catalogVersion, seed } from '../server/db/seed.js';
 import { Store } from '../server/services/store.js';
+import { createDesktopRememberStore } from './remember-store.js';
 
 const host = '127.0.0.1';
 const accessToken = randomUUID();
@@ -16,7 +17,8 @@ let origin;
 let window;
 
 async function start() {
-  const dbPath = join(app.getPath('userData'), 'pantry.sqlite');
+  const userDataDir = app.getPath('userData');
+  const dbPath = join(userDataDir, 'pantry.sqlite');
   database = openDatabase(dbPath, { create: true });
 
   const hasMigrationHistory = database.prepare(
@@ -29,7 +31,7 @@ async function start() {
       : undefined;
     if (schemaVersion < migration.version || installedCatalog !== catalogVersion) {
       const stamp = new Date().toISOString().replaceAll(':', '-');
-      await database.backup(join(app.getPath('userData'), `pantry-before-upgrade-${stamp}.sqlite`));
+      await database.backup(join(userDataDir, `pantry-before-upgrade-${stamp}.sqlite`));
     }
   }
 
@@ -39,7 +41,13 @@ async function start() {
     new Store(database).getSnapshot();
   }).immediate();
 
-  const expressApp = createApp(database, { serveStatic: true });
+  const desktopRememberStore = createDesktopRememberStore(userDataDir, safeStorage);
+  const expressApp = createApp(database, {
+    serveStatic: true,
+    desktopMode: true,
+    desktopRememberStore,
+  });
+
   let authority;
   server = createServer((request, response) => {
     if (request.headers.host !== authority || request.headers['x-pantry-desktop'] !== accessToken) {

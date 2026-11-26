@@ -1,16 +1,16 @@
 import { test as base, expect } from '@playwright/test';
 import { createApp } from '../../server/app.js';
 import { Store } from '../../server/services/store.js';
-import { fixture, listen } from '../helpers.js';
+import { fixture, listen, signInPage } from '../helpers.js';
 
 const test = base.extend({
   database: async ({}, use) => { const f = fixture(); try { await use(f); } finally { f.close(); } },
-  service: async ({ database }, use) => {
+  service: async ({ database, page }, use) => {
     const s = await listen(createApp(database.db, {
       serveStatic: true,
       now: () => new Date('2026-11-25T08:00:00.000Z'), // 2026-11-25 Asia/Shanghai
     }));
-    try { await use(s); } finally { await s.close(); }
+    try { await signInPage(page, s); await use(s); } finally { await s.close(); }
   },
 });
 
@@ -107,6 +107,7 @@ test('daily inspiration (B12): browser timezone override does not alter server A
   const context = await browser.newContext({ timezoneId: 'America/New_York' });
   const page = await context.newPage();
   try {
+    await signInPage(page, service);
     await page.goto(service.url + '/?view=inspiration#/recipes');
     await expect(page.getByText('2026-11-25 (Asia/Shanghai)', { exact: false })).toBeVisible();
     await expect(page.getByRole('article')).toHaveCount(3);
