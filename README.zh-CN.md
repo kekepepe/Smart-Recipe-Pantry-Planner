@@ -42,7 +42,7 @@
 | **100 道带图菜谱与多维检索** | 覆盖 **16 个国家**、**15 种地区菜系**、**6 种口味**、**3 种餐次**、原分类、可做状态（`全部状态` / `现在可做` / `需要补料` / `单位待核对`）及中英文关键词检索；筛选状态保存在 URL 中，刷新或详情返回不丢失。 |
 | **用现有食材（主食材推荐）** | 仅依据**主食材匹配度**排序（`主食材齐备`、`部分主食材匹配`、`主食材单位待核对`），逐项展示库存对比并单独标注所缺调料，避免因为少一味调料而错过好菜。 |
 | **每日灵感** | 按 `Asia/Shanghai` 自然日提供 **3 道确定性每日推荐**，选菜完全不受当前库存限制，同时共享当前激活的国家/地区/口味/餐次筛选条件。 |
-| **经核验的 USDA 热量估算** | 展示每份与整道菜的估算千卡、基础份数、烹调状态假设，以及可展开追溯的 **USDA FoodData Central (SR Legacy)** 原始记录（**69 条核验映射**覆盖 **21 道完整菜谱**）；其余未覆盖菜谱诚实标示为 `暂无数据`，绝不显示伪造的 `0 千卡`。 |
+| **经核验的 USDA 热量估算** | 展示每份与整道菜的估算千卡、基础份数、烹调状态假设，以及可展开追溯的 **USDA FoodData Central (SR Legacy)** 原始记录（**306 条核验映射**覆盖 **全部 100 道菜谱**）；任何缺少核验映射或有效份数的菜谱均诚实标示为 `暂无数据`，绝不显示伪造的 `0 千卡`。 |
 | **多菜合并购物清单与已购状态** | 支持同时保存多道菜谱，先汇总共同食材需求再统一扣除一次库存；支持勾选/撤销 **已购** 状态且跨刷新/重启保留，**不会**擅自修改库存；当菜谱用量变更或出现单位冲突时自动提示重新核对。 |
 | **完整中英双语界面** | 右上角一键切换英文 / 简体中文并本地持久化，结合首屏前 `<html lang>` 同步脚本，实现 100 道菜谱、286 种原料、分类标签与营养说明的全量本地化。 |
 | **本地离线登录与自动登录** | 支持按本机 SQLite 数据库设置本地账号与哈希密码，提供「记住登录」（30 天可撤销凭据自动登录）与修改密码；从旧版升级后自动保留全部库存与购物清单数据。 |
@@ -192,7 +192,7 @@ flowchart LR
 
     subgraph Storage["本机离线持久化"]
         DB[("SQLite（better-sqlite3）\npantry.sqlite + 版本化迁移")]
-        CAT["内置静态目录与资源\n100 道菜谱 · 286 种原料 · 69 条 USDA 映射"]
+        CAT["内置静态目录与资源\n100 道菜谱 · 286 种原料 · 306 条 USDA 映射"]
     end
 
     subgraph Desktop["桌面容器（Electron）"]
@@ -253,7 +253,7 @@ GitHub Actions 持续集成工作流：
 本项目坚持**准确透明、绝不伪造数据**的工程原则：
 
 - **严格单位安全**：库存匹配与购物汇总绝不擅自猜测 `克` / `毫升` / `个` 之间的换算；遇到不可比较单位时明确标注 `单位待核对`。
-- **热量数据失败关闭（Fail-Closed）**：仅展示经 **USDA FoodData Central (SR Legacy)** 核验的完整估算（详见 [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)）。当前 **21 / 100 道菜谱**具备完整估算（**69 条原料映射**），其余 **79 道**明确标示 `暂无数据` 并列出缺失映射的必需原料，绝不输出残缺总和或伪造 `0 千卡`。
+- **热量数据失败关闭（Fail-Closed）**：仅展示经 **USDA FoodData Central (SR Legacy)** 核验的完整估算（详见 [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)）。当前 **100 / 100 道菜谱**均已完成核验覆盖（**306 条原料映射**，并对油炸油浴吸油率与带骨可食部在 `assumptions` 中透明说明）；若缺少映射或有效份数则明确标示 `暂无数据`，绝不输出残缺总和或伪造 `0 千卡`。
 - **已购标记不误改库存**：在购物清单中勾选「已购」仅记录本次采购进度，不会擅自扣减或增加你的厨房库存。
 - **完全离线运行**：全部菜谱、原料字典、营养表与 100 张菜谱插图均随项目打包在本地。
 
@@ -289,5 +289,5 @@ GitHub Actions 持续集成工作流：
 - **第三方菜谱与营养数据（独立许可与署名说明）**：
   - 18 道中式家常菜谱改编自 [Anduin2017/HowToCook](https://github.com/Anduin2017/HowToCook)（**Unlicense**，原文快照保存在 `data/sources/howtocook/`）。
   - 80 道世界菜谱改编自 [UniTools Recipes](https://github.com/farcrak/unitools-recipes)（**CC BY-SA 4.0**，署名：*UniTools — theunitools.com*；改编数据 `data/world-recipes.json` 继续适用 **CC BY-SA 4.0**，不误标为 MIT）。
-  - 69 条营养映射数据来源于 **USDA FoodData Central — SR Legacy**（Public Domain / CC0 1.0，完整审计表见 [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)）。
+  - 306 条营养映射数据来源于 **USDA FoodData Central — SR Legacy**（Public Domain / CC0 1.0，完整审计表见 [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)）。
   - 100 张内置菜谱插图为本项目统一生成，完整清单与哈希见 `data/world-image-manifest.json`。

@@ -1,5 +1,84 @@
 [
   {
+    "ingredientId": "achiote",
+    "entryName": "Spices, paprika",
+    "state": "prepared",
+    "kcalPer100g": 282,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171329/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171329 (pub 2019-04-01); Achiote/annatto paste approximated via paprika spice base; small seasoning amount."
+  },
+  {
+    "ingredientId": "ajwain",
+    "entryName": "Spices, caraway seed",
+    "state": "prepared",
+    "kcalPer100g": 333,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170918/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170918 (pub 2019-04-01); Ajwain (carom) seeds approximated via closely related caraway seeds."
+  },
+  {
+    "ingredientId": "almonds",
+    "entryName": "Nuts, almonds, oil roasted, lightly salted",
+    "state": "prepared",
+    "kcalPer100g": 607,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168602/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168602 (pub 2019-04-01); Whole almonds."
+  },
+  {
+    "ingredientId": "amchur",
+    "entryName": "Mangos, raw",
+    "state": "prepared",
+    "kcalPer100g": 60,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169910/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169910 (pub 2019-04-01); Dried mango powder (amchur); small seasoning amount (2 g)."
+  },
+  {
+    "ingredientId": "ancho",
+    "entryName": "Peppers, ancho, dried",
+    "state": "prepared",
+    "kcalPer100g": 281,
+    "basisUnit": "piece",
+    "gramsPerPiece": 17,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169396/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169396 (pub 2019-04-01); 1 dried ancho chili = 17 g per USDA foodPortions."
+  },
+  {
+    "ingredientId": "asafoetida",
+    "entryName": "Spices, garlic powder",
+    "state": "prepared",
+    "kcalPer100g": 331,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171325/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171325 (pub 2019-04-01); Asafoetida pinch (0.2 g); approximated via dry aromatic spice powder."
+  },
+  {
+    "ingredientId": "aubergine",
+    "entryName": "Eggplant, raw",
+    "state": "raw",
+    "kcalPer100g": 25,
+    "basisUnit": "piece",
+    "gramsPerPiece": 458,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169228/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169228 (pub 2019-04-01); 1 medium unpeeled eggplant = 458 g edible per USDA foodPortions."
+  },
+  {
     "ingredientId": "avocado",
     "entryName": "Avocados, raw, all commercial varieties",
     "state": "raw",
@@ -21,6 +100,30 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 168277 (pub 2019-04-01); cured unprepared pork bacon weight basis (rendered fat losses during pan-frying not deducted)."
+  },
+  {
+    "ingredientId": "baguette",
+    "entryName": "Bread, french or vienna (includes sourdough)",
+    "state": "prepared",
+    "kcalPer100g": 272,
+    "basisUnit": "piece",
+    "gramsPerPiece": 200,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172675/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172675 (pub 2019-04-01); 1 small/medium baguette loaf = 200 g."
+  },
+  {
+    "ingredientId": "baguette-slice",
+    "entryName": "Bread, french or vienna (includes sourdough)",
+    "state": "prepared",
+    "kcalPer100g": 272,
+    "basisUnit": "piece",
+    "gramsPerPiece": 30,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172675/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172675 (pub 2019-04-01); 1 baguette slice = 30 g."
   },
   {
     "ingredientId": "bakingpowder",
@@ -45,6 +148,141 @@
     "notes": "USDA SR Legacy FDC 172232 (pub 2019-04-01); fresh basil leaves."
   },
   {
+    "ingredientId": "bay-leaf",
+    "entryName": "Spices, bay leaf",
+    "state": "prepared",
+    "kcalPer100g": 313,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170917/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170917 (pub 2019-04-01); Dried bay leaves (infusion spice, small quantity)."
+  },
+  {
+    "ingredientId": "bay-leaf",
+    "entryName": "Spices, bay leaf",
+    "state": "prepared",
+    "kcalPer100g": 313,
+    "basisUnit": "piece",
+    "gramsPerPiece": 0.6,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170917/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170917 (pub 2019-04-01); 1 dried bay leaf = 0.6 g (crumbled tbsp = 1.8 g per USDA)."
+  },
+  {
+    "ingredientId": "beansprouts",
+    "entryName": "Mung beans, mature seeds, sprouted, raw",
+    "state": "raw",
+    "kcalPer100g": 30,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169957/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169957 (pub 2019-04-01); Raw mung bean sprouts."
+  },
+  {
+    "ingredientId": "beef",
+    "entryName": "Beef, chuck eye roast, boneless, America's Beef Roast, separable lean and fat, trimmed to 0\" fat, choice, raw",
+    "state": "raw",
+    "kcalPer100g": 185,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168661/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168661 (pub 2019-04-01); Sliced beef chuck, raw, lean and fat."
+  },
+  {
+    "ingredientId": "beef-brisket",
+    "entryName": "Beef, brisket, whole, separable lean and fat, trimmed to 1/8\" fat, all grades, raw",
+    "state": "raw",
+    "kcalPer100g": 253,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168664/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168664 (pub 2019-04-01); Raw beef brisket, lean and fat."
+  },
+  {
+    "ingredientId": "beef-topside",
+    "entryName": "Beef, round, top round, steak, separable lean only, trimmed to 1/8\" fat, choice, raw",
+    "state": "raw",
+    "kcalPer100g": 140,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171820/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171820 (pub 2019-04-01); Raw beef topside / top round, separable lean."
+  },
+  {
+    "ingredientId": "beefdripping",
+    "entryName": "Fat, beef tallow",
+    "state": "prepared",
+    "kcalPer100g": 902,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171400/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171400 (pub 2019-04-01); Rendered beef dripping / tallow."
+  },
+  {
+    "ingredientId": "beefjoint",
+    "entryName": "Beef, rib, whole (ribs 6-12), separable lean and fat, trimmed to 1/8\" fat, prime, raw",
+    "state": "raw",
+    "kcalPer100g": 355,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169503/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169503 (pub 2019-04-01); Raw roasting beef joint (rib roast, lean and fat)."
+  },
+  {
+    "ingredientId": "beer",
+    "entryName": "Alcoholic beverage, beer, regular, all",
+    "state": "prepared",
+    "kcalPer100g": 43,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.01,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168746/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168746 (pub 2019-04-01); Regular lager beer; density 1.01 g/ml (12 fl oz = 356 g per USDA)."
+  },
+  {
+    "ingredientId": "bell-pepper",
+    "entryName": "Peppers, sweet, red, raw",
+    "state": "raw",
+    "kcalPer100g": 26,
+    "basisUnit": "piece",
+    "gramsPerPiece": 119,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170108/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170108 (pub 2019-04-01); 1 medium sweet bell pepper = 119 g edible per USDA foodPortions."
+  },
+  {
+    "ingredientId": "beniShoga",
+    "entryName": "Ginger root, raw",
+    "state": "prepared",
+    "kcalPer100g": 80,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169231/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169231 (pub 2019-04-01); Pickled red ginger (beni shoga); approximated via raw ginger root (10 g garnish)."
+  },
+  {
+    "ingredientId": "biber",
+    "entryName": "Tomato products, canned, paste, without salt added (Includes foods for USDA's Food Distribution Program)",
+    "state": "prepared",
+    "kcalPer100g": 82,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170459/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170459 (pub 2019-04-01); Turkish red pepper paste (biber salcasi); approximated via concentrated tomato/pepper paste."
+  },
+  {
     "ingredientId": "black-pepper",
     "entryName": "Spices, pepper, black",
     "state": "prepared",
@@ -54,6 +292,53 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 170931 (pub 2019-04-01); dried ground black pepper."
+  },
+  {
+    "ingredientId": "bluecheese",
+    "entryName": "Cheese, blue",
+    "state": "prepared",
+    "kcalPer100g": 353,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172175/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172175 (pub 2019-04-01); Blue cheese / blue cheese dip base (10 g)."
+  },
+  {
+    "ingredientId": "bone-in-chicken",
+    "entryName": "Chicken, broilers or fryers, meat and skin, raw",
+    "state": "raw",
+    "kcalPer100g": 215,
+    "basisUnit": "g",
+    "edibleYield": 0.68,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171447/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171447 (pub 2019-04-01); Bone-in chicken cuts; 68% edible meat-and-skin yield applied (32% bone refuse per USDA)."
+  },
+  {
+    "ingredientId": "bone-in-lamb",
+    "entryName": "Lamb, leg, sirloin half, separable lean and fat, trimmed to 1/8\" fat, choice, raw",
+    "state": "raw",
+    "kcalPer100g": 261,
+    "basisUnit": "g",
+    "edibleYield": 0.72,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172549/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172549 (pub 2019-04-01); Bone-in lamb cuts; 72% edible yield applied (28% bone refuse per USDA)."
+  },
+  {
+    "ingredientId": "bones",
+    "entryName": "Soup, SWANSON, beef broth, lower sodium",
+    "state": "cooked",
+    "kcalPer100g": 6,
+    "basisUnit": "g",
+    "edibleYield": 0.15,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171179/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171179 (pub 2019-04-01); Beef marrow bones simmered for pho broth and discarded; 15% marrow/broth energy extraction yield."
   },
   {
     "ingredientId": "bread",
@@ -79,6 +364,17 @@
     "notes": "USDA SR Legacy FDC 174924 (pub 2019-04-01); 1 commercially prepared white bread slice = 29 g."
   },
   {
+    "ingredientId": "breadcrumbs",
+    "entryName": "Bread, crumbs, dry, grated, plain",
+    "state": "prepared",
+    "kcalPer100g": 395,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174928/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174928 (pub 2019-04-01); Dry plain breadcrumbs."
+  },
+  {
     "ingredientId": "broccoli",
     "entryName": "Broccoli, raw",
     "state": "raw",
@@ -101,6 +397,17 @@
     "notes": "USDA SR Legacy FDC 168833 (pub 2019-04-01); brown sugar matching catalog entry \"Dark muscovado sugar\"."
   },
   {
+    "ingredientId": "bucatini",
+    "entryName": "Pasta, dry, unenriched",
+    "state": "prepared",
+    "kcalPer100g": 371,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168927/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168927 (pub 2019-04-01); Dry durum wheat pasta (bucatini)."
+  },
+  {
     "ingredientId": "butter",
     "entryName": "Butter, salted",
     "state": "prepared",
@@ -110,6 +417,28 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 173410 (pub 2019-04-01); salted butter (717 kcal/100g, identical to unsalted FDC 173430)."
+  },
+  {
+    "ingredientId": "butterbeans",
+    "entryName": "Lima beans, large, mature seeds, cooked, boiled, without salt",
+    "state": "cooked",
+    "kcalPer100g": 115,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174253/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174253 (pub 2019-04-01); Cooked large white/butter beans (garrofo)."
+  },
+  {
+    "ingredientId": "cabbage",
+    "entryName": "Cabbage, raw",
+    "state": "raw",
+    "kcalPer100g": 25,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169975/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169975 (pub 2019-04-01); Raw green cabbage."
   },
   {
     "ingredientId": "canned-tomato",
@@ -123,6 +452,244 @@
     "notes": "USDA SR Legacy FDC 170051 (pub 2019-04-01); canned red ripe tomatoes packed in tomato juice."
   },
   {
+    "ingredientId": "caraway",
+    "entryName": "Spices, caraway seed",
+    "state": "prepared",
+    "kcalPer100g": 333,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170918/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170918 (pub 2019-04-01); Caraway seeds."
+  },
+  {
+    "ingredientId": "cardamom",
+    "entryName": "Spices, cardamom",
+    "state": "prepared",
+    "kcalPer100g": 311,
+    "basisUnit": "piece",
+    "gramsPerPiece": 0.5,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170919/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170919 (pub 2019-04-01); 1 whole green cardamom pod = 0.5 g (ground tsp = 2 g per USDA)."
+  },
+  {
+    "ingredientId": "carrot",
+    "entryName": "Carrots, raw",
+    "state": "raw",
+    "kcalPer100g": 41,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170393/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170393 (pub 2019-04-01); Raw carrots."
+  },
+  {
+    "ingredientId": "carrot",
+    "entryName": "Carrots, raw",
+    "state": "raw",
+    "kcalPer100g": 41,
+    "basisUnit": "piece",
+    "gramsPerPiece": 61,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170393/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170393 (pub 2019-04-01); 1 medium carrot = 61 g edible per USDA foodPortions."
+  },
+  {
+    "ingredientId": "cashew",
+    "entryName": "Nuts, cashew nuts, raw",
+    "state": "raw",
+    "kcalPer100g": 553,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170162/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170162 (pub 2019-04-01); Raw cashew nuts."
+  },
+  {
+    "ingredientId": "celeriac",
+    "entryName": "Celeriac, raw",
+    "state": "raw",
+    "kcalPer100g": 42,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170400/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170400 (pub 2019-04-01); Raw celeriac root."
+  },
+  {
+    "ingredientId": "celery",
+    "entryName": "Celery, raw",
+    "state": "raw",
+    "kcalPer100g": 14,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169988/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169988 (pub 2019-04-01); Raw celery."
+  },
+  {
+    "ingredientId": "celery",
+    "entryName": "Celery, raw",
+    "state": "raw",
+    "kcalPer100g": 14,
+    "basisUnit": "piece",
+    "gramsPerPiece": 40,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169988/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169988 (pub 2019-04-01); 1 medium celery stalk = 40 g edible per USDA foodPortions."
+  },
+  {
+    "ingredientId": "chestnuts",
+    "entryName": "Nuts, chestnuts, chinese, raw",
+    "state": "raw",
+    "kcalPer100g": 224,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170164/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170164 (pub 2019-04-01); Raw Chinese chestnuts."
+  },
+  {
+    "ingredientId": "chestnuts",
+    "entryName": "Nuts, chestnuts, chinese, raw",
+    "state": "raw",
+    "kcalPer100g": 224,
+    "basisUnit": "piece",
+    "gramsPerPiece": 12,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170164/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170164 (pub 2019-04-01); 1 peeled chestnut = 12 g."
+  },
+  {
+    "ingredientId": "chicken-breast",
+    "entryName": "Chicken, broilers or fryers, breast, skinless, boneless, meat only, with added solution, raw",
+    "state": "raw",
+    "kcalPer100g": 108,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171509/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171509 (pub 2019-04-01); Boneless skinless chicken breast, raw."
+  },
+  {
+    "ingredientId": "chicken-drumstick",
+    "entryName": "Chicken, broilers or fryers, drumstick, meat and skin, raw",
+    "state": "raw",
+    "kcalPer100g": 161,
+    "basisUnit": "g",
+    "edibleYield": 0.67,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172373/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172373 (pub 2019-04-01); Bone-in chicken drumsticks; 67% edible meat-and-skin yield (33% bone refuse per USDA)."
+  },
+  {
+    "ingredientId": "chicken-thigh",
+    "entryName": "Chicken, broilers or fryers, dark meat, thigh, meat only, raw",
+    "state": "raw",
+    "kcalPer100g": 121,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173627/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173627 (pub 2019-04-01); Boneless skinless chicken thigh, raw."
+  },
+  {
+    "ingredientId": "chicken-wing",
+    "entryName": "Chicken, broilers or fryers, wing, meat and skin, raw",
+    "state": "raw",
+    "kcalPer100g": 191,
+    "basisUnit": "piece",
+    "gramsPerPiece": 32,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172390/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172390 (pub 2019-04-01); 1 chicken mid-wing edible meat and skin = 32 g (excluding wing bone per USDA)."
+  },
+  {
+    "ingredientId": "chickenbones",
+    "entryName": "Soup, chicken broth cubes, dry",
+    "state": "cooked",
+    "kcalPer100g": 198,
+    "basisUnit": "g",
+    "edibleYield": 0.08,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171563/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171563 (pub 2019-04-01); Chicken carcasses simmered for ramen stock and discarded; 8% broth extraction yield."
+  },
+  {
+    "ingredientId": "chili-garlic-sauce",
+    "entryName": "Sauce, peppers, hot, chili, mature red, canned",
+    "state": "prepared",
+    "kcalPer100g": 21,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171604/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171604 (pub 2019-04-01); Chili garlic sauce / doubanjiang condiment."
+  },
+  {
+    "ingredientId": "chili-powder",
+    "entryName": "Spices, chili powder",
+    "state": "prepared",
+    "kcalPer100g": 282,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171319/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171319 (pub 2019-04-01); Chili powder."
+  },
+  {
+    "ingredientId": "chillipowder",
+    "entryName": "Spices, chili powder",
+    "state": "prepared",
+    "kcalPer100g": 282,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171319/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171319 (pub 2019-04-01); Kashmiri chili powder."
+  },
+  {
+    "ingredientId": "chives",
+    "entryName": "Chives, raw",
+    "state": "raw",
+    "kcalPer100g": 30,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169994/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169994 (pub 2019-04-01); Fresh chives / garlic chives."
+  },
+  {
+    "ingredientId": "chocolate",
+    "entryName": "Chocolate, dark, 70-85% cacao solids",
+    "state": "prepared",
+    "kcalPer100g": 598,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170273/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170273 (pub 2019-04-01); Dark chocolate (70-85% cacao solids)."
+  },
+  {
+    "ingredientId": "chorizo",
+    "entryName": "Sausage, pork, chorizo, link or ground, raw",
+    "state": "prepared",
+    "kcalPer100g": 296,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173859/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173859 (pub 2019-04-01); Cured pork chorizo."
+  },
+  {
     "ingredientId": "cilantro",
     "entryName": "Coriander (cilantro) leaves, raw",
     "state": "raw",
@@ -134,6 +701,122 @@
     "notes": "USDA SR Legacy FDC 169997 (pub 2019-04-01); raw coriander/cilantro leaves."
   },
   {
+    "ingredientId": "cinnamon",
+    "entryName": "Spices, cinnamon, ground",
+    "state": "prepared",
+    "kcalPer100g": 247,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171320/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171320 (pub 2019-04-01); Ground cinnamon."
+  },
+  {
+    "ingredientId": "cinnamon",
+    "entryName": "Spices, cinnamon, ground",
+    "state": "prepared",
+    "kcalPer100g": 247,
+    "basisUnit": "piece",
+    "gramsPerPiece": 4,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171320/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171320 (pub 2019-04-01); 1 whole cinnamon stick = 4 g."
+  },
+  {
+    "ingredientId": "clams",
+    "entryName": "Mollusks, clam, mixed species, raw",
+    "state": "raw",
+    "kcalPer100g": 86,
+    "basisUnit": "g",
+    "edibleYield": 0.28,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174214/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174214 (pub 2019-04-01); Whole clams in shell; 28% edible meat yield applied (72% shell refuse per USDA)."
+  },
+  {
+    "ingredientId": "clove",
+    "entryName": "Spices, cloves, ground",
+    "state": "prepared",
+    "kcalPer100g": 274,
+    "basisUnit": "piece",
+    "gramsPerPiece": 0.3,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171321/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171321 (pub 2019-04-01); 1 whole clove = 0.3 g."
+  },
+  {
+    "ingredientId": "cocoa",
+    "entryName": "Cocoa, dry powder, unsweetened",
+    "state": "prepared",
+    "kcalPer100g": 228,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169593/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169593 (pub 2019-04-01); Unsweetened dry cocoa powder."
+  },
+  {
+    "ingredientId": "coconutmilk",
+    "entryName": "Nuts, coconut milk, canned (liquid expressed from grated meat and water)",
+    "state": "prepared",
+    "kcalPer100g": 197,
+    "basisUnit": "ml",
+    "densityGPerMl": 0.96,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170173/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170173 (pub 2019-04-01); Canned coconut milk; density 0.96 g/ml (1 cup = 226 g / 236.6 ml per USDA)."
+  },
+  {
+    "ingredientId": "cod",
+    "entryName": "Fish, cod, Atlantic, raw",
+    "state": "raw",
+    "kcalPer100g": 82,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171955/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171955 (pub 2019-04-01); Raw Atlantic cod fillet."
+  },
+  {
+    "ingredientId": "codfish",
+    "entryName": "Fish, cod, Atlantic, dried and salted",
+    "state": "prepared",
+    "kcalPer100g": 290,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174190/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174190 (pub 2019-04-01); Dried salted cod (bacalhau), dry weight prior to soaking."
+  },
+  {
+    "ingredientId": "coffee",
+    "entryName": "Beverages, coffee, brewed, espresso, restaurant-prepared",
+    "state": "prepared",
+    "kcalPer100g": 9,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.0,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171891/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171891 (pub 2019-04-01); Brewed espresso coffee; density 1.00 g/ml."
+  },
+  {
+    "ingredientId": "cola",
+    "entryName": "Beverages, carbonated, cola, regular",
+    "state": "prepared",
+    "kcalPer100g": 42,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.04,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174852/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174852 (pub 2019-04-01); Regular cola soft drink; density 1.04 g/ml (12 fl oz = 368 g per USDA)."
+  },
+  {
     "ingredientId": "condensedmilk",
     "entryName": "Milk, canned, condensed, sweetened",
     "state": "prepared",
@@ -143,6 +826,74 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 171275 (pub 2019-04-01); sweetened condensed canned milk."
+  },
+  {
+    "ingredientId": "cooked-rice",
+    "entryName": "Rice, white, long-grain, regular, unenriched, cooked without salt",
+    "state": "cooked",
+    "kcalPer100g": 130,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169757/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169757 (pub 2019-04-01); Cooked white long-grain rice."
+  },
+  {
+    "ingredientId": "cooking-wine",
+    "entryName": "Alcoholic beverage, wine, cooking",
+    "state": "prepared",
+    "kcalPer100g": 50,
+    "basisUnit": "ml",
+    "densityGPerMl": 0.99,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169070/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169070 (pub 2019-04-01); Cooking wine; density 0.99 g/ml (1 tsp = 4.9 g per USDA)."
+  },
+  {
+    "ingredientId": "coriander-ground",
+    "entryName": "Spices, coriander seed",
+    "state": "prepared",
+    "kcalPer100g": 298,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170922/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170922 (pub 2019-04-01); Ground coriander seed."
+  },
+  {
+    "ingredientId": "coriander-seed",
+    "entryName": "Spices, coriander seed",
+    "state": "prepared",
+    "kcalPer100g": 298,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170922/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170922 (pub 2019-04-01); Whole coriander seeds."
+  },
+  {
+    "ingredientId": "corn-starch",
+    "entryName": "Cornstarch",
+    "state": "prepared",
+    "kcalPer100g": 381,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169698/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169698 (pub 2019-04-01); Cornstarch."
+  },
+  {
+    "ingredientId": "courgette",
+    "entryName": "Squash, summer, zucchini, includes skin, raw",
+    "state": "raw",
+    "kcalPer100g": 17,
+    "basisUnit": "piece",
+    "gramsPerPiece": 196,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169291/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169291 (pub 2019-04-01); 1 medium zucchini/courgette = 196 g edible per USDA foodPortions."
   },
   {
     "ingredientId": "crackers",
@@ -191,6 +942,99 @@
     "notes": "USDA SR Legacy FDC 168409 (pub 2019-04-01); 1 whole raw cucumber (8-1/4\") = 301 g."
   },
   {
+    "ingredientId": "cumin",
+    "entryName": "Spices, cumin seed",
+    "state": "prepared",
+    "kcalPer100g": 375,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170923/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170923 (pub 2019-04-01); Cumin seeds."
+  },
+  {
+    "ingredientId": "curry",
+    "entryName": "Spices, curry powder",
+    "state": "prepared",
+    "kcalPer100g": 325,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170924/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170924 (pub 2019-04-01); Curry powder."
+  },
+  {
+    "ingredientId": "curryleaves",
+    "entryName": "Coriander (cilantro) leaves, raw",
+    "state": "raw",
+    "kcalPer100g": 23,
+    "basisUnit": "piece",
+    "gramsPerPiece": 0.2,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169997/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169997 (pub 2019-04-01); Fresh curry leaves; 1 leaf = 0.2 g (approximated via fresh culinary herb leaves)."
+  },
+  {
+    "ingredientId": "currypaste",
+    "entryName": "Spices, curry powder",
+    "state": "prepared",
+    "kcalPer100g": 325,
+    "basisUnit": "g",
+    "edibleYield": 0.5,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170924/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170924 (pub 2019-04-01); Thai red curry paste (~50% moisture relative to dry curry spice blend)."
+  },
+  {
+    "ingredientId": "daikon",
+    "entryName": "Radishes, oriental, raw",
+    "state": "raw",
+    "kcalPer100g": 18,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168451/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168451 (pub 2019-04-01); Raw oriental radish (daikon)."
+  },
+  {
+    "ingredientId": "dark-soy-sauce",
+    "entryName": "Soy sauce made from soy (tamari)",
+    "state": "prepared",
+    "kcalPer100g": 60,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.15,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174278/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174278 (pub 2019-04-01); Dark soy sauce (tamari basis); density 1.15 g/ml."
+  },
+  {
+    "ingredientId": "darkbeer",
+    "entryName": "Alcoholic beverage, beer, regular, all",
+    "state": "prepared",
+    "kcalPer100g": 43,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.01,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168746/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168746 (pub 2019-04-01); Dark lager/beer; density 1.01 g/ml (alcohol partially evaporates during braising)."
+  },
+  {
+    "ingredientId": "dashi",
+    "entryName": "Soup, SWANSON, beef broth, lower sodium",
+    "state": "prepared",
+    "kcalPer100g": 6,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.01,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171179/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171179 (pub 2019-04-01); Japanese dashi stock (light kombu/bonito broth equivalent); density 1.01 g/ml."
+  },
+  {
     "ingredientId": "dates",
     "entryName": "Dates, deglet noor",
     "state": "raw",
@@ -224,6 +1068,51 @@
     "notes": "USDA SR Legacy FDC 170932 (pub 2019-04-01); dried red/cayenne chili pepper."
   },
   {
+    "ingredientId": "dried-chili",
+    "entryName": "Peppers, pasilla, dried",
+    "state": "prepared",
+    "kcalPer100g": 345,
+    "basisUnit": "piece",
+    "gramsPerPiece": 2,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168579/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168579 (pub 2019-04-01); 1 small dried red chili = 2 g."
+  },
+  {
+    "ingredientId": "dried-mint",
+    "entryName": "Spearmint, dried",
+    "state": "prepared",
+    "kcalPer100g": 285,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172239/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172239 (pub 2019-04-01); Dried spearmint."
+  },
+  {
+    "ingredientId": "dried-seaweed",
+    "entryName": "Seaweed, laver, raw",
+    "state": "prepared",
+    "kcalPer100g": 35,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168458/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168458 (pub 2019-04-01); Dried soup seaweed (laver/zi cai basis)."
+  },
+  {
+    "ingredientId": "dryginger",
+    "entryName": "Spices, ginger, ground",
+    "state": "prepared",
+    "kcalPer100g": 335,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170926/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170926 (pub 2019-04-01); Ground dry ginger."
+  },
+  {
     "ingredientId": "egg",
     "entryName": "Egg, whole, raw, fresh",
     "state": "raw",
@@ -236,6 +1125,18 @@
     "notes": "USDA SR Legacy FDC 171287 (pub 2019-04-01); 1 large raw whole egg = 50 g edible weight excluding shell."
   },
   {
+    "ingredientId": "egg-white",
+    "entryName": "Egg, white, raw, fresh",
+    "state": "raw",
+    "kcalPer100g": 52,
+    "basisUnit": "piece",
+    "gramsPerPiece": 33,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172183/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172183 (pub 2019-04-01); 1 large raw egg white = 33 g per USDA foodPortions."
+  },
+  {
     "ingredientId": "egg-yolk",
     "entryName": "Egg, yolk, raw, fresh",
     "state": "raw",
@@ -246,6 +1147,62 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 172184 (pub 2019-04-01); 1 large raw egg yolk = 17 g."
+  },
+  {
+    "ingredientId": "eggnoodles",
+    "entryName": "Noodles, egg, dry, unenriched",
+    "state": "prepared",
+    "kcalPer100g": 384,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169755/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169755 (pub 2019-04-01); Dry egg noodles."
+  },
+  {
+    "ingredientId": "fabes",
+    "entryName": "Beans, white, mature seeds, raw",
+    "state": "raw",
+    "kcalPer100g": 333,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/175202/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 175202 (pub 2019-04-01); Dried large white beans (fabes)."
+  },
+  {
+    "ingredientId": "fennel",
+    "entryName": "Fennel, bulb, raw",
+    "state": "raw",
+    "kcalPer100g": 31,
+    "basisUnit": "piece",
+    "gramsPerPiece": 234,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169385/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169385 (pub 2019-04-01); 1 raw fennel bulb = 234 g edible per USDA foodPortions."
+  },
+  {
+    "ingredientId": "fennel-ground",
+    "entryName": "Spices, fennel seed",
+    "state": "prepared",
+    "kcalPer100g": 345,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171323/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171323 (pub 2019-04-01); Ground fennel seed."
+  },
+  {
+    "ingredientId": "fenugreek",
+    "entryName": "Spices, fenugreek seed",
+    "state": "prepared",
+    "kcalPer100g": 323,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171324/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171324 (pub 2019-04-01); Fenugreek seeds."
   },
   {
     "ingredientId": "feta",
@@ -270,6 +1227,18 @@
     "notes": "USDA SR Legacy FDC 172791 (pub 2019-04-01); raw phyllo/filo pastry dough."
   },
   {
+    "ingredientId": "fishsauce",
+    "entryName": "Sauce, fish, ready-to-serve",
+    "state": "prepared",
+    "kcalPer100g": 35,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.2,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174531/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174531 (pub 2019-04-01); Fish sauce; density 1.20 g/ml (1 tbsp = 18 g / 14.8 ml per USDA)."
+  },
+  {
     "ingredientId": "flour",
     "entryName": "Wheat flour, white, all-purpose, unenriched",
     "state": "raw",
@@ -279,6 +1248,40 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 169761 (pub 2019-04-01); all-purpose white wheat flour."
+  },
+  {
+    "ingredientId": "fresh-chili",
+    "entryName": "Peppers, hot chili, red, raw",
+    "state": "raw",
+    "kcalPer100g": 40,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170106/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170106 (pub 2019-04-01); Fresh red hot chili peppers, raw."
+  },
+  {
+    "ingredientId": "fresh-chili",
+    "entryName": "Peppers, jalapeno, raw",
+    "state": "raw",
+    "kcalPer100g": 29,
+    "basisUnit": "piece",
+    "gramsPerPiece": 14,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168576/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168576 (pub 2019-04-01); 1 fresh chili pepper = 14 g edible (jalapeno/bird's eye medium average per USDA)."
+  },
+  {
+    "ingredientId": "garammasala",
+    "entryName": "Spices, curry powder",
+    "state": "prepared",
+    "kcalPer100g": 325,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170924/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170924 (pub 2019-04-01); Garam masala ground spice blend (approximated via dry Indian spice blend)."
   },
   {
     "ingredientId": "garlic",
@@ -292,6 +1295,39 @@
     "notes": "USDA SR Legacy FDC 169230 (pub 2019-04-01); raw garlic cloves."
   },
   {
+    "ingredientId": "garlic-sauce",
+    "entryName": "Sauce, oyster, ready-to-serve",
+    "state": "prepared",
+    "kcalPer100g": 51,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174529/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174529 (pub 2019-04-01); Prepared savory garlic sauce condiment (50 g)."
+  },
+  {
+    "ingredientId": "garlicpowder",
+    "entryName": "Spices, garlic powder",
+    "state": "prepared",
+    "kcalPer100g": 331,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171325/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171325 (pub 2019-04-01); Garlic powder."
+  },
+  {
+    "ingredientId": "gelatin",
+    "entryName": "Gelatins, dry powder, unsweetened",
+    "state": "prepared",
+    "kcalPer100g": 335,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169599/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169599 (pub 2019-04-01); Unsweetened dry gelatin."
+  },
+  {
     "ingredientId": "ghee",
     "entryName": "Butter oil, anhydrous",
     "state": "prepared",
@@ -301,6 +1337,62 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 173412 (pub 2019-04-01); anhydrous butter oil / clarified butter (ghee)."
+  },
+  {
+    "ingredientId": "ginger",
+    "entryName": "Ginger root, raw",
+    "state": "raw",
+    "kcalPer100g": 80,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169231/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169231 (pub 2019-04-01); Raw ginger root."
+  },
+  {
+    "ingredientId": "gingerbread",
+    "entryName": "Cake, gingerbread, prepared from recipe",
+    "state": "prepared",
+    "kcalPer100g": 356,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172702/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172702 (pub 2019-04-01); Gingerbread / Lebkuchen thickening crumb."
+  },
+  {
+    "ingredientId": "ginseng",
+    "entryName": "Ginger root, raw",
+    "state": "raw",
+    "kcalPer100g": 80,
+    "basisUnit": "piece",
+    "gramsPerPiece": 15,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169231/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169231 (pub 2019-04-01); 1 small fresh ginseng root = 15 g (approximated via fresh aromatic root)."
+  },
+  {
+    "ingredientId": "glutinousrice",
+    "entryName": "Rice, white, glutinous, unenriched, uncooked",
+    "state": "raw",
+    "kcalPer100g": 370,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168883/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168883 (pub 2019-04-01); Uncooked white glutinous rice."
+  },
+  {
+    "ingredientId": "gochujang",
+    "entryName": "Sauce, oyster, ready-to-serve",
+    "state": "prepared",
+    "kcalPer100g": 51,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174529/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174529 (pub 2019-04-01); Korean fermented chili paste (gochujang); savory fermented paste basis."
   },
   {
     "ingredientId": "green-pepper",
@@ -326,6 +1418,165 @@
     "notes": "USDA SR Legacy FDC 170427 (pub 2019-04-01); 1 medium raw sweet green pepper = 119 g edible portion without stem/seeds."
   },
   {
+    "ingredientId": "greenbeans",
+    "entryName": "Beans, snap, green, raw",
+    "state": "raw",
+    "kcalPer100g": 31,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169961/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169961 (pub 2019-04-01); Raw green snap beans."
+  },
+  {
+    "ingredientId": "greenpapaya",
+    "entryName": "Papayas, raw",
+    "state": "raw",
+    "kcalPer100g": 43,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169926/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169926 (pub 2019-04-01); Raw green papaya."
+  },
+  {
+    "ingredientId": "greenpepper",
+    "entryName": "Peppers, sweet, green, raw",
+    "state": "raw",
+    "kcalPer100g": 20,
+    "basisUnit": "piece",
+    "gramsPerPiece": 119,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170427/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170427 (pub 2019-04-01); 1 medium green pepper = 119 g edible per USDA foodPortions."
+  },
+  {
+    "ingredientId": "gruyere",
+    "entryName": "Cheese, gruyere",
+    "state": "prepared",
+    "kcalPer100g": 413,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171242/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171242 (pub 2019-04-01); Gruyere cheese."
+  },
+  {
+    "ingredientId": "guajillo",
+    "entryName": "Peppers, pasilla, dried",
+    "state": "prepared",
+    "kcalPer100g": 345,
+    "basisUnit": "piece",
+    "gramsPerPiece": 7,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168579/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168579 (pub 2019-04-01); 1 dried guajillo chili = 7 g (pasilla dried chili basis per USDA)."
+  },
+  {
+    "ingredientId": "guanciale",
+    "entryName": "Pork, cured, bacon, unprepared",
+    "state": "prepared",
+    "kcalPer100g": 393,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168277/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168277 (pub 2019-04-01); Cured pork jowl (guanciale); approximated via unprepared cured pork bacon."
+  },
+  {
+    "ingredientId": "ham",
+    "entryName": "Pork, cured, ham, patties, unheated",
+    "state": "prepared",
+    "kcalPer100g": 315,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167873/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167873 (pub 2019-04-01); Cured ham / ham sausage."
+  },
+  {
+    "ingredientId": "ham-bone",
+    "entryName": "Soup, SWANSON, beef broth, lower sodium",
+    "state": "cooked",
+    "kcalPer100g": 6,
+    "basisUnit": "piece",
+    "gramsPerPiece": 200,
+    "edibleYield": 0.2,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171179/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171179 (pub 2019-04-01); 1 cured ham bone simmered for fabada broth and discarded; 20% broth extraction estimate."
+  },
+  {
+    "ingredientId": "herbs",
+    "entryName": "Coriander (cilantro) leaves, raw",
+    "state": "raw",
+    "kcalPer100g": 23,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169997/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169997 (pub 2019-04-01); Mixed fresh culinary herbs (cilantro, spring onion, Thai basil)."
+  },
+  {
+    "ingredientId": "hoisin",
+    "entryName": "Sauce, hoisin, ready-to-serve",
+    "state": "prepared",
+    "kcalPer100g": 220,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172886/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172886 (pub 2019-04-01); Hoisin sauce."
+  },
+  {
+    "ingredientId": "holybasil",
+    "entryName": "Basil, fresh",
+    "state": "raw",
+    "kcalPer100g": 23,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172232/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172232 (pub 2019-04-01); Fresh Thai holy basil (fresh basil basis)."
+  },
+  {
+    "ingredientId": "hominy",
+    "entryName": "Hominy, canned, white",
+    "state": "prepared",
+    "kcalPer100g": 72,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169701/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169701 (pub 2019-04-01); Canned white hominy, drained."
+  },
+  {
+    "ingredientId": "hotpaprika",
+    "entryName": "Spices, paprika",
+    "state": "prepared",
+    "kcalPer100g": 282,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171329/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171329 (pub 2019-04-01); Hot paprika."
+  },
+  {
+    "ingredientId": "hotsauce",
+    "entryName": "Sauce, peppers, hot, chili, mature red, canned",
+    "state": "prepared",
+    "kcalPer100g": 21,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.02,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171604/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171604 (pub 2019-04-01); Hot pepper sauce; density 1.02 g/ml."
+  },
+  {
     "ingredientId": "icingsugar",
     "entryName": "Sugars, powdered",
     "state": "prepared",
@@ -335,6 +1586,17 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 169656 (pub 2019-04-01); powdered/icing sugar."
+  },
+  {
+    "ingredientId": "instant-noodles",
+    "entryName": "Soup, ramen noodle, any flavor, dry",
+    "state": "prepared",
+    "kcalPer100g": 440,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171177/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171177 (pub 2019-04-01); Dry instant ramen noodles with seasoning packet."
   },
   {
     "ingredientId": "jalapeno",
@@ -347,6 +1609,108 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 168576 (pub 2019-04-01); 1 raw jalapeno pepper = 14 g edible portion."
+  },
+  {
+    "ingredientId": "jujube",
+    "entryName": "Jujube, Chinese, fresh, dried",
+    "state": "prepared",
+    "kcalPer100g": 281,
+    "basisUnit": "piece",
+    "gramsPerPiece": 8,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168152/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168152 (pub 2019-04-01); 1 dried Chinese jujube date = 8 g edible."
+  },
+  {
+    "ingredientId": "kashmirichili",
+    "entryName": "Spices, paprika",
+    "state": "prepared",
+    "kcalPer100g": 282,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171329/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171329 (pub 2019-04-01); Kashmiri red chili powder (mild red pepper paprika basis)."
+  },
+  {
+    "ingredientId": "katsuobushi",
+    "entryName": "Fish, tuna, light, canned in water, without salt, drained solids",
+    "state": "prepared",
+    "kcalPer100g": 116,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171986/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171986 (pub 2019-04-01); Dried bonito flakes (katsuobushi); small garnish/infusion quantity (10-15 g)."
+  },
+  {
+    "ingredientId": "kefalotyri",
+    "entryName": "Cheese, parmesan, grated",
+    "state": "prepared",
+    "kcalPer100g": 420,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171247/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171247 (pub 2019-04-01); Kefalotyri hard sheep/goat cheese (aged grated Parmesan basis)."
+  },
+  {
+    "ingredientId": "kirsch",
+    "entryName": "Alcoholic beverage, distilled, all (gin, rum, vodka, whiskey) 86 proof",
+    "state": "prepared",
+    "kcalPer100g": 250,
+    "basisUnit": "ml",
+    "densityGPerMl": 0.94,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171919/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171919 (pub 2019-04-01); Kirsch cherry brandy (~80-86 proof distilled spirit); density 0.94 g/ml."
+  },
+  {
+    "ingredientId": "kombu",
+    "entryName": "Seaweed, kelp, raw",
+    "state": "raw",
+    "kcalPer100g": 43,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168457/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168457 (pub 2019-04-01); Kombu kelp (infusion seaweed)."
+  },
+  {
+    "ingredientId": "lamb",
+    "entryName": "Lamb, leg, sirloin half, separable lean and fat, trimmed to 1/8\" fat, choice, raw",
+    "state": "raw",
+    "kcalPer100g": 261,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172549/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172549 (pub 2019-04-01); Boneless lamb leg/shoulder cuts, raw."
+  },
+  {
+    "ingredientId": "lard",
+    "entryName": "Lard",
+    "state": "prepared",
+    "kcalPer100g": 902,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171401/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171401 (pub 2019-04-01); Rendered pork lard."
+  },
+  {
+    "ingredientId": "leek",
+    "entryName": "Leeks, (bulb and lower leaf-portion), raw",
+    "state": "raw",
+    "kcalPer100g": 61,
+    "basisUnit": "piece",
+    "gramsPerPiece": 89,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169246/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169246 (pub 2019-04-01); 1 raw leek = 89 g edible per USDA foodPortions."
   },
   {
     "ingredientId": "lemon",
@@ -373,6 +1737,52 @@
     "notes": "USDA SR Legacy FDC 167746 (pub 2019-04-01); 1 medium raw lemon = 58 g edible pulp without peel."
   },
   {
+    "ingredientId": "lemonpeel",
+    "entryName": "Lemon peel, raw",
+    "state": "raw",
+    "kcalPer100g": 47,
+    "basisUnit": "piece",
+    "gramsPerPiece": 6,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167749/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167749 (pub 2019-04-01); Peel of 1 lemon (~1 tbsp = 6 g per USDA)."
+  },
+  {
+    "ingredientId": "lemonzest",
+    "entryName": "Lemon peel, raw",
+    "state": "raw",
+    "kcalPer100g": 47,
+    "basisUnit": "piece",
+    "gramsPerPiece": 6,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167749/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167749 (pub 2019-04-01); Zest of 1 lemon (~1 tbsp = 6 g per USDA)."
+  },
+  {
+    "ingredientId": "lentils",
+    "entryName": "Lentils, raw",
+    "state": "raw",
+    "kcalPer100g": 352,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172420/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172420 (pub 2019-04-01); Dry split lentils / toor dal."
+  },
+  {
+    "ingredientId": "lettuce",
+    "entryName": "Lettuce, cos or romaine, raw",
+    "state": "raw",
+    "kcalPer100g": 17,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169247/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169247 (pub 2019-04-01); Raw romaine/cos lettuce."
+  },
+  {
     "ingredientId": "lime",
     "entryName": "Limes, raw",
     "state": "raw",
@@ -385,6 +1795,41 @@
     "notes": "USDA SR Legacy FDC 168155 (pub 2019-04-01); 1 raw lime (2\" dia) = 67 g edible portion without peel."
   },
   {
+    "ingredientId": "marsala",
+    "entryName": "Alcoholic beverage, wine, dessert, sweet",
+    "state": "prepared",
+    "kcalPer100g": 160,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.0,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173176/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173176 (pub 2019-04-01); Sweet Marsala dessert wine; density 1.00 g/ml (3.5 fl oz = 103 g per USDA)."
+  },
+  {
+    "ingredientId": "mascarpone",
+    "entryName": "Cheese, cream",
+    "state": "prepared",
+    "kcalPer100g": 350,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173418/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173418 (pub 2019-04-01); Mascarpone Italian cream cheese (full-fat cream cheese basis)."
+  },
+  {
+    "ingredientId": "massamanpaste",
+    "entryName": "Spices, curry powder",
+    "state": "prepared",
+    "kcalPer100g": 325,
+    "basisUnit": "g",
+    "edibleYield": 0.5,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170924/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170924 (pub 2019-04-01); Massaman curry paste (~50% moisture relative to dry spice blend)."
+  },
+  {
     "ingredientId": "mayonnaise",
     "entryName": "Salad dressing, mayonnaise, regular",
     "state": "prepared",
@@ -394,6 +1839,17 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 171009 (pub 2019-04-01); regular commercial mayonnaise."
+  },
+  {
+    "ingredientId": "methi",
+    "entryName": "Spices, fenugreek seed",
+    "state": "prepared",
+    "kcalPer100g": 323,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171324/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171324 (pub 2019-04-01); Dried fenugreek leaves (kasuri methi)."
   },
   {
     "ingredientId": "milk",
@@ -408,6 +1864,84 @@
     "notes": "USDA SR Legacy FDC 171265 (pub 2019-04-01); density 1.03 g/ml from USDA 1 cup = 244 g (236.588 ml)."
   },
   {
+    "ingredientId": "minced-lamb",
+    "entryName": "Lamb, ground, raw",
+    "state": "raw",
+    "kcalPer100g": 282,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174370/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174370 (pub 2019-04-01); Raw ground/minced lamb."
+  },
+  {
+    "ingredientId": "minced-pork",
+    "entryName": "Pork, fresh, ground, raw",
+    "state": "raw",
+    "kcalPer100g": 263,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167902/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167902 (pub 2019-04-01); Raw ground/minced pork."
+  },
+  {
+    "ingredientId": "mint",
+    "entryName": "Peppermint, fresh",
+    "state": "raw",
+    "kcalPer100g": 70,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173474/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173474 (pub 2019-04-01); Fresh mint leaves."
+  },
+  {
+    "ingredientId": "mirin",
+    "entryName": "Alcoholic beverage, wine, dessert, sweet",
+    "state": "prepared",
+    "kcalPer100g": 160,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.08,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173176/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173176 (pub 2019-04-01); Japanese sweet cooking rice wine (mirin); sweet dessert wine basis, density 1.08 g/ml."
+  },
+  {
+    "ingredientId": "miso",
+    "entryName": "Miso",
+    "state": "prepared",
+    "kcalPer100g": 198,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172442/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172442 (pub 2019-04-01); Fermented soybean miso paste."
+  },
+  {
+    "ingredientId": "morcilla",
+    "entryName": "Blood sausage",
+    "state": "prepared",
+    "kcalPer100g": 379,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171618/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171618 (pub 2019-04-01); Spanish blood sausage (morcilla)."
+  },
+  {
+    "ingredientId": "mountain-cheese",
+    "entryName": "Cheese, swiss",
+    "state": "prepared",
+    "kcalPer100g": 393,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171251/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171251 (pub 2019-04-01); Alpine/Emmental/Bergkase Swiss-style cheese."
+  },
+  {
     "ingredientId": "mozzarella",
     "entryName": "Cheese, mozzarella, whole milk",
     "state": "prepared",
@@ -417,6 +1951,62 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 170845 (pub 2019-04-01); whole-milk mozzarella cheese."
+  },
+  {
+    "ingredientId": "mulatochili",
+    "entryName": "Peppers, ancho, dried",
+    "state": "prepared",
+    "kcalPer100g": 281,
+    "basisUnit": "piece",
+    "gramsPerPiece": 17,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169396/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169396 (pub 2019-04-01); 1 dried mulato chili = 17 g (ancho dried chili basis per USDA)."
+  },
+  {
+    "ingredientId": "mushrooms",
+    "entryName": "Mushrooms, white, raw",
+    "state": "raw",
+    "kcalPer100g": 22,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169251/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169251 (pub 2019-04-01); Raw white button mushrooms."
+  },
+  {
+    "ingredientId": "mustard",
+    "entryName": "Mustard, prepared, yellow",
+    "state": "prepared",
+    "kcalPer100g": 60,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172234/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172234 (pub 2019-04-01); Prepared mustard."
+  },
+  {
+    "ingredientId": "mustard-seed",
+    "entryName": "Spices, mustard seed, ground",
+    "state": "prepared",
+    "kcalPer100g": 508,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170929/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170929 (pub 2019-04-01); Mustard seeds."
+  },
+  {
+    "ingredientId": "mustardseeds",
+    "entryName": "Spices, mustard seed, ground",
+    "state": "prepared",
+    "kcalPer100g": 508,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170929/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170929 (pub 2019-04-01); Mustard seeds."
   },
   {
     "ingredientId": "nutmeg",
@@ -441,6 +2031,28 @@
     "notes": "USDA SR Legacy FDC 173904 (pub 2019-04-01); dry unfortified rolled/quick oats."
   },
   {
+    "ingredientId": "oaxaca-cheese",
+    "entryName": "Cheese, mozzarella, whole milk",
+    "state": "prepared",
+    "kcalPer100g": 299,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170845/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170845 (pub 2019-04-01); Oaxaca melting cheese (whole-milk mozzarella basis)."
+  },
+  {
+    "ingredientId": "octopus",
+    "entryName": "Mollusks, octopus, common, raw",
+    "state": "raw",
+    "kcalPer100g": 82,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174218/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174218 (pub 2019-04-01); Raw common octopus."
+  },
+  {
     "ingredientId": "oil",
     "entryName": "Oil, canola",
     "state": "prepared",
@@ -450,7 +2062,56 @@
     "sourceUrl": "https://fdc.nal.usda.gov/food-details/172336/nutrients",
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
-    "notes": "USDA SR Legacy FDC 172336 (pub 2019-04-01, canola cooking oil); density 0.92 g/ml from USDA 1 cup = 218 g; assumes listed stir-fry/pan oil is consumed with the dish."
+    "notes": "USDA SR Legacy FDC 172336 (pub 2019-04-01, canola cooking oil); density 0.92 g/ml from USDA 1 cup = 218 g; assumes listed stir-fry/pan oil is consumed with the dish.",
+    "recipeRetentions": {
+      "fish-and-chips": {
+        "factor": 0.08,
+        "notes": "Deep-frying oil bath (1500 ml); 8% oil absorption (~120 ml across 4 servings) applied for energy estimate."
+      },
+      "tempura": {
+        "factor": 0.08,
+        "notes": "Deep-frying oil bath (1000 ml); 8% oil absorption (~80 ml across 4 servings) applied for energy estimate."
+      },
+      "patatas-bravas": {
+        "factor": 0.08,
+        "notes": "Deep-frying oil bath (800 ml); 8% oil absorption (~64 ml across 4 servings) applied for energy estimate."
+      },
+      "samosa": {
+        "factor": 0.08,
+        "notes": "Deep-frying oil bath (700 ml); 8% oil absorption (~56 ml across 6 servings) applied for energy estimate."
+      },
+      "croquetas-de-jamon": {
+        "factor": 0.08,
+        "notes": "Deep-frying oil bath (700 ml); 8% oil absorption (~56 ml across 4 servings) applied for energy estimate."
+      },
+      "bacalhau-a-bras": {
+        "factor": 0.08,
+        "notes": "Deep-frying oil bath (600 ml); 8% oil absorption (~48 ml across 4 servings) applied for energy estimate."
+      },
+      "katsudon": {
+        "factor": 0.08,
+        "notes": "Deep-frying oil bath (500 ml); 8% oil absorption (~40 ml across 2 servings) applied for energy estimate."
+      },
+      "khao-soi": {
+        "factor": 0.08,
+        "notes": "Deep-frying oil bath (500 ml); 8% oil absorption (~40 ml across 4 servings) applied for energy estimate."
+      },
+      "chiles-en-nogada": {
+        "factor": 0.1,
+        "notes": "Shallow/deep frying oil bath (400 ml); 10% oil absorption (~40 ml across 4 servings) applied for energy estimate."
+      }
+    }
+  },
+  {
+    "ingredientId": "okonomisauce",
+    "entryName": "Sauce, teriyaki, ready-to-serve",
+    "state": "prepared",
+    "kcalPer100g": 89,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171167/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171167 (pub 2019-04-01); Okonomiyaki savory-sweet sauce (teriyaki/Worcestershire glaze basis, 10 g)."
   },
   {
     "ingredientId": "olive-oil",
@@ -462,7 +2123,13 @@
     "sourceUrl": "https://fdc.nal.usda.gov/food-details/171413/nutrients",
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
-    "notes": "USDA SR Legacy FDC 171413 (pub 2019-04-01); density 0.91 g/ml from USDA 1 cup = 216 g; assumes listed dressing/baking/marinade olive oil is consumed with the dish."
+    "notes": "USDA SR Legacy FDC 171413 (pub 2019-04-01); density 0.91 g/ml from USDA 1 cup = 216 g; assumes listed dressing/baking/marinade olive oil is consumed with the dish.",
+    "recipeRetentions": {
+      "tortilla-espanola": {
+        "factor": 0.15,
+        "notes": "Olive oil poaching bath (400 ml, drained before mixing); 15% oil retention (~60 ml across 4 servings) applied for energy estimate."
+      }
+    }
   },
   {
     "ingredientId": "olives",
@@ -474,6 +2141,53 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 169094 (pub 2019-04-01); canned ripe olives edible flesh basis."
+  },
+  {
+    "ingredientId": "onion",
+    "entryName": "Onions, raw",
+    "state": "raw",
+    "kcalPer100g": 40,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170000/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170000 (pub 2019-04-01); Raw onions."
+  },
+  {
+    "ingredientId": "onion",
+    "entryName": "Onions, raw",
+    "state": "raw",
+    "kcalPer100g": 40,
+    "basisUnit": "piece",
+    "gramsPerPiece": 110,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170000/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170000 (pub 2019-04-01); 1 medium onion = 110 g edible without skin per USDA foodPortions."
+  },
+  {
+    "ingredientId": "onions",
+    "entryName": "Onions, raw",
+    "state": "raw",
+    "kcalPer100g": 40,
+    "basisUnit": "piece",
+    "gramsPerPiece": 110,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170000/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170000 (pub 2019-04-01); 1 medium onion = 110 g edible without skin per USDA foodPortions."
+  },
+  {
+    "ingredientId": "orangezest",
+    "entryName": "Orange peel, raw",
+    "state": "raw",
+    "kcalPer100g": 97,
+    "basisUnit": "piece",
+    "gramsPerPiece": 6,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169103/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169103 (pub 2019-04-01); Zest of 1 orange (~1 tbsp = 6 g per USDA)."
   },
   {
     "ingredientId": "oregano",
@@ -499,6 +2213,61 @@
     "notes": "USDA SR Legacy FDC 174529 (pub 2019-04-01); ready-to-serve oyster sauce density 1.22 g/ml from USDA 1 tbsp = 18 g."
   },
   {
+    "ingredientId": "palmsugar",
+    "entryName": "Sugars, brown",
+    "state": "prepared",
+    "kcalPer100g": 380,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168833/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168833 (pub 2019-04-01); Palm sugar (unrefined brown sugar sucrose basis)."
+  },
+  {
+    "ingredientId": "pancetta",
+    "entryName": "Pork, cured, bacon, unprepared",
+    "state": "prepared",
+    "kcalPer100g": 393,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168277/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168277 (pub 2019-04-01); Cured pork belly (pancetta); unprepared cured bacon basis."
+  },
+  {
+    "ingredientId": "paneer",
+    "entryName": "Cheese, fresh, queso fresco",
+    "state": "prepared",
+    "kcalPer100g": 299,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172223/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172223 (pub 2019-04-01); Paneer fresh unripened cheese (queso fresco basis)."
+  },
+  {
+    "ingredientId": "panko",
+    "entryName": "Bread, crumbs, dry, grated, plain",
+    "state": "prepared",
+    "kcalPer100g": 395,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174928/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174928 (pub 2019-04-01); Japanese panko dry breadcrumbs."
+  },
+  {
+    "ingredientId": "paprika",
+    "entryName": "Spices, paprika",
+    "state": "prepared",
+    "kcalPer100g": 282,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171329/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171329 (pub 2019-04-01); Sweet paprika."
+  },
+  {
     "ingredientId": "parmesan",
     "entryName": "Cheese, parmesan, hard",
     "state": "prepared",
@@ -510,6 +2279,96 @@
     "notes": "USDA SR Legacy FDC 170848 (pub 2019-04-01); hard Parmesan cheese."
   },
   {
+    "ingredientId": "parsley",
+    "entryName": "Parsley, fresh",
+    "state": "raw",
+    "kcalPer100g": 36,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170416/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170416 (pub 2019-04-01); Fresh parsley."
+  },
+  {
+    "ingredientId": "pasillachili",
+    "entryName": "Peppers, pasilla, dried",
+    "state": "prepared",
+    "kcalPer100g": 345,
+    "basisUnit": "piece",
+    "gramsPerPiece": 7,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168579/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168579 (pub 2019-04-01); 1 dried pasilla chili = 7 g per USDA foodPortions."
+  },
+  {
+    "ingredientId": "pastry",
+    "entryName": "Puff pastry, frozen, ready-to-bake",
+    "state": "prepared",
+    "kcalPer100g": 551,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172790/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172790 (pub 2019-04-01); Frozen ready-to-bake puff pastry."
+  },
+  {
+    "ingredientId": "pate",
+    "entryName": "Pate, chicken liver, canned",
+    "state": "prepared",
+    "kcalPer100g": 201,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172928/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172928 (pub 2019-04-01); Chicken liver pate."
+  },
+  {
+    "ingredientId": "peanutbutter",
+    "entryName": "Peanut butter, smooth style, with salt (Includes foods for USDA's Food Distribution Program)",
+    "state": "prepared",
+    "kcalPer100g": 598,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174266/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174266 (pub 2019-04-01); Smooth peanut butter."
+  },
+  {
+    "ingredientId": "peanuts",
+    "entryName": "Peanuts, all types, oil-roasted, with salt",
+    "state": "prepared",
+    "kcalPer100g": 599,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174261/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174261 (pub 2019-04-01); Roasted peanuts."
+  },
+  {
+    "ingredientId": "pear",
+    "entryName": "Pears, asian, raw",
+    "state": "raw",
+    "kcalPer100g": 42,
+    "basisUnit": "piece",
+    "gramsPerPiece": 275,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168177/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168177 (pub 2019-04-01); 1 Korean/Asian pear = 275 g edible per USDA foodPortions."
+  },
+  {
+    "ingredientId": "peas",
+    "entryName": "Peas, green, raw",
+    "state": "raw",
+    "kcalPer100g": 81,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170419/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170419 (pub 2019-04-01); Green peas."
+  },
+  {
     "ingredientId": "pecorino",
     "entryName": "Cheese, romano",
     "state": "prepared",
@@ -519,6 +2378,73 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 171249 (pub 2019-04-01); Romano / Pecorino Romano hard sheep-milk style cheese."
+  },
+  {
+    "ingredientId": "pepperflakes",
+    "entryName": "Spices, pepper, red or cayenne",
+    "state": "prepared",
+    "kcalPer100g": 318,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170932/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170932 (pub 2019-04-01); Red chili flakes (pul biber)."
+  },
+  {
+    "ingredientId": "pepperpaste",
+    "entryName": "Tomato products, canned, paste, without salt added (Includes foods for USDA's Food Distribution Program)",
+    "state": "prepared",
+    "kcalPer100g": 82,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170459/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170459 (pub 2019-04-01); Turkish red pepper paste (8 g)."
+  },
+  {
+    "ingredientId": "peppers",
+    "entryName": "Peppers, sweet, green, raw",
+    "state": "raw",
+    "kcalPer100g": 20,
+    "basisUnit": "piece",
+    "gramsPerPiece": 60,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170427/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170427 (pub 2019-04-01); 1 long slender Turkish green pepper = 60 g edible."
+  },
+  {
+    "ingredientId": "pickledmustard",
+    "entryName": "Mustard greens, raw",
+    "state": "prepared",
+    "kcalPer100g": 27,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169256/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169256 (pub 2019-04-01); Pickled mustard greens."
+  },
+  {
+    "ingredientId": "pide",
+    "entryName": "Bread, pita, white, enriched",
+    "state": "prepared",
+    "kcalPer100g": 275,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174915/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174915 (pub 2019-04-01); Turkish pide flatbread (enriched white pita flatbread basis)."
+  },
+  {
+    "ingredientId": "pineapple",
+    "entryName": "Pineapple, raw, all varieties",
+    "state": "raw",
+    "kcalPer100g": 50,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169124/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169124 (pub 2019-04-01); Raw pineapple."
   },
   {
     "ingredientId": "pinenuts",
@@ -555,6 +2481,41 @@
     "notes": "USDA SR Legacy FDC 174915 (pub 2019-04-01); 1 large white pita bread (6-1/2\" dia) = 60 g."
   },
   {
+    "ingredientId": "poblano",
+    "entryName": "Peppers, sweet, green, raw",
+    "state": "raw",
+    "kcalPer100g": 20,
+    "basisUnit": "piece",
+    "gramsPerPiece": 64,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170427/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170427 (pub 2019-04-01); 1 medium poblano pepper = 64 g edible."
+  },
+  {
+    "ingredientId": "pork-belly",
+    "entryName": "Pork, fresh, belly, raw",
+    "state": "raw",
+    "kcalPer100g": 518,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167812/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167812 (pub 2019-04-01); Raw fresh pork belly."
+  },
+  {
+    "ingredientId": "pork-loin",
+    "entryName": "Pork, fresh, loin, center loin (chops), boneless, separable lean only, raw",
+    "state": "raw",
+    "kcalPer100g": 123,
+    "basisUnit": "piece",
+    "gramsPerPiece": 150,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168263/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168263 (pub 2019-04-01); 1 boneless pork loin cutlet (tonkatsu) = 150 g raw."
+  },
+  {
     "ingredientId": "pork-shoulder",
     "entryName": "Pork, fresh, shoulder, whole, separable lean and fat, raw",
     "state": "raw",
@@ -566,6 +2527,19 @@
     "notes": "USDA SR Legacy FDC 167843 (pub 2019-04-01); raw boneless separable lean and fat pork shoulder cubes prior to grilling."
   },
   {
+    "ingredientId": "porkknuckle",
+    "entryName": "Pork, fresh, leg (ham), whole, separable lean and fat, raw",
+    "state": "raw",
+    "kcalPer100g": 245,
+    "basisUnit": "piece",
+    "gramsPerPiece": 750,
+    "edibleYield": 0.65,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168222/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168222 (pub 2019-04-01); 1 whole bone-in pork knuckle (Schweinshaxe) = 750 g; 65% edible meat-and-skin yield applied."
+  },
+  {
     "ingredientId": "potato",
     "entryName": "Potatoes, flesh and skin, raw",
     "state": "raw",
@@ -575,6 +2549,75 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 170026 (pub 2019-04-01); raw potatoes, flesh and skin."
+  },
+  {
+    "ingredientId": "potato",
+    "entryName": "Potatoes, flesh and skin, raw",
+    "state": "raw",
+    "kcalPer100g": 77,
+    "basisUnit": "piece",
+    "gramsPerPiece": 173,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170026/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170026 (pub 2019-04-01); 1 medium potato = 173 g edible per USDA foodPortions."
+  },
+  {
+    "ingredientId": "prepared-stock",
+    "entryName": "Soup, SWANSON, beef broth, lower sodium",
+    "state": "prepared",
+    "kcalPer100g": 6,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.01,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171179/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171179 (pub 2019-04-01); Prepared savory meat/chicken stock; density 1.01 g/ml."
+  },
+  {
+    "ingredientId": "rabbit",
+    "entryName": "Game meat, rabbit, domesticated, composite of cuts, raw",
+    "state": "raw",
+    "kcalPer100g": 136,
+    "basisUnit": "g",
+    "edibleYield": 0.78,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172521/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172521 (pub 2019-04-01); Bone-in rabbit pieces; 78% edible meat yield applied."
+  },
+  {
+    "ingredientId": "radish",
+    "entryName": "Radishes, raw",
+    "state": "raw",
+    "kcalPer100g": 16,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169276/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169276 (pub 2019-04-01); Raw radish/cabbage garnish mix (10 g)."
+  },
+  {
+    "ingredientId": "raisins",
+    "entryName": "Raisins, golden, seedless",
+    "state": "prepared",
+    "kcalPer100g": 301,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168164/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168164 (pub 2019-04-01); Seedless raisins."
+  },
+  {
+    "ingredientId": "ramen-noodle",
+    "entryName": "Noodles, egg, dry, unenriched",
+    "state": "prepared",
+    "kcalPer100g": 384,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169755/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169755 (pub 2019-04-01); Fresh/dry wheat ramen noodles."
   },
   {
     "ingredientId": "red-onion",
@@ -611,6 +2654,122 @@
     "notes": "USDA SR Legacy FDC 170108 (pub 2019-04-01); raw sweet red pepper."
   },
   {
+    "ingredientId": "red-pepper",
+    "entryName": "Peppers, sweet, red, raw",
+    "state": "raw",
+    "kcalPer100g": 26,
+    "basisUnit": "piece",
+    "gramsPerPiece": 119,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170108/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170108 (pub 2019-04-01); 1 medium red bell pepper = 119 g edible per USDA foodPortions."
+  },
+  {
+    "ingredientId": "red-wine",
+    "entryName": "Alcoholic beverage, wine, table, red",
+    "state": "prepared",
+    "kcalPer100g": 85,
+    "basisUnit": "ml",
+    "densityGPerMl": 0.99,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173190/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173190 (pub 2019-04-01); Red table wine; density 0.99 g/ml (5 fl oz = 147 g per USDA; alcohol partially evaporates in braising)."
+  },
+  {
+    "ingredientId": "redwine",
+    "entryName": "Alcoholic beverage, wine, table, red",
+    "state": "prepared",
+    "kcalPer100g": 85,
+    "basisUnit": "ml",
+    "densityGPerMl": 0.99,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173190/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173190 (pub 2019-04-01); Red table wine; density 0.99 g/ml."
+  },
+  {
+    "ingredientId": "rice",
+    "entryName": "Rice, white, long-grain, regular, raw, unenriched",
+    "state": "raw",
+    "kcalPer100g": 365,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169756/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169756 (pub 2019-04-01); Uncooked long-grain white rice."
+  },
+  {
+    "ingredientId": "rice-noodle",
+    "entryName": "Rice noodles, dry",
+    "state": "prepared",
+    "kcalPer100g": 364,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169742/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169742 (pub 2019-04-01); Dry flat rice noodles."
+  },
+  {
+    "ingredientId": "ricepaper",
+    "entryName": "Rice noodles, dry",
+    "state": "prepared",
+    "kcalPer100g": 364,
+    "basisUnit": "piece",
+    "gramsPerPiece": 10,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169742/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169742 (pub 2019-04-01); 1 dry rice paper wrapper = 10 g (dry rice starch sheet basis)."
+  },
+  {
+    "ingredientId": "rockfish",
+    "entryName": "Fish, rockfish, Pacific, mixed species, raw",
+    "state": "raw",
+    "kcalPer100g": 90,
+    "basisUnit": "g",
+    "edibleYield": 0.35,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173684/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173684 (pub 2019-04-01); Small bony soup rockfish simmered and strained for bouillabaisse broth; 35% edible/broth extraction yield."
+  },
+  {
+    "ingredientId": "rosemary",
+    "entryName": "Rosemary, fresh",
+    "state": "raw",
+    "kcalPer100g": 131,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173473/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173473 (pub 2019-04-01); Fresh rosemary."
+  },
+  {
+    "ingredientId": "saffron",
+    "entryName": "Spices, saffron",
+    "state": "prepared",
+    "kcalPer100g": 310,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170934/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170934 (pub 2019-04-01); Saffron threads (0.05 g)."
+  },
+  {
+    "ingredientId": "sake",
+    "entryName": "Alcoholic beverage, rice (sake)",
+    "state": "prepared",
+    "kcalPer100g": 134,
+    "basisUnit": "ml",
+    "densityGPerMl": 0.98,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167723/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167723 (pub 2019-04-01); Japanese rice wine (sake); density 0.98 g/ml (1 fl oz = 29.1 g per USDA)."
+  },
+  {
     "ingredientId": "salt",
     "entryName": "Salt, table",
     "state": "raw",
@@ -620,6 +2779,52 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 173468 (pub 2019-04-01); sourced 0 kcal/100g table salt; editorial fixed amount."
+  },
+  {
+    "ingredientId": "salted-duck-egg",
+    "entryName": "Egg, duck, whole, fresh, raw",
+    "state": "prepared",
+    "kcalPer100g": 185,
+    "basisUnit": "piece",
+    "gramsPerPiece": 70,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172189/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172189 (pub 2019-04-01); 1 salted duck egg = 70 g edible per USDA duck egg foodPortions."
+  },
+  {
+    "ingredientId": "sardines",
+    "entryName": "Fish, sardine, Atlantic, canned in oil, drained solids with bone",
+    "state": "raw",
+    "kcalPer100g": 208,
+    "basisUnit": "g",
+    "edibleYield": 0.65,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/175139/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 175139 (pub 2019-04-01); Whole grilled sardines; 65% edible yield excluding head/viscera/backbone."
+  },
+  {
+    "ingredientId": "sauerkraut",
+    "entryName": "Sauerkraut, canned, solids and liquids",
+    "state": "prepared",
+    "kcalPer100g": 19,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169279/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169279 (pub 2019-04-01); Prepared sauerkraut."
+  },
+  {
+    "ingredientId": "savoiardi",
+    "entryName": "Cookies, ladyfingers, without lemon juice and rind",
+    "state": "prepared",
+    "kcalPer100g": 363,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172821/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172821 (pub 2019-04-01); Savoiardi ladyfinger biscuits."
   },
   {
     "ingredientId": "scallion",
@@ -645,6 +2850,40 @@
     "notes": "USDA SR Legacy FDC 170005 (pub 2019-04-01); 1 medium raw scallion = 15 g edible portion."
   },
   {
+    "ingredientId": "sea-bass",
+    "entryName": "Fish, sea bass, mixed species, raw",
+    "state": "raw",
+    "kcalPer100g": 97,
+    "basisUnit": "piece",
+    "gramsPerPiece": 500,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/175142/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 175142 (pub 2019-04-01); 1 whole steamed sea bass = 500 g edible fillet yield (excluding head, viscera and bones)."
+  },
+  {
+    "ingredientId": "serrano-ham",
+    "entryName": "Pork, cured, ham, patties, unheated",
+    "state": "prepared",
+    "kcalPer100g": 315,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167873/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167873 (pub 2019-04-01); Cured Serrano ham."
+  },
+  {
+    "ingredientId": "sesame",
+    "entryName": "Seeds, sesame seeds, whole, dried",
+    "state": "prepared",
+    "kcalPer100g": 573,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170150/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170150 (pub 2019-04-01); Whole dried sesame seeds."
+  },
+  {
     "ingredientId": "sesame-oil",
     "entryName": "Oil, sesame, salad or cooking",
     "state": "prepared",
@@ -657,6 +2896,120 @@
     "notes": "USDA SR Legacy FDC 171016 (pub 2019-04-01); density 0.92 g/ml from USDA 1 cup = 218 g."
   },
   {
+    "ingredientId": "sesameseeds",
+    "entryName": "Seeds, sesame seeds, whole, dried",
+    "state": "prepared",
+    "kcalPer100g": 573,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170150/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170150 (pub 2019-04-01); Whole dried sesame seeds."
+  },
+  {
+    "ingredientId": "shallot",
+    "entryName": "Shallots, raw",
+    "state": "raw",
+    "kcalPer100g": 72,
+    "basisUnit": "piece",
+    "gramsPerPiece": 30,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170499/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170499 (pub 2019-04-01); 1 medium raw shallot = 30 g edible."
+  },
+  {
+    "ingredientId": "shiitake-dried",
+    "entryName": "Mushrooms, shiitake, dried",
+    "state": "prepared",
+    "kcalPer100g": 296,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168436/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168436 (pub 2019-04-01); Dried shiitake mushrooms."
+  },
+  {
+    "ingredientId": "shiitake-fresh",
+    "entryName": "Mushrooms, shiitake, raw",
+    "state": "raw",
+    "kcalPer100g": 34,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169242/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169242 (pub 2019-04-01); Raw shiitake mushrooms."
+  },
+  {
+    "ingredientId": "shirataki",
+    "entryName": "Radishes, oriental, raw",
+    "state": "prepared",
+    "kcalPer100g": 18,
+    "basisUnit": "g",
+    "edibleYield": 0.5,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168451/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168451 (pub 2019-04-01); Konjac shirataki noodles (~9 kcal/100g, very low energy fiber noodle)."
+  },
+  {
+    "ingredientId": "shortribs",
+    "entryName": "Beef, rib, shortribs, separable lean and fat, choice, raw",
+    "state": "raw",
+    "kcalPer100g": 390,
+    "basisUnit": "g",
+    "edibleYield": 0.55,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169439/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169439 (pub 2019-04-01); Bone-in beef short ribs; 55% edible meat yield applied (45% bone/trim refuse per USDA)."
+  },
+  {
+    "ingredientId": "shrimp",
+    "entryName": "Crustaceans, shrimp, mixed species, raw (may contain additives to retain moisture)",
+    "state": "raw",
+    "kcalPer100g": 71,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174210/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174210 (pub 2019-04-01); Raw peeled shrimp."
+  },
+  {
+    "ingredientId": "shrimp",
+    "entryName": "Crustaceans, shrimp, mixed species, raw (may contain additives to retain moisture)",
+    "state": "raw",
+    "kcalPer100g": 71,
+    "basisUnit": "piece",
+    "gramsPerPiece": 15,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174210/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174210 (pub 2019-04-01); 1 medium/large peeled shrimp = 15 g edible."
+  },
+  {
+    "ingredientId": "sichuan-pepper",
+    "entryName": "Spices, pepper, black",
+    "state": "prepared",
+    "kcalPer100g": 251,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170931/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170931 (pub 2019-04-01); Sichuan peppercorns (1-2 g infusion spice)."
+  },
+  {
+    "ingredientId": "small-onion",
+    "entryName": "Onions, raw",
+    "state": "raw",
+    "kcalPer100g": 40,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170000/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170000 (pub 2019-04-01); Pearl / small onions, raw."
+  },
+  {
     "ingredientId": "soda",
     "entryName": "Leavening agents, baking soda",
     "state": "prepared",
@@ -666,6 +3019,17 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 175040 (pub 2019-04-01); sourced 0 kcal/100g baking soda (bicarbonate of soda)."
+  },
+  {
+    "ingredientId": "sourcherry",
+    "entryName": "Cherries, sour, red, raw",
+    "state": "raw",
+    "kcalPer100g": 50,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173954/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173954 (pub 2019-04-01); Pitted sour cherries."
   },
   {
     "ingredientId": "soy-sauce",
@@ -680,6 +3044,39 @@
     "notes": "USDA SR Legacy FDC 174277 (pub 2019-04-01); shoyu soy sauce density 1.08 g/ml from USDA 1 cup = 255 g."
   },
   {
+    "ingredientId": "soybean-sprout",
+    "entryName": "Soybeans, mature seeds, sprouted, raw",
+    "state": "raw",
+    "kcalPer100g": 122,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169284/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169284 (pub 2019-04-01); Raw soybean sprouts."
+  },
+  {
+    "ingredientId": "spaghetti",
+    "entryName": "Pasta, dry, unenriched",
+    "state": "prepared",
+    "kcalPer100g": 371,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168927/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168927 (pub 2019-04-01); Dry spaghetti pasta."
+  },
+  {
+    "ingredientId": "spices",
+    "entryName": "Spices, cloves, ground",
+    "state": "prepared",
+    "kcalPer100g": 274,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171321/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171321 (pub 2019-04-01); Mixed pickling spices (cloves, juniper, bay, peppercorns; infused in marinade)."
+  },
+  {
     "ingredientId": "spinach",
     "entryName": "Spinach, raw",
     "state": "raw",
@@ -691,6 +3088,51 @@
     "notes": "USDA SR Legacy FDC 168462 (pub 2019-04-01); raw spinach."
   },
   {
+    "ingredientId": "star-anise",
+    "entryName": "Spices, anise seed",
+    "state": "prepared",
+    "kcalPer100g": 337,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171316/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171316 (pub 2019-04-01); Star anise (anise seed basis)."
+  },
+  {
+    "ingredientId": "star-anise",
+    "entryName": "Spices, anise seed",
+    "state": "prepared",
+    "kcalPer100g": 337,
+    "basisUnit": "piece",
+    "gramsPerPiece": 1.5,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171316/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171316 (pub 2019-04-01); 1 whole star anise pod = 1.5 g."
+  },
+  {
+    "ingredientId": "steak",
+    "entryName": "Beef, top sirloin, steak, separable lean only, trimmed to 1/8\" fat, select, raw",
+    "state": "raw",
+    "kcalPer100g": 127,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171804/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171804 (pub 2019-04-01); Raw beef top sirloin steak, thinly sliced."
+  },
+  {
+    "ingredientId": "stock-powder",
+    "entryName": "Soup, chicken broth cubes, dry",
+    "state": "prepared",
+    "kcalPer100g": 198,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171563/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171563 (pub 2019-04-01); Dry savory stock seasoning powder (1-2 g)."
+  },
+  {
     "ingredientId": "sugar",
     "entryName": "Sugars, granulated",
     "state": "prepared",
@@ -700,6 +3142,72 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 169655 (pub 2019-04-01); granulated white sugar."
+  },
+  {
+    "ingredientId": "sumac",
+    "entryName": "Spices, paprika",
+    "state": "prepared",
+    "kcalPer100g": 282,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171329/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171329 (pub 2019-04-01); Ground sumac berry spice (2 g)."
+  },
+  {
+    "ingredientId": "tamarind",
+    "entryName": "Tamarinds, raw",
+    "state": "prepared",
+    "kcalPer100g": 239,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167763/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167763 (pub 2019-04-01); Tamarind pulp/paste."
+  },
+  {
+    "ingredientId": "tenkasu",
+    "entryName": "Bread, crumbs, dry, grated, plain",
+    "state": "prepared",
+    "kcalPer100g": 395,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174928/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174928 (pub 2019-04-01); Crispy tempura batter scraps (tenkasu, 40 g)."
+  },
+  {
+    "ingredientId": "thyme",
+    "entryName": "Thyme, fresh",
+    "state": "raw",
+    "kcalPer100g": 101,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173470/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173470 (pub 2019-04-01); Fresh thyme."
+  },
+  {
+    "ingredientId": "tofu",
+    "entryName": "Tofu, raw, firm, prepared with calcium sulfate",
+    "state": "raw",
+    "kcalPer100g": 144,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172475/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172475 (pub 2019-04-01); Firm raw tofu."
+  },
+  {
+    "ingredientId": "tomatillo",
+    "entryName": "Tomatillos, raw",
+    "state": "raw",
+    "kcalPer100g": 32,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168566/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168566 (pub 2019-04-01); Raw tomatillos."
   },
   {
     "ingredientId": "tomato",
@@ -725,6 +3233,74 @@
     "notes": "USDA SR Legacy FDC 170457 (pub 2019-04-01); 1 medium whole raw tomato = 123 g edible weight."
   },
   {
+    "ingredientId": "tomatopassata",
+    "entryName": "Tomatoes, crushed, canned",
+    "state": "prepared",
+    "kcalPer100g": 32,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.02,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170501/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170501 (pub 2019-04-01); Tomato passata / crushed tomatoes; density 1.02 g/ml."
+  },
+  {
+    "ingredientId": "tomatopaste",
+    "entryName": "Tomato products, canned, paste, without salt added (Includes foods for USDA's Food Distribution Program)",
+    "state": "prepared",
+    "kcalPer100g": 82,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170459/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170459 (pub 2019-04-01); Concentrated tomato paste."
+  },
+  {
+    "ingredientId": "tortillas",
+    "entryName": "Tortillas, ready-to-bake or -fry, corn",
+    "state": "prepared",
+    "kcalPer100g": 218,
+    "basisUnit": "piece",
+    "gramsPerPiece": 24,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/175036/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 175036 (pub 2019-04-01); 1 corn tortilla (6-inch) = 24 g per USDA foodPortions."
+  },
+  {
+    "ingredientId": "tostadas",
+    "entryName": "Snacks, tortilla chips, plain, white corn, salted",
+    "state": "prepared",
+    "kcalPer100g": 472,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/167558/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 167558 (pub 2019-04-01); Crisp corn tostada garnish (10 g)."
+  },
+  {
+    "ingredientId": "turmeric",
+    "entryName": "Spices, turmeric, ground",
+    "state": "prepared",
+    "kcalPer100g": 312,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172231/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172231 (pub 2019-04-01); Ground turmeric."
+  },
+  {
+    "ingredientId": "uraddal",
+    "entryName": "Mungo beans, mature seeds, raw",
+    "state": "raw",
+    "kcalPer100g": 341,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174259/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174259 (pub 2019-04-01); Split black gram (urad dal / mungo beans), raw."
+  },
+  {
     "ingredientId": "vanilla",
     "entryName": "Vanilla extract",
     "state": "prepared",
@@ -734,6 +3310,53 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 173471 (pub 2019-04-01); vanilla extract (includes alcohol kcal prior to baking evaporation)."
+  },
+  {
+    "ingredientId": "vanilla-pod",
+    "entryName": "Vanilla extract",
+    "state": "raw",
+    "kcalPer100g": 288,
+    "basisUnit": "piece",
+    "gramsPerPiece": 5,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/173471/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 173471 (pub 2019-04-01); 1 scraped vanilla bean pod (~5 g extract-equivalent aromatic seeds)."
+  },
+  {
+    "ingredientId": "veal",
+    "entryName": "Veal, shank, separable lean and fat, raw",
+    "state": "raw",
+    "kcalPer100g": 107,
+    "basisUnit": "piece",
+    "gramsPerPiece": 250,
+    "edibleYield": 0.72,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172648/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172648 (pub 2019-04-01); 1 bone-in veal shank cross-cut (osso buco) = 250 g; 72% edible meat yield applied."
+  },
+  {
+    "ingredientId": "vegetables",
+    "entryName": "Sweet potato, raw, unprepared (Includes foods for USDA's Food Distribution Program)",
+    "state": "raw",
+    "kcalPer100g": 86,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/168482/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 168482 (pub 2019-04-01); Assorted tempura vegetables (sweet potato, aubergine, pumpkin, pepper; sweet potato upper-mid reference)."
+  },
+  {
+    "ingredientId": "vermicelli",
+    "entryName": "Rice noodles, dry",
+    "state": "prepared",
+    "kcalPer100g": 364,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/169742/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 169742 (pub 2019-04-01); Dry rice vermicelli."
   },
   {
     "ingredientId": "vinegar",
@@ -746,6 +3369,109 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 172237 (pub 2019-04-01); distilled vinegar density 1.01 g/ml from USDA 1 cup = 238 g."
+  },
+  {
+    "ingredientId": "wakame",
+    "entryName": "Seaweed, wakame, raw",
+    "state": "prepared",
+    "kcalPer100g": 45,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170496/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170496 (pub 2019-04-01); Dried wakame seaweed (8 g)."
+  },
+  {
+    "ingredientId": "white-wine",
+    "entryName": "Alcoholic beverage, wine, table, white",
+    "state": "prepared",
+    "kcalPer100g": 82,
+    "basisUnit": "ml",
+    "densityGPerMl": 0.99,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/174837/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 174837 (pub 2019-04-01); Dry white table wine; density 0.99 g/ml (1 fl oz = 29.4 g per USDA)."
+  },
+  {
+    "ingredientId": "whitefish",
+    "entryName": "Fish, haddock, raw",
+    "state": "raw",
+    "kcalPer100g": 74,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171964/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171964 (pub 2019-04-01); Firm white fish fillets (haddock/monkfish basis)."
+  },
+  {
+    "ingredientId": "whole-poussin",
+    "entryName": "Chicken, cornish game hens, meat and skin, raw",
+    "state": "raw",
+    "kcalPer100g": 200,
+    "basisUnit": "piece",
+    "gramsPerPiece": 450,
+    "edibleYield": 0.7,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171507/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171507 (pub 2019-04-01); 1 whole young poussin/Cornish game hen = 450 g; 70% edible meat-and-skin yield applied."
+  },
+  {
+    "ingredientId": "whole-spice-mix",
+    "entryName": "Spices, cardamom",
+    "state": "prepared",
+    "kcalPer100g": 311,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170919/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170919 (pub 2019-04-01); Whole biryani spice mix (cardamom, cloves, cinnamon, bay; 8 g infused)."
+  },
+  {
+    "ingredientId": "wings",
+    "entryName": "Chicken, broilers or fryers, wing, meat and skin, raw",
+    "state": "raw",
+    "kcalPer100g": 191,
+    "basisUnit": "g",
+    "edibleYield": 0.49,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/172390/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 172390 (pub 2019-04-01); Bone-in chicken wings; 49% edible meat-and-skin yield applied (51% bone refuse per USDA)."
+  },
+  {
+    "ingredientId": "worcestershire",
+    "entryName": "Sauce, worcestershire",
+    "state": "prepared",
+    "kcalPer100g": 77,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171610/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171610 (pub 2019-04-01); Worcestershire sauce."
+  },
+  {
+    "ingredientId": "yam",
+    "entryName": "Yam, raw",
+    "state": "raw",
+    "kcalPer100g": 118,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/170071/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 170071 (pub 2019-04-01); Raw grated mountain yam (nagaimo)."
+  },
+  {
+    "ingredientId": "yeast",
+    "entryName": "Leavening agents, yeast, baker's, active dry",
+    "state": "prepared",
+    "kcalPer100g": 325,
+    "basisUnit": "g",
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/175043/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 175043 (pub 2019-04-01); Active dry baker's yeast."
   },
   {
     "ingredientId": "yeast-fresh",
@@ -768,6 +3494,18 @@
     "sourceDate": "2026-11-26",
     "verifiedBy": "ZheKai Mao (@Justmao1)",
     "notes": "USDA SR Legacy FDC 171304 (pub 2019-04-01); plain whole-milk Greek yogurt."
+  },
+  {
+    "ingredientId": "yogurt",
+    "entryName": "Yogurt, plain, whole milk",
+    "state": "prepared",
+    "kcalPer100g": 61,
+    "basisUnit": "ml",
+    "densityGPerMl": 1.03,
+    "sourceUrl": "https://fdc.nal.usda.gov/food-details/171284/nutrients",
+    "sourceDate": "2026-11-27",
+    "verifiedBy": "Peng Ke (@kekepepe)",
+    "notes": "USDA SR Legacy FDC 171284 (pub 2019-04-01); Plain whole-milk yogurt; density 1.03 g/ml (1 cup = 245 g / 236.6 ml per USDA)."
   },
   {
     "ingredientId": "yufka",

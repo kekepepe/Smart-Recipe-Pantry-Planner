@@ -147,3 +147,29 @@ test('C03 rules: display rounding rounds half up and never mutates the raw value
   assert.equal(roundForDisplay(200), 200);
   assert.equal(roundForDisplay(199.5), 200);
 });
+
+test('C03 rules: optional edibleYield and recipeRetentions adjust energy and surface assumptions', t => {
+  const wings = mapping({
+    ingredientId: 'wings', entryName: 'Chicken wings', state: 'raw', kcalPer100g: 200, basisUnit: 'g',
+    edibleYield: 0.5, notes: '50% edible yield.',
+  });
+  const oil = mapping({
+    ingredientId: 'oil', entryName: 'Vegetable oil', state: 'raw', kcalPer100g: 884, basisUnit: 'ml', densityGPerMl: 0.92,
+    recipeRetentions: { 'deep-fry': { factor: 0.1, notes: '10% deep-fry absorption.' } },
+  });
+  const indexed = index([wings, oil]);
+  const fried = computeNutrition(recipe('deep-fry', 2, [req('wings', 1000, 'g'), req('oil', 500, 'ml')]), indexed);
+  // wings: 1000/100 * 200 * 0.5 = 1000; oil: 500 * 0.92 / 100 * 884 * 0.1 = 406.64
+  assert.equal(fried.wholeDishKcal, 1406.64);
+  assert.equal(fried.perServingKcal, 703.32);
+  assert(fried.assumptions.some(a => a.ingredientId === 'oil' && a.notes.includes('10% deep-fry absorption.')));
+
+  // Normal recipe without retention override uses 100% of oil.
+  const pan = computeNutrition(recipe('pan-fry', 1, [req('oil', 10, 'ml')]), indexed);
+  assert.equal(pan.wholeDishKcal, 81.328);
+
+  // Validation rejects out-of-range yield or malformed retention entries.
+  assert.throws(() => validateNutritionMappings([mapping({ ingredientId: 'x', entryName: 'X', state: 'raw', kcalPer100g: 100, basisUnit: 'g', edibleYield: 0 })]), /edibleYield/);
+  assert.throws(() => validateNutritionMappings([mapping({ ingredientId: 'x', entryName: 'X', state: 'raw', kcalPer100g: 100, basisUnit: 'g', edibleYield: 1.5 })]), /edibleYield/);
+  assert.throws(() => validateNutritionMappings([mapping({ ingredientId: 'x', entryName: 'X', state: 'raw', kcalPer100g: 100, basisUnit: 'g', recipeRetentions: { r1: { factor: 0, notes: 'bad' } } })]), /recipeRetentions/);
+});

@@ -161,8 +161,8 @@ try {
   assert.equal((await request('/api/recommendations/staples')).total > 0, true);
   assert.equal((await request('/api/inspiration')).recipes.length > 0, true);
   const nutrition = await request('/api/nutrition');
-  assert.equal(nutrition.estimatedCount, 21);
-  assert(nutrition.nutrition.some(recipe => recipe.status === 'unavailable'));
+  assert.equal(nutrition.estimatedCount, 100);
+  assert(nutrition.nutrition.every(recipe => recipe.status === 'estimated'));
 
   // Verify graceful launcher shutdown endpoint rejects wrong token and stops cleanly with valid token
   await request('/api/lite-shutdown', 'POST', undefined, 403, { 'X-Lite-Control-Token': 'wrong-token' });
