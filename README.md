@@ -42,7 +42,7 @@ Home cooks frequently have ingredients on hand yet still spend time manually cro
 | **100-Recipe Multi-Dimensional Discovery** | Filter **100 illustrated world recipes** across **16 countries**, **15 regional cuisines**, **6 tastes**, **3 meals**, category, availability status (`Any status`, `Can make now`, `Need ingredients`, `Check units`), and bilingual keyword search. URL-persisted queries survive reload and back navigation. |
 | **Use What I Have (Staple Recommendations)** | Ranks matching dishes by **main food coverage** (`Main foods ready`, `Partial staple match`, `Check staple units`) with per-staple stock breakdowns, while surfacing missing seasonings separately so you never miss a dish for lack of one spice. |
 | **Daily Inspiration** | Serves **3 deterministic daily picks** per `Asia/Shanghai` calendar day, completely independent of pantry inventory while respecting active cuisine/taste/meal filters. |
-| **Verified USDA Nutrition Estimates** | Displays per-serving and whole-dish `kcal`, base servings, cooking-state assumptions, and expandable **USDA FoodData Central (SR Legacy)** source citations (**69 verified mappings** covering **21 complete recipes**). Unmapped dishes explicitly display `Unavailable`—never fabricated `0 kcal`. |
+| **Verified USDA Nutrition Estimates** | Displays per-serving and whole-dish `kcal`, base servings, cooking-state assumptions, and expandable **USDA FoodData Central (SR Legacy)** source citations (**306 verified mappings** covering **all 100 recipes**). Any recipe missing a verified mapping or serving count explicitly displays `Unavailable`—never fabricated `0 kcal`. |
 | **Multi-Recipe Shopping List & Purchased Marks** | Save multiple recipes into one combined list, sum shared ingredients before subtracting pantry stock once, and check off **Purchased** items that persist across refreshes/restarts without mutating pantry stock. Automatically flags quantity changes and unit conflicts. |
 | **Full EN / 简体中文 Bilingual UI** | One-click language switcher persisted in `localStorage` with pre-paint `<html lang>` sync and 100% localized recipes, ingredients, taxonomy, nutrition labels, and status messages. |
 | **Local Offline Sign-In** | Optional single-user local account per SQLite database with hashed password storage, "Remember me" auto-login (30-day revocable token), password change, and automatic preservation of existing pantry/shopping data on upgrade. |
@@ -192,7 +192,7 @@ flowchart LR
 
     subgraph Storage["Offline Local Persistence"]
         DB[("SQLite (better-sqlite3)\npantry.sqlite + migrations")]
-        CAT["Bundled Catalog & Assets\n100 recipes · 286 ingredients · 69 USDA mappings"]
+        CAT["Bundled Catalog & Assets\n100 recipes · 286 ingredients · 306 USDA mappings"]
     end
 
     subgraph Desktop["Desktop Shell (Electron)"]
@@ -268,7 +268,7 @@ Continuous Integration runs automatically on GitHub Actions:
 Pantry & Plate prioritizes **correctness and transparency** over inflated claims:
 
 - **Strict Unit Integrity:** Pantry matching and shopping totals never silently guess conversions between `g`, `ml`, and `piece`. Incompatible units are explicitly flagged as **Check units** rather than producing misleading numbers.
-- **Fail-Closed Nutrition Estimates:** Calorie estimates are computed strictly from verified **USDA FoodData Central (SR Legacy)** entries ([`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)). Currently **21 of 100 recipes** have complete verified coverage (**69 ingredient mappings**); the remaining **79 recipes** explicitly display `Unavailable` with unmapped required ingredients listed—never partial totals or fabricated `0 kcal`.
+- **Fail-Closed Nutrition Estimates:** Calorie estimates are computed strictly from verified **USDA FoodData Central (SR Legacy)** entries ([`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)). All **100 of 100 recipes** now have complete verified coverage (**306 ingredient mappings**, with explicit oil-retention and bone-in edible-yield assumptions surfaced alongside estimates); any dish missing a verified mapping or serving count explicitly displays `Unavailable`—never partial totals or fabricated `0 kcal`.
 - **No Silent Pantry Mutation:** Checking off an item as **Purchased** in the shopping list records your shopping progress without silently modifying pantry quantities.
 - **No Cloud Dependency:** All data, catalog entries, nutrition tables, and 100 illustrations are bundled locally.
 
@@ -305,5 +305,5 @@ Built collaboratively by:
 - **Third-Party Recipe & Nutrition Data (Separate Licenses & Provenance):**
   - 18 home-style recipes adapted from [Anduin2017/HowToCook](https://github.com/Anduin2017/HowToCook) (**Unlicense**, snapshots in `data/sources/howtocook/`).
   - 80 world recipes adapted from [UniTools Recipes](https://github.com/farcrak/unitools-recipes) (**CC BY-SA 4.0**, attribution: *UniTools — theunitools.com*; `data/world-recipes.json` remains under **CC BY-SA 4.0** and is not relicensed under MIT).
-  - 69 nutrition mappings sourced from **USDA FoodData Central — SR Legacy** (Public Domain / CC0 1.0; full audit in [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)).
+  - 306 nutrition mappings sourced from **USDA FoodData Central — SR Legacy** (Public Domain / CC0 1.0; full audit in [`docs/NUTRITION-SOURCES.md`](docs/NUTRITION-SOURCES.md)).
   - 100 bundled recipe illustrations generated for this project with provenance recorded in `data/world-image-manifest.json`.

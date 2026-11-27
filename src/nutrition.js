@@ -46,6 +46,19 @@ export function validateNutritionMappings(records) {
     if (record.basisUnit === 'ml' && (!Number.isFinite(record.densityGPerMl) || record.densityGPerMl <= 0)) fail('basisUnit ml needs a positive sourced densityGPerMl.');
     if (record.basisUnit === 'piece' && (!Number.isFinite(record.gramsPerPiece) || record.gramsPerPiece <= 0)) fail('basisUnit piece needs a positive sourced gramsPerPiece.');
     if (record.basisUnit === 'g' && (record.densityGPerMl !== undefined || record.gramsPerPiece !== undefined)) fail('basisUnit g must not carry density or piece-weight conversion fields.');
+    if (record.edibleYield !== undefined && (!Number.isFinite(record.edibleYield) || record.edibleYield <= 0 || record.edibleYield > 1)) {
+      fail('edibleYield must be a finite number in (0, 1].');
+    }
+    if (record.recipeRetentions !== undefined) {
+      if (!record.recipeRetentions || typeof record.recipeRetentions !== 'object' || Array.isArray(record.recipeRetentions)) {
+        fail('recipeRetentions must be an object keyed by recipeId.');
+      }
+      for (const [rid, entry] of Object.entries(record.recipeRetentions)) {
+        if (!entry || typeof entry !== 'object' || !Number.isFinite(entry.factor) || entry.factor <= 0 || entry.factor > 1 || typeof entry.notes !== 'string' || !entry.notes) {
+          fail(`recipeRetentions[${rid}] must specify factor in (0, 1] and non-empty notes.`);
+        }
+      }
+    }
   }
   return records;
 }
@@ -66,18 +79,21 @@ export const roundForDisplay = value => Math.round(value);
 const precise = value => Number(value.toFixed(10));
 
 // Energy contributed by one requirement line, or null when the mapping/conversion is unusable.
-function requirementEnergy(requirement, record) {
+function requirementEnergy(requirement, record, recipeId) {
   if (!record) return null;
-  if (requirement.unit === 'g' && record.basisUnit === 'g') return precise(requirement.quantity / 100 * record.kcalPer100g);
-  if (requirement.unit === 'ml' && record.basisUnit === 'ml') {
+  let base = null;
+  if (requirement.unit === 'g' && record.basisUnit === 'g') base = requirement.quantity / 100 * record.kcalPer100g;
+  else if (requirement.unit === 'ml' && record.basisUnit === 'ml') {
     if (!Number.isFinite(record.densityGPerMl) || record.densityGPerMl <= 0) return null;
-    return precise(requirement.quantity * record.densityGPerMl / 100 * record.kcalPer100g);
-  }
-  if (requirement.unit === 'piece' && record.basisUnit === 'piece') {
+    base = requirement.quantity * record.densityGPerMl / 100 * record.kcalPer100g;
+  } else if (requirement.unit === 'piece' && record.basisUnit === 'piece') {
     if (!Number.isFinite(record.gramsPerPiece) || record.gramsPerPiece <= 0) return null;
-    return precise(requirement.quantity * record.gramsPerPiece / 100 * record.kcalPer100g);
+    base = requirement.quantity * record.gramsPerPiece / 100 * record.kcalPer100g;
   }
-  return null; // requirement unit and mapping basis do not line up: never guess a conversion
+  if (base === null) return null; // requirement unit and mapping basis do not line up: never guess a conversion
+  const yieldFactor = record.edibleYield ?? 1;
+  const retentionFactor = recipeId && record.recipeRetentions?.[recipeId]?.factor ? record.recipeRetentions[recipeId].factor : 1;
+  return precise(base * yieldFactor * retentionFactor);
 }
 
 // Compute one recipe's energy summary. `mappings` is a Map keyed by `ingredientId|basisUnit`
@@ -91,15 +107,17 @@ export function computeNutrition(recipe, mappings) {
   // Deterministic accumulation in requirements (position) order.
   for (const requirement of recipe.requirements) {
     const record = mappings.get(`${requirement.ingredientId}|${requirement.unit}`);
-    const energy = requirementEnergy(requirement, record);
+    const energy = requirementEnergy(requirement, record, recipe.id);
     if (energy === null) {
       (record ? blocked : missing).push(requirement.ingredientId);
       continue;
     }
     wholeDishKcal = precise(wholeDishKcal + energy);
     used.push(requirement.ingredientId);
-    if (record.notes || record.state !== 'raw') {
-      assumptions.push({ ingredientId: requirement.ingredientId, state: record.state, notes: record.notes || null });
+    const retention = record.recipeRetentions?.[recipe.id];
+    if (record.notes || record.state !== 'raw' || retention) {
+      const noteParts = [record.notes, retention?.notes].filter(Boolean);
+      assumptions.push({ ingredientId: requirement.ingredientId, state: record.state, notes: noteParts.length ? noteParts.join(' ') : null });
     }
   }
   const unavailable = missing.length > 0 || blocked.length > 0;

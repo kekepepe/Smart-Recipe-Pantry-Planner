@@ -12,6 +12,17 @@ function formatIngredientNames(ids, ingredientMap, lang) {
   }).filter(Boolean).join(sep);
 }
 
+function formatAssumptionNote(notes, lang) {
+  if (!notes) return '';
+  if (lang !== 'zh-CN') return notes;
+  const parts = [];
+  if (/oil absorption|oil retention|poaching bath|frying oil/i.test(notes)) parts.push('已按油炸或油浸吸油率折算');
+  if (/edible.*yield|bone refuse|shell refuse|broth.*extraction/i.test(notes)) parts.push('已按去骨、去壳可食部或出汤比例折算');
+  if (/zero energy|0 kcal|energy 0/i.test(notes)) parts.push('公开营养来源标注为零热量调料');
+  if (parts.length === 0) parts.push('依据美国农业部标准食品成分数据库核验估算');
+  return parts.join('；');
+}
+
 function formatUnavailableReason(nutrition, ingredientMap, lang, t) {
   const unmapped = nutrition.unmappedRequired || [];
   const names = formatIngredientNames(unmapped, ingredientMap, lang);
@@ -165,9 +176,10 @@ export function NutritionPanel({ recipeId }) {
                     const ing = ingredientMap.get(item.ingredientId);
                     const name = ing ? getIngredientName(ing, lang) : item.ingredientId;
                     const stateLabel = t.nutritionStates[item.state] || item.state;
+                    const noteText = formatAssumptionNote(item.notes, lang);
                     return (
                       <li key={`${item.ingredientId}-${idx}`}>
-                        <strong>{name}</strong>{lang === 'zh-CN' ? `（${stateLabel}）` : ` (${stateLabel})`}{item.notes ? `${lang === 'zh-CN' ? '：' : ': '}${item.notes}` : ''}
+                        <strong>{name}</strong>{lang === 'zh-CN' ? `（${stateLabel}）` : ` (${stateLabel})`}{noteText ? `${lang === 'zh-CN' ? '：' : ': '}${noteText}` : ''}
                       </li>
                     );
                   })}

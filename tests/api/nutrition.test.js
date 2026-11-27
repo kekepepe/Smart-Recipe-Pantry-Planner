@@ -25,16 +25,15 @@ test('nutrition API: without the M02 dataset every dish honestly reports unavail
   assert.equal(r.data.pantryRevision, 0); // read-only: pre-onboarding workspace untouched
 });
 
-test('nutrition API: default M02 production dataset loads >= 20 verified dishes and leaves unmapped dishes unavailable', async t => {
+test('nutrition API: default production dataset covers all 100 catalog recipes with verified USDA mappings', async t => {
   const f = fixture(); const api = await listen(createApp(f.db));
   t.after(async () => { await api.close(); f.close(); });
 
   const r = await api.request('/nutrition');
   assert.equal(r.status, 200);
   assert.equal(r.data.total, 100);
-  assert.equal(r.data.mappingsLoaded, 69);
-  assert.equal(r.data.estimatedCount, 21);
-  assert(r.data.estimatedCount >= 20);
+  assert.equal(r.data.mappingsLoaded, 306);
+  assert.equal(r.data.estimatedCount, 100);
   assert.equal(r.data.pantryRevision, 0); // read-only
 
   // Hand-calculated spot checks against USDA SR Legacy FDC entries in data/nutrition-mappings.json:
@@ -63,13 +62,12 @@ test('nutrition API: default M02 production dataset loads >= 20 verified dishes 
   assert.equal(detail.data.mappings.length, 4);
   assert(detail.data.mappings.every(m => m.sourceUrl.startsWith('https://fdc.nal.usda.gov/food-details/') && m.sourceDate && m.verifiedBy));
 
-  // Withheld oil-bath / bone-in / compound dishes stay honestly unavailable with null energy (never fabricated 0 kcal).
+  // Oil-bath and bone-in dishes compute realistic estimates with transparent yield/retention assumptions.
   for (const id of ['stir-fried-noodles', 'tortilla-espanola', 'buffalo-wings', 'fish-and-chips', 'bacalhau-a-bras']) {
     const item = r.data.nutrition.find(entry => entry.recipeId === id);
-    assert.equal(item.status, 'unavailable');
-    assert.equal(item.wholeDishKcal, null);
-    assert.equal(item.perServingKcal, null);
-    assert(item.unmappedRequired.length > 0);
+    assert.equal(item.status, 'estimated');
+    assert(item.perServingKcal > 100 && item.perServingKcal < 1500, `${id} perServingKcal=${item.perServingKcal}`);
+    assert(item.assumptions.length > 0, `${id} should surface explicit estimation assumptions`);
   }
 });
 
