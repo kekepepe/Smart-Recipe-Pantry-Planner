@@ -16,7 +16,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-22.23.1-339933?logo=node.js&logoColor=white)](.nvmrc)
 [![License: MIT](https://img.shields.io/badge/Code%20License-MIT-blue.svg)](LICENSE)
 
-[**Download v1.0.3**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**Features**](#features) · [**Screenshots**](#interface-showcase) · [**Quick Start**](#run-from-source) · [**Architecture**](#architecture) · [**Documentation**](#documentation)
+[**Download v1.0.4**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) · [**Features**](#features) · [**Screenshots**](#interface-showcase) · [**Quick Start**](#run-from-source) · [**Architecture**](#architecture) · [**Documentation**](#documentation)
 
 **English** | [简体中文](README.zh-CN.md)
 
@@ -46,7 +46,7 @@ Home cooks frequently have ingredients on hand yet still spend time manually cro
 | **Multi-Recipe Shopping List & Purchased Marks** | Save multiple recipes into one combined list, sum shared ingredients before subtracting pantry stock once, and check off **Purchased** items that persist across refreshes/restarts without mutating pantry stock. Automatically flags quantity changes and unit conflicts. |
 | **Full EN / 简体中文 Bilingual UI** | One-click language switcher persisted in `localStorage` with pre-paint `<html lang>` sync and 100% localized recipes, ingredients, taxonomy, nutrition labels, and status messages. |
 | **Local Offline Sign-In** | Optional single-user local account per SQLite database with hashed password storage, "Remember me" auto-login (30-day revocable token), password change, and automatic preservation of existing pantry/shopping data on upgrade. |
-| **Offline Lite & Desktop Editions** | **Lite native installers (`v1.0.3`, ~28 MB `.dmg` / `.exe`)** reuse your system Node.js (`22.14+` in `22.x`) and default browser with zero terminal window, menu-bar/tray controls, and one-click in-app incremental updates with automatic rollback. Standalone Electron installers (`v1.0.1`) remain available for machines without Node.js. |
+| **Offline Lite & Desktop Editions** | **Lite native installers (`v1.0.4`, ~28 MB `.dmg` / `.exe`)** reuse your system Node.js (`22.14+` in `22.x`) and default browser with zero terminal window, menu-bar/tray controls, and one-click in-app incremental updates with automatic rollback. Standalone Electron installers (`v1.0.1`) remain available for machines without Node.js. |
 
 ---
 
@@ -92,18 +92,18 @@ Home cooks frequently have ingredients on hand yet still spend time manually cro
 
 ## Download Desktop App
 
-### Latest: v1.0.3 Lite Native Installers (macOS DMG & Windows EXE)
+### Latest: v1.0.4 Lite Native Installers (macOS DMG & Windows EXE)
 
-Pre-built offline **Lite** native installers (~28 MB) for **macOS (Apple Silicon `.dmg`)** and **Windows (`x64` `.exe`)** are published on [**GitHub Releases (`v1.0.3`)**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) along with `SHA256SUMS.txt`, `SOURCE_COMMIT.txt`, and the in-app update assets (`Pantry-and-Plate-1.0.3-Lite-Bundle.tar.gz`, `lite-update-manifest.json`).
+Pre-built offline **Lite** native installers (~28 MB) for **macOS (Apple Silicon `.dmg`)** and **Windows (`x64` `.exe`)** are published on [**GitHub Releases (`v1.0.4`)**](https://github.com/kekepepe/Smart-Recipe-Pantry-Planner/releases/latest) along with `SHA256SUMS.txt`, `SOURCE_COMMIT.txt`, and the in-app update assets (`Pantry-and-Plate-1.0.4-Lite-Bundle.tar.gz`, `lite-update-manifest.json`).
 
-| Platform | Target OS / Arch | Lite Installer Asset (`v1.0.3`) | Notes |
+| Platform | Target OS / Arch | Lite Installer Asset (`v1.0.4`) | Notes |
 | --- | --- | --- | --- |
-| **macOS** | macOS 15+ (`arm64` Apple Silicon) | `Pantry-and-Plate-1.0.3-Lite-mac-arm64.dmg` | Requires native `arm64` **Node.js `22.14+` (`22.x`)**. Drag **Pantry & Plate Lite** to *Applications* and launch directly (no terminal window; menu bar icon to open/quit). Ad-hoc signed: on first launch, use **Right-click → Open** if Gatekeeper prompts. |
-| **Windows** | Windows 11 (`x64`) | `Pantry-and-Plate-1.0.3-Lite-win-x64.exe` | Requires `x64` **Node.js `22.14+` (`22.x`)**. Per-user NSIS installer (supports `/S` silent install), Desktop & Start Menu shortcuts, system tray icon, and uninstaller that preserves local SQLite data. |
+| **macOS** | macOS 15+ (`arm64` Apple Silicon) | `Pantry-and-Plate-1.0.4-Lite-mac-arm64.dmg` | Requires native `arm64` **Node.js `22.14+` (`22.x`)**. Drag **Pantry & Plate Lite** to *Applications* and launch directly (no terminal window; menu bar icon to open/quit). Ad-hoc signed: on first launch, use **Right-click → Open** if Gatekeeper prompts. |
+| **Windows** | Windows 11 (`x64`) | `Pantry-and-Plate-1.0.4-Lite-win-x64.exe` | Requires `x64` **Node.js `22.14+` (`22.x`)**. Per-user NSIS installer (supports `/S` silent install), Desktop & Start Menu shortcuts, system tray icon, and uninstaller that preserves local SQLite data. |
 
 > [!TIP]
 > **In-App Incremental Updates (Lite `v1.0.2+`)**
-> Lite stays offline by default. When online, click **Check updates** in the header to download and verify lightweight app bundles (`Pantry-and-Plate-1.0.3-Lite-Bundle.tar.gz`) via `lite-update-manifest.json` with SHA-256 verification and automatic rollback—stored in your writable user data directory while keeping the installed app and `pantry.sqlite` untouched.
+> Lite stays offline by default. When online, click **Check updates** in the header to download and verify lightweight app bundles (`Pantry-and-Plate-1.0.4-Lite-Bundle.tar.gz`) via `lite-update-manifest.json` with SHA-256 verification and automatic rollback—stored in your writable user data directory while keeping the installed app and `pantry.sqlite` untouched.
 
 ### Standalone Electron Installers (No Node.js Required)
 
